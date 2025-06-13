@@ -71,12 +71,19 @@
 .checkout-layout {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  gap: 3rem;
+  gap: 2.5rem;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  box-sizing: border-box;
 }
+
 
 /* Form Styles */
 .checkout-form {
-  space-y: 2rem;
+  width: 100%;
 }
 
 .form-section {
@@ -280,10 +287,12 @@
 
 /* Order Summary */
 .order-summary {
+  width: 100%;
   position: sticky;
-  top: 100px;
-  height: fit-content;
+  top: 2rem;
+  align-self: flex-start;
 }
+
 
 .summary-card {
   background: rgba(15, 23, 42, 0.5);

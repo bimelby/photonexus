@@ -177,7 +177,7 @@ function createPhotoCard(photo) {
 
 // Cart Functions
 function addToCart(photoId) {
-  const photo = featuredPhotos.find((p) => p.id === photoId)
+  const photo = (typeof allPhotos !== "undefined" ? allPhotos : featuredPhotos).find((p) => p.id === photoId)
   if (!photo) return
 
   const existingItem = cart.find((item) => item.id === photoId)

@@ -27,7 +27,7 @@
             <div class="nav-actions">
                 <button class="cart-btn" onclick="window.location.href='cart.html'">
                     <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count">0</span>
+                    <span class="cart-count" id="cartCount">0</span>
                 </button>
             </div>
         </div>
@@ -75,33 +75,35 @@
             </div>
 
             <!-- Next Steps -->
-            <div class="next-steps">
-                <h3><i class="fas fa-lightbulb"></i> What's Next?</h3>
-                <div class="steps-grid">
-                    <div class="step-item">
-                        <i class="fas fa-download"></i>
-                        <h4>Download Your Photos</h4>
-                        <p>Access your high-resolution images immediately</p>
-                    </div>
-                    <div class="step-item">
-                        <i class="fas fa-file-contract"></i>
-                        <h4>Review License Terms</h4>
-                        <p>Understand how you can use your purchased images</p>
-                    </div>
-                    <div class="step-item">
-                        <i class="fas fa-star"></i>
-                        <h4>Rate & Review</h4>
-                        <p>Help other customers by rating the photos</p>
-                    </div>
-                    <div class="step-item">
-                        <i class="fas fa-share-alt"></i>
-                        <h4>Share Your Work</h4>
-                        <p>Show us how you use our photos in your projects</p>
-                    </div>
-                </div>
-            </div>
+           <div class="next-steps">
 
-            <!-- Continue Shopping */
+             <h3><i class="fas fa-lightbulb"></i> What's Next?</h3>
+             <div class="steps-grid">
+                <div class="step-item" onclick="window.location.href='dashboard.html#downloads'" style="cursor:pointer">
+                  <i class="fas fa-download"></i>
+                  <h4>Download Your Photos</h4>
+                  <p>Access your high-resolution images immediately</p>
+                </div>
+                <div class="step-item" onclick="window.location.href='license.html'" style="cursor:pointer">
+                  <i class="fas fa-file-contract"></i>
+                  <h4>Review License Terms</h4>
+                  <p>Understand how you can use your purchased images</p>
+                </div>
+                <div class="step-item" onclick="window.location.href='review.html'" style="cursor:pointer">
+                  <i class="fas fa-star"></i>
+                  <h4>Rate & Review</h4>
+                  <p>Help other customers by rating the photos</p>
+                </div>
+                <div class="step-item" onclick="window.location.href='share.html'" style="cursor:pointer">
+                  <i class="fas fa-share-alt"></i>
+                  <h4>Share Your Work</h4>
+                  <p>Show us how you use our photos in your projects</p>
+                </div>
+             </div>
+           </div>
+            
+
+            <!-- Continue Shopping Section -->
             <div class="continue-shopping">
                 <h3>Continue Exploring</h3>
                 <p>Discover more amazing photography for your next project</p>
@@ -119,5 +121,12 @@
 
     <script src="script.js"></script>
     <script src="success.js"></script>
+    
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    updateCartCount && updateCartCount();
+  });
+</script>
 </body>
+
 </html>

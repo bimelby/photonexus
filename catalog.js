@@ -731,10 +731,10 @@ const photosPerPage = 6
 let viewMode = "grid"
 
 // Declare missing functions
-function updateCartCount() {
+//function updateCartCount() {
   // Placeholder for updateCartCount logic
-  console.log("Updating cart count...")
-}
+  //console.log("Updating cart count...")
+//}
 
 function viewPhotoDetail(photoId) {
   // Placeholder for viewPhotoDetail logic

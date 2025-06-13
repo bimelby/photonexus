@@ -16,14 +16,12 @@
                 <i class="fas fa-camera"></i>
                 <span>PhotoNexus</span>
             </div>
-            
             <div class="nav-menu">
                 <a href="index.html" class="nav-link">Home</a>
                 <a href="catalog.html" class="nav-link">Catalog</a>
                 <a href="articles.html" class="nav-link">Articles</a>
                 <a href="dashboard.html" class="nav-link">Dashboard</a>
             </div>
-            
             <div class="nav-actions">
                 <button class="cart-btn" onclick="window.location.href='cart.html'">
                     <i class="fas fa-shopping-cart"></i>
@@ -58,8 +56,9 @@
         </div>
 
         <div class="checkout-layout">
-            <!-- Checkout Form -->
+            <!-- Checkout Form (KIRI) -->
             <div class="checkout-form">
+                <!-- Billing Information -->
                 <div class="form-section">
                     <h2><i class="fas fa-user"></i> Billing Information</h2>
                     <form id="checkoutForm">
@@ -73,27 +72,22 @@
                                 <input type="text" id="lastName" name="lastName" required>
                             </div>
                         </div>
-                        
                         <div class="form-group">
                             <label for="email">Email Address *</label>
                             <input type="email" id="email" name="email" required>
                         </div>
-                        
                         <div class="form-group">
                             <label for="phone">Phone Number</label>
                             <input type="tel" id="phone" name="phone">
                         </div>
-                        
                         <div class="form-group">
                             <label for="company">Company (Optional)</label>
                             <input type="text" id="company" name="company">
                         </div>
-                        
                         <div class="form-group">
                             <label for="address">Address *</label>
                             <input type="text" id="address" name="address" required>
                         </div>
-                        
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="city">City *</label>
@@ -108,7 +102,6 @@
                                 <input type="text" id="zipCode" name="zipCode" required>
                             </div>
                         </div>
-                        
                         <div class="form-group">
                             <label for="country">Country *</label>
                             <select id="country" name="country" required>
@@ -126,116 +119,108 @@
                     </form>
                 </div>
 
+                <!-- Payment Information -->
                 <div class="form-section">
                     <h2><i class="fas fa-credit-card"></i> Payment Information</h2>
                     <div class="payment-methods">
-                        <div class="payment-method active" data-method="card">
-                            <i class="fas fa-credit-card"></i>
-                            <span>Credit/Debit Card</span>
+                        <div class="payment-method active" data-method="ebanking">
+                            <i class="fas fa-university"></i>
+                            <span>E-Banking</span>
                         </div>
-                        <div class="payment-method" data-method="paypal">
-                            <i class="fab fa-paypal"></i>
-                            <span>PayPal</span>
+                        <div class="payment-method" data-method="qris">
+                            <i class="fas fa-qrcode"></i>
+                            <span>QRIS</span>
                         </div>
-                        <div class="payment-method" data-method="crypto">
-                            <i class="fab fa-bitcoin"></i>
-                            <span>Cryptocurrency</span>
+                        <div class="payment-method" data-method="emoney">
+                            <i class="fas fa-wallet"></i>
+                            <span>E-Money</span>
                         </div>
                     </div>
-
-                    <div id="cardPayment" class="payment-form active">
+                    <!-- E-Banking -->
+                    <div id="ebankingPayment" class="payment-form active">
                         <div class="form-group">
-                            <label for="cardNumber">Card Number *</label>
-                            <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
-                            <div class="card-icons">
-                                <i class="fab fa-cc-visa"></i>
-                                <i class="fab fa-cc-mastercard"></i>
-                                <i class="fab fa-cc-amex"></i>
-                                <i class="fab fa-cc-discover"></i>
-                            </div>
+                            <label for="bankName">Bank Name *</label>
+                            <select id="bankName" required>
+                                <option value="">Select Bank</option>
+                                <option value="bca">BCA</option>
+                                <option value="bri">BRI</option>
+                                <option value="bni">BNI</option>
+                                <option value="mandiri">Mandiri</option>
+                                <option value="cimb">CIMB Niaga</option>
+                            </select>
                         </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="expiryDate">Expiry Date *</label>
-                                <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" maxlength="5" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="cvv">CVV *</label>
-                                <input type="text" id="cvv" name="cvv" placeholder="123" maxlength="4" required>
-                            </div>
-                        </div>
-                        
                         <div class="form-group">
-                            <label for="cardName">Name on Card *</label>
-                            <input type="text" id="cardName" name="cardName" required>
+                            <label for="bankAccount">Account Number *</label>
+                            <input type="text" id="bankAccount" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="accountName">Account Name *</label>
+                            <input type="text" id="accountName" required>
                         </div>
                     </div>
-
-                    <div id="paypalPayment" class="payment-form">
-                        <div class="paypal-info">
-                            <i class="fab fa-paypal" style="font-size: 3rem; color: #0070ba; margin-bottom: 1rem;"></i>
-                            <p>You will be redirected to PayPal to complete your payment securely.</p>
+                    <!-- QRIS -->
+                    <div id="qrisPayment" class="payment-form">
+                        <div class="qris-info" style="text-align:center;">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PHOTONEXUS-ORDER" alt="QRIS Code" style="margin:1rem auto;display:block;border-radius:12px;">
+                            <p>Scan QRIS ini dengan aplikasi e-wallet/bank Anda untuk membayar.</p>
+                            <div style="font-size:0.95rem;color:#94a3b8;">Contoh: OVO, DANA, GoPay, ShopeePay, BCA Mobile, dll.</div>
                         </div>
                     </div>
-
-                    <div id="cryptoPayment" class="payment-form">
-                        <div class="crypto-info">
-                            <i class="fab fa-bitcoin" style="font-size: 3rem; color: #f7931a; margin-bottom: 1rem;"></i>
-                            <p>We accept Bitcoin, Ethereum, and other major cryptocurrencies.</p>
-                            <div class="crypto-options">
-                                <div class="crypto-option">
-                                    <i class="fab fa-bitcoin"></i>
-                                    <span>Bitcoin</span>
-                                </div>
-                                <div class="crypto-option">
-                                    <i class="fab fa-ethereum"></i>
-                                    <span>Ethereum</span>
-                                </div>
-                                <div class="crypto-option">
-                                    <i class="fas fa-coins"></i>
-                                    <span>Other</span>
-                                </div>
-                            </div>
+                    <!-- E-Money -->
+                    <div id="emoneyPayment" class="payment-form">
+                        <div class="form-group">
+                            <label for="emoneyProvider">E-Money Provider *</label>
+                            <select id="emoneyProvider" required>
+                                <option value="">Pilih Provider</option>
+                                <option value="ovo">OVO</option>
+                                <option value="gopay">GoPay</option>
+                                <option value="dana">DANA</option>
+                                <option value="shopeepay">ShopeePay</option>
+                                <option value="linkaja">LinkAja</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="emoneyNumber">Nomor HP/ID *</label>
+                            <input type="text" id="emoneyNumber" required>
                         </div>
                     </div>
                 </div>
 
+                <!-- License Agreement -->
                 <div class="form-section">
-                    <h2><i class="fas fa-file-contract"></i> License Agreement</h2>
-                    <div class="license-info">
+                    <div class="form-group license-info">
                         <div class="license-item">
                             <input type="checkbox" id="termsAccept" required>
-                            <label for="termsAccept">I agree to the <a href="#" class="link">Terms of Service</a> and <a href="#" class="link">Privacy Policy</a></label>
+                            <label for="termsAccept">
+                                I agree to the <a href="#" class="link">Terms of Service</a> and <a href="#" class="link">Privacy Policy</a>
+                            </label>
                         </div>
                         <div class="license-item">
                             <input type="checkbox" id="licenseAccept" required>
-                            <label for="licenseAccept">I understand and agree to the <a href="#" class="link">License Terms</a> for the purchased images</label>
-                        </div>
-                        <div class="license-item">
-                            <input type="checkbox" id="newsletterSubscribe">
-                            <label for="newsletterSubscribe">Subscribe to our newsletter for updates and special offers</label>
+                            <label for="licenseAccept">
+                                I agree to the <a href="#" class="link">License Agreement</a>
+                            </label>
                         </div>
                     </div>
+                    <button class="btn btn-primary btn-large" onclick="processPayment()">
+                        <i class="fas fa-lock"></i>
+                        Complete Purchase
+                    </button>
                 </div>
             </div>
-
-            <!-- Order Summary -->
+            <!-- Order Summary (KANAN) -->
             <div class="order-summary">
                 <div class="summary-card">
                     <h3><i class="fas fa-receipt"></i> Order Summary</h3>
-                    
                     <div class="order-items" id="orderItems">
                         <!-- Items will be loaded here -->
                     </div>
-                    
                     <div class="promo-code">
                         <div class="promo-input">
                             <input type="text" id="promoCode" placeholder="Enter promo code">
                             <button class="btn btn-secondary" onclick="applyPromoCode()">Apply</button>
                         </div>
                     </div>
-                    
                     <div class="order-totals">
                         <div class="total-row">
                             <span>Subtotal:</span>
@@ -254,17 +239,10 @@
                             <span id="total">$0.00</span>
                         </div>
                     </div>
-                    
                     <div class="security-info">
                         <i class="fas fa-lock"></i>
                         <span>Secure 256-bit SSL encryption</span>
                     </div>
-                    
-                    <button class="btn btn-primary btn-large" onclick="processPayment()">
-                        <i class="fas fa-lock"></i>
-                        Complete Purchase
-                    </button>
-                    
                     <div class="money-back">
                         <i class="fas fa-shield-alt"></i>
                         <span>30-day money-back guarantee</span>
