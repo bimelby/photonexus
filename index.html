@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhotoNexus - Premium Stock Photography</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-camera"></i>
+                <span>PhotoNexus</span>
+            </div>
+            
+            <div class="nav-menu" id="navMenu">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="catalog.html" class="nav-link">Catalog</a>
+                <a href="articles.html" class="nav-link">Articles</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+            </div>
+            
+            <div class="nav-actions">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search photos...">
+                </div>
+                <button class="cart-btn" onclick="openCart()">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+                <button class="user-btn">
+                    <i class="fas fa-user"></i>
+                </button>
+            </div>
+            
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">
+                Discover Extraordinary<br>
+                <span class="gradient-text">Photography</span>
+            </h1>
+            <p class="hero-subtitle">
+                Explore our curated collection of premium stock photos from world-class photographers. 
+                Find the perfect image for your next project.
+            </p>
+            <div class="hero-actions">
+                <button class="btn btn-primary" onclick="window.location.href='catalog.html'">
+                    Browse Catalog
+                </button>
+                <button class="btn btn-secondary">
+                    Learn More
+                </button>
+            </div>
+        </div>
+        <canvas id="particleCanvas" class="particle-canvas"></canvas>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <div class="stat-value">50,000+</div>
+                    <div class="stat-label">Photos Available</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-value">2,500+</div>
+                    <div class="stat-label">Active Photographers</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-value">125K+</div>
+                    <div class="stat-label">Downloads This Month</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <div class="stat-value">500+</div>
+                    <div class="stat-label">Award Winners</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Photos -->
+    <section class="featured">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title gradient-text">Featured Photography</h2>
+                <p class="section-subtitle">Handpicked masterpieces from our most talented photographers</p>
+            </div>
+            
+            <div class="photos-grid" id="featuredPhotos">
+                <!-- Photos will be loaded by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2 class="cta-title gradient-text">Ready to Find Your Perfect Shot?</h2>
+            <p class="cta-subtitle">Join thousands of creators who trust PhotoNexus for their visual content needs</p>
+            <button class="btn btn-primary btn-large" onclick="window.location.href='catalog.html'">
+                Start Browsing Now
+            </button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <div class="footer-brand">
+                        <i class="fas fa-camera"></i>
+                        <span>PhotoNexus</span>
+                    </div>
+                    <p>Premium stock photography for creative professionals worldwide.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Browse</h3>
+                    <ul>
+                        <li><a href="catalog.html">Photo Catalog</a></li>
+                        <li><a href="categories.html">Categories</a></li>
+                        <li><a href="collections.html">Collections</a></li>
+                        <li><a href="new.html">New Arrivals</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="articles.html">Articles</a></li>
+                        <li><a href="tutorials.html">Tutorials</a></li>
+                        <li><a href="inspiration.html">Inspiration</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Account</h3>
+                    <ul>
+                        <li><a href="login.html">Sign In</a></li>
+                        <li><a href="register.html">Register</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="history.html">Purchase History</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 PhotoNexus. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+                <button class="close-btn" onclick="closeCart()">&times;</button>
+            </div>
+            <div class="modal-body" id="cartItems">
+                <!-- Cart items will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <div class="cart-total">
+                    <strong>Total: $<span id="cartTotal">0.00</span></strong>
+                </div>
+                <button class="btn btn-primary" onclick="window.location.href='checkout.html'">
+                    Proceed to Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

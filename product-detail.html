@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail - PhotoNexus</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="product-detail.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-camera"></i>
+                <span>PhotoNexus</span>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="catalog.html" class="nav-link active">Catalog</a>
+                <a href="articles.html" class="nav-link">Articles</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="cart-btn" onclick="openCart()">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+                <button class="user-btn">
+                    <i class="fas fa-user"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="product-detail-container">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="index.html">Home</a>
+            <i class="fas fa-chevron-right"></i>
+            <a href="catalog.html">Catalog</a>
+            <i class="fas fa-chevron-right"></i>
+            <span id="breadcrumbCategory">Category</span>
+            <i class="fas fa-chevron-right"></i>
+            <span id="breadcrumbTitle">Product</span>
+        </div>
+
+        <!-- Product Content -->
+        <div class="product-content" id="productContent">
+            <!-- Product will be loaded here -->
+        </div>
+
+        <!-- Related Products -->
+        <section class="related-products">
+            <h3><i class="fas fa-images"></i> Related Photos</h3>
+            <div class="related-grid" id="relatedGrid">
+                <!-- Related products will be loaded here -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Image Zoom Modal -->
+    <div id="zoomModal" class="modal">
+        <div class="modal-content zoom-content">
+            <button class="close-btn" onclick="closeZoom()">&times;</button>
+            <img id="zoomImage" src="/placeholder.svg" alt="Zoomed Image">
+            <div class="zoom-controls">
+                <button class="zoom-btn" onclick="zoomIn()"><i class="fas fa-search-plus"></i></button>
+                <button class="zoom-btn" onclick="zoomOut()"><i class="fas fa-search-minus"></i></button>
+                <button class="zoom-btn" onclick="resetZoom()"><i class="fas fa-expand-arrows-alt"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+                <button class="close-btn" onclick="closeCart()">&times;</button>
+            </div>
+            <div class="modal-body" id="cartItems">
+                <!-- Cart items will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <div class="cart-total">
+                    <strong>Total: $<span id="cartTotal">0.00</span></strong>
+                </div>
+                <button class="btn btn-primary" onclick="window.location.href='checkout.html'">
+                    Proceed to Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="product-detail.js"></script>
+</body>
+</html>

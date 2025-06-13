@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Catalog - PhotoNexus</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="catalog.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-camera"></i>
+                <span>PhotoNexus</span>
+            </div>
+            
+            <div class="nav-menu" id="navMenu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="catalog.html" class="nav-link active">Catalog</a>
+                <a href="articles.html" class="nav-link">Articles</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+            </div>
+            
+            <div class="nav-actions">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search photos..." id="searchInput">
+                </div>
+                <button class="cart-btn" onclick="openCart()">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+                <button class="user-btn">
+                    <i class="fas fa-user"></i>
+                </button>
+            </div>
+            
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="catalog-container">
+        <!-- Header -->
+        <div class="catalog-header">
+            <h1 class="gradient-text">Photo Catalog</h1>
+            <p>Discover premium stock photography from talented artists worldwide</p>
+        </div>
+
+        <div class="catalog-layout">
+            <!-- Filters Sidebar -->
+            <div class="filters-sidebar">
+                <div class="filter-card">
+                    <h3><i class="fas fa-filter"></i> Filters</h3>
+                    
+                    <!-- Category Filter -->
+                    <div class="filter-group">
+                        <label>Category</label>
+                        <select id="categoryFilter" onchange="applyFilters()">
+                            <option value="">All Categories</option>
+                            <option value="nature">Nature</option>
+                            <option value="urban">Urban</option>
+                            <option value="portrait">Portrait</option>
+                            <option value="abstract">Abstract</option>
+                            <option value="architecture">Architecture</option>
+                            <option value="wildlife">Wildlife</option>
+                            <option value="space">Space</option>
+                        </select>
+                    </div>
+
+                    <!-- Price Range -->
+                    <div class="filter-group">
+                        <label>Price Range: $<span id="priceMin">0</span> - $<span id="priceMax">1000</span></label>
+                        <div class="price-range">
+                            <input type="range" id="priceRangeMin" min="0" max="1000" value="0" oninput="updatePriceRange()">
+                            <input type="range" id="priceRangeMax" min="0" max="1000" value="1000" oninput="updatePriceRange()">
+                        </div>
+                    </div>
+
+                    <!-- Sort By -->
+                    <div class="filter-group">
+                        <label>Sort By</label>
+                        <select id="sortFilter" onchange="applyFilters()">
+                            <option value="popular">Most Popular</option>
+                            <option value="newest">Newest First</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="rating">Highest Rated</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
+                    <button class="btn btn-secondary" onclick="clearFilters()">Clear All</button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="catalog-main">
+                <!-- Toolbar -->
+                <div class="catalog-toolbar">
+                    <div class="results-info">
+                        Showing <span id="resultsCount">0</span> results
+                    </div>
+                    <div class="view-controls">
+                        <button class="view-btn active" id="gridView" onclick="setViewMode('grid')">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button class="view-btn" id="listView" onclick="setViewMode('list')">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Photos Container -->
+                <div class="photos-container" id="photosContainer">
+                    <!-- Photos will be loaded here -->
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination" id="pagination">
+                    <!-- Pagination will be generated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+                <button class="close-btn" onclick="closeCart()">&times;</button>
+            </div>
+            <div class="modal-body" id="cartItems">
+                <!-- Cart items will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <div class="cart-total">
+                    <strong>Total: $<span id="cartTotal">0.00</span></strong>
+                </div>
+                <button class="btn btn-primary" onclick="window.location.href='checkout.html'">
+                    Proceed to Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="catalog.js"></script>
+</body>
+</html>

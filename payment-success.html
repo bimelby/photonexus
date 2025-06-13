@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - PhotoNexus</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="success.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-camera"></i>
+                <span>PhotoNexus</span>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="catalog.html" class="nav-link">Catalog</a>
+                <a href="articles.html" class="nav-link">Articles</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="cart-btn" onclick="window.location.href='cart.html'">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="success-container">
+        <div class="success-content">
+            <!-- Success Animation -->
+            <div class="success-animation">
+                <div class="checkmark-circle">
+                    <div class="checkmark"></div>
+                </div>
+            </div>
+
+            <!-- Success Message -->
+            <div class="success-message">
+                <h1 class="gradient-text">Payment Successful!</h1>
+                <p>Thank you for your purchase. Your transaction has been completed successfully.</p>
+            </div>
+
+            <!-- Transaction Details -->
+            <div class="transaction-details" id="transactionDetails">
+                <!-- Details will be loaded here -->
+            </div>
+
+            <!-- Download Section -->
+            <div class="download-section">
+                <h3><i class="fas fa-download"></i> Download Your Photos</h3>
+                <p>Your high-resolution photos are ready for download. You can also access them anytime from your dashboard.</p>
+                
+                <div class="download-items" id="downloadItems">
+                    <!-- Download items will be loaded here -->
+                </div>
+                
+                <div class="download-actions">
+                    <button class="btn btn-primary btn-large" onclick="downloadAll()">
+                        <i class="fas fa-download"></i>
+                        Download All Photos
+                    </button>
+                    <button class="btn btn-secondary" onclick="window.location.href='history.html'">
+                        <i class="fas fa-history"></i>
+                        View Purchase History
+                    </button>
+                </div>
+            </div>
+
+            <!-- Next Steps -->
+            <div class="next-steps">
+                <h3><i class="fas fa-lightbulb"></i> What's Next?</h3>
+                <div class="steps-grid">
+                    <div class="step-item">
+                        <i class="fas fa-download"></i>
+                        <h4>Download Your Photos</h4>
+                        <p>Access your high-resolution images immediately</p>
+                    </div>
+                    <div class="step-item">
+                        <i class="fas fa-file-contract"></i>
+                        <h4>Review License Terms</h4>
+                        <p>Understand how you can use your purchased images</p>
+                    </div>
+                    <div class="step-item">
+                        <i class="fas fa-star"></i>
+                        <h4>Rate & Review</h4>
+                        <p>Help other customers by rating the photos</p>
+                    </div>
+                    <div class="step-item">
+                        <i class="fas fa-share-alt"></i>
+                        <h4>Share Your Work</h4>
+                        <p>Show us how you use our photos in your projects</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Continue Shopping */
+            <div class="continue-shopping">
+                <h3>Continue Exploring</h3>
+                <p>Discover more amazing photography for your next project</p>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="window.location.href='catalog.html'">
+                        Browse More Photos
+                    </button>
+                    <button class="btn btn-secondary" onclick="window.location.href='articles.html'">
+                        Read Photography Tips
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="success.js"></script>
+</body>
+</html>

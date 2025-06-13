@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - PhotoNexus</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-camera"></i>
+                <span>PhotoNexus</span>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="catalog.html" class="nav-link">Catalog</a>
+                <a href="articles.html" class="nav-link">Articles</a>
+                <a href="dashboard.html" class="nav-link active">Dashboard</a>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="cart-btn" onclick="openCart()">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+                <button class="user-btn">
+                    <i class="fas fa-user"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="dashboard-sidebar">
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" alt="User Avatar" id="userAvatar">
+                </div>
+                <div class="user-info">
+                    <h3 id="userName">John Doe</h3>
+                    <p id="userEmail">john@example.com</p>
+                    <div class="user-badge">Premium Member</div>
+                </div>
+            </div>
+
+            <nav class="dashboard-nav">
+                <a href="#overview" class="nav-item active" onclick="showSection('overview')">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Overview</span>
+                </a>
+                <a href="#purchases" class="nav-item" onclick="showSection('purchases')">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>My Purchases</span>
+                </a>
+                <a href="#wishlist" class="nav-item" onclick="showSection('wishlist')">
+                    <i class="fas fa-heart"></i>
+                    <span>Wishlist</span>
+                </a>
+                <a href="#downloads" class="nav-item" onclick="showSection('downloads')">
+                    <i class="fas fa-download"></i>
+                    <span>Downloads</span>
+                </a>
+                <a href="#profile" class="nav-item" onclick="showSection('profile')">
+                    <i class="fas fa-user-cog"></i>
+                    <span>Profile Settings</span>
+                </a>
+                <a href="#admin" class="nav-item admin-only" onclick="showSection('admin')" style="display: none;">
+                    <i class="fas fa-cog"></i>
+                    <span>Admin Panel</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="dashboard-main">
+            <!-- Overview Section -->
+            <div id="overview" class="dashboard-section active">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-pie"></i> Dashboard Overview</h2>
+                    <p>Welcome back! Here's what's happening with your account.</p>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="quick-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-images"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalPhotosOwned">0</div>
+                            <div class="stat-label">Photos Owned</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-download"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalDownloads">0</div>
+                            <div class="stat-label">Total Downloads</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalSpent">$0</div>
+                            <div class="stat-label">Total Spent</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="wishlistCount">0</div>
+                            <div class="stat-label">Wishlist Items</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="activity-section">
+                    <h3><i class="fas fa-clock"></i> Recent Activity</h3>
+                    <div class="activity-list" id="recentActivity">
+                        <!-- Activity items will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                    <div class="actions-grid">
+                        <button class="action-btn" onclick="window.location.href='catalog.html'">
+                            <i class="fas fa-search"></i>
+                            <span>Browse Photos</span>
+                        </button>
+                        <button class="action-btn" onclick="showSection('wishlist')">
+                            <i class="fas fa-heart"></i>
+                            <span>View Wishlist</span>
+                        </button>
+                        <button class="action-btn" onclick="window.location.href='history.html'">
+                            <i class="fas fa-history"></i>
+                            <span>Purchase History</span>
+                        </button>
+                        <button class="action-btn" onclick="showSection('profile')">
+                            <i class="fas fa-user-edit"></i>
+                            <span>Edit Profile</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Purchases Section -->
+            <div id="purchases" class="dashboard-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-shopping-bag"></i> My Purchases</h2>
+                    <p>Manage and download your purchased photos</p>
+                </div>
+
+                <div class="purchases-content" id="purchasesContent">
+                    <!-- Purchases will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Wishlist Section -->
+            <div id="wishlist" class="dashboard-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-heart"></i> My Wishlist</h2>
+                    <p>Photos you've saved for later</p>
+                </div>
+
+                <div class="wishlist-content" id="wishlistContent">
+                    <!-- Wishlist items will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Downloads Section -->
+            <div id="downloads" class="dashboard-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-download"></i> My Downloads</h2>
+                    <p>Access your downloaded photos</p>
+                </div>
+
+                <div class="downloads-content" id="downloadsContent">
+                    <!-- Downloads will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Profile Section -->
+            <div id="profile" class="dashboard-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-user-cog"></i> Profile Settings</h2>
+                    <p>Manage your account information and preferences</p>
+                </div>
+
+                <div class="profile-content">
+                    <div class="profile-form">
+                        <form id="profileForm">
+                            <div class="form-section">
+                                <h3>Personal Information</h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="firstName">First Name</label>
+                                        <input type="text" id="firstName" name="firstName" value="mehmed">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lastName">Last Name</label>
+                                        <input type="text" id="lastName" name="lastName" value="bay">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email Address</label>
+                                    <input type="email" id="email" name="email" value="mehmed@example.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Phone Number</label>
+                                    <input type="tel" id="phone" name="phone" value="+68 1234567890">
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h3>Preferences</h3>
+                                <div class="form-group">
+                                    <label for="newsletter">
+                                        <input type="checkbox" id="newsletter" name="newsletter" checked>
+                                        Subscribe to newsletter
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="notifications">
+                                        <input type="checkbox" id="notifications" name="notifications" checked>
+                                        Email notifications
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="theme">Theme Preference</label>
+                                    <select id="theme" name="theme">
+                                        <option value="dark">Dark</option>
+                                        <option value="light">Light</option>
+                                        <option value="auto">Auto</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Section -->
+            <div id="admin" class="dashboard-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-cog"></i> Admin Panel</h2>
+                    <p>Manage the platform content and users</p>
+                </div>
+
+                <div class="admin-content">
+                    <div class="admin-tabs">
+                        <button class="tab-btn active" onclick="showAdminTab('articles')">
+                            <i class="fas fa-newspaper"></i>
+                            Articles
+                        </button>
+                        <button class="tab-btn" onclick="showAdminTab('products')">
+                            <i class="fas fa-images"></i>
+                            Products
+                        </button>
+                        <button class="tab-btn" onclick="showAdminTab('users')">
+                            <i class="fas fa-users"></i>
+                            Users
+                        </button>
+                        <button class="tab-btn" onclick="showAdminTab('transactions')">
+                            <i class="fas fa-receipt"></i>
+                            Transactions
+                        </button>
+                    </div>
+
+                    <div class="admin-tab-content">
+                        <!-- Articles Management -->
+                        <div id="articles-tab" class="admin-tab active">
+                            <div class="tab-header">
+                                <h3>Articles Management</h3>
+                                <button class="btn btn-primary" onclick="openArticleModal()">
+                                    <i class="fas fa-plus"></i>
+                                    Add Article
+                                </button>
+                            </div>
+                            <div class="admin-table" id="articlesTable">
+                                <!-- Articles table will be loaded here -->
+                            </div>
+                        </div>
+
+                        <!-- Products Management -->
+                        <div id="products-tab" class="admin-tab">
+                            <div class="tab-header">
+                                <h3>Products Management</h3>
+                                <button class="btn btn-primary" onclick="openProductModal()">
+                                    <i class="fas fa-plus"></i>
+                                    Add Product
+                                </button>
+                            </div>
+                            <div class="admin-table" id="productsTable">
+                                <!-- Products table will be loaded here -->
+                            </div>
+                        </div>
+
+                        <!-- Users Management -->
+                        <div id="users-tab" class="admin-tab">
+                            <div class="tab-header">
+                                <h3>Users Management</h3>
+                                <button class="btn btn-primary" onclick="openUserModal()">
+                                    <i class="fas fa-plus"></i>
+                                    Add User
+                                </button>
+                            </div>
+                            <div class="admin-table" id="usersTable">
+                                <!-- Users table will be loaded here -->
+                            </div>
+                        </div>
+
+                        <!-- Transactions Management -->
+                        <div id="transactions-tab" class="admin-tab">
+                            <div class="tab-header">
+                                <h3>Transactions Management</h3>
+                                <div class="tab-actions">
+                                    <button class="btn btn-secondary" onclick="exportTransactions()">
+                                        <i class="fas fa-download"></i>
+                                        Export
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="admin-table" id="transactionsTable">
+                                <!-- Transactions table will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Add Product Modal -->
+<div id="addProductModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3><i class="fas fa-image"></i> Add New Product</h3>
+      <button class="close-btn" onclick="closeModal('addProductModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="addProductForm" onsubmit="addProduct(event)">
+        <div class="form-group">
+          <label for="productTitle">Title</label>
+          <input type="text" id="productTitle" required>
+        </div>
+        <div class="form-group">
+          <label for="productPhotographer">Photographer</label>
+          <input type="text" id="productPhotographer" required>
+        </div>
+        <div class="form-group">
+          <label for="productCategory">Category</label>
+          <input type="text" id="productCategory" required>
+        </div>
+        <div class="form-group">
+          <label for="productPrice">Price</label>
+          <input type="number" id="productPrice" min="0" required>
+        </div>
+        <div class="form-group">
+          <label for="productImage">Image URL</label>
+          <input type="url" id="productImage" required>
+        </div>
+        <div class="form-group">
+          <label for="productStatus">Status</label>
+          <select id="productStatus" required>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" onclick="closeModal('addProductModal')">Cancel</button>
+      <button type="submit" form="addProductForm" class="btn btn-primary">Add Product</button>
+    </div>
+  </div>
+</div>
+
+    <!-- Article Modal -->
+    <div id="articleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="articleModalTitle">Add Article</h3>
+                <button class="close-btn" onclick="closeArticleModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="articleForm">
+                    <div class="form-group">
+                        <label for="articleTitle">Title</label>
+                        <input type="text" id="articleTitle" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="articleExcerpt">Excerpt</label>
+                        <textarea id="articleExcerpt" name="excerpt" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="articleContent">Content</label>
+                        <textarea id="articleContent" name="content" rows="10" required></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="articleCategory">Category</label>
+                            <select id="articleCategory" name="category" required>
+                                <option value="Portrait">Portrait</option>
+                                <option value="Landscape">Landscape</option>
+                                <option value="Street">Street</option>
+                                <option value="Macro">Macro</option>
+                                <option value="Night">Night</option>
+                                <option value="Wildlife">Wildlife</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="articleAuthor">Author</label>
+                            <input type="text" id="articleAuthor" name="author" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="articleImage">Image URL</label>
+                        <input type="url" id="articleImage" name="image" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="articleTags">Tags (comma separated)</label>
+                        <input type="text" id="articleTags" name="tags" placeholder="tag1, tag2, tag3">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeArticleModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveArticle()">Save Article</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+                <button class="close-btn" onclick="closeCart()">&times;</button>
+            </div>
+            <div class="modal-body" id="cartItems">
+                <!-- Cart items will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <div class="cart-total">
+                    <strong>Total: $<span id="cartTotal">0.00</span></strong>
+                </div>
+                <button class="btn btn-primary" onclick="window.location.href='checkout.html'">
+                    Proceed to Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="dashboard.js"></script>
+    
+     <!-- Add User Modal -->
+    <div id="addUserModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-plus"></i> Add New User</h3>
+                <button class="close-btn" onclick="closeModal('addUserModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addUserForm" onsubmit="addUser(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                           <label for="addUserName">Full Name</label>
+                            <input type="text" id="addUserName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="addUserEmail">Email</label>
+                             <input type="email" id="addUserEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="userRole">Role</label>
+                            <select id="userRole" required>
+                                <option value="">Select Role</option>
+                                <option value="customer">Customer</option>
+                                <option value="photographer">Photographer</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="userStatus">Status</label>
+                            <select id="userStatus" required>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="userBio">Bio (Optional)</label>
+                        <textarea id="userBio" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('addUserModal')">Cancel</button>
+                <button type="submit" form="addUserForm" class="btn btn-primary">Add User</button>
+            </div>
+        </div>
+    </div>
+    
+
+
+</body>
+</html>
