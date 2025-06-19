@@ -1,11 +1,11 @@
 Here’s a refined, visually enhanced, and well-structured `README.md` for **PhotoNexus** with improved formatting, concise details, and stylish design elements:
 
 ```markdown
- 📸 PhotoNexus  
-A Modern Stock Photography Platform UI  
+# 📸 PhotoNexus  
+*A Modern Stock Photography Platform UI*  
 
 ![Project Banner](https://via.placeholder.com/1200x400/4a6cf7/ffffff?text=PhotoNexus+UI)  
-Clean, responsive, and animated UI for a stock photography platform.
+*Clean, responsive, and animated UI for a stock photography platform.*
 
 ---
 
