@@ -317,7 +317,9 @@ function loadPurchases() {
 
 // Load wishlist
 function loadWishlist() {
-  const wishlist = JSON.parse(localStorage.getItem("wishlist")) || []
+  const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+  const allPhotos = (window.productsData || window.featuredPhotos || []);
+  const wishlistPhotos = wishlist.map(id => allPhotos.find(p => p.id === id)).filter(Boolean);
   const container = document.getElementById("wishlistContent")
 
   if (wishlist.length === 0) {

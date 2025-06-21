@@ -139,3 +139,34 @@ function updateCartCount() {
   // Placeholder for cart count update logic
   console.log("Cart count updated")
 }
+document.addEventListener("DOMContentLoaded", () => {
+  // ...existing code...
+  // Simulasi: tampilkan foto yang dibeli
+  const downloadItems = document.getElementById("downloadItems");
+  const purchased = JSON.parse(localStorage.getItem("lastPurchased") || "[]");
+  downloadItems.innerHTML = "";
+  purchased.forEach(photo => {
+    const div = document.createElement("div");
+    div.className = "download-item";
+    div.innerHTML = `
+      <img src="${photo.image}" alt="${photo.title}" style="width:100px;">
+      <span>${photo.title}</span>
+      <button class="btn btn-primary" onclick="downloadPhoto('${photo.image}','${photo.title}')">Download</button>
+    `;
+    downloadItems.appendChild(div);
+  });
+});
+
+function downloadPhoto(url, title) {
+  // Simpan ke history download
+  let downloads = JSON.parse(localStorage.getItem("downloads")||"[]");
+  downloads.push({url, title, date: new Date().toISOString()});
+  localStorage.setItem("downloads", JSON.stringify(downloads));
+  // Download file
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = title.replace(/\s+/g,"_")+".jpg";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}

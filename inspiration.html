@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Inspiration - PhotoNexus</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="articles.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <!-- Navbar sama seperti index.html -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <i class="fas fa-camera"></i>
+        <span>PhotoNexus</span>
+      </div>
+      <div class="nav-menu">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="catalog.html" class="nav-link">Catalog</a>
+        <a href="inspiration.html" class="nav-link active">Inspiration</a>
+        <a href="blog.html" class="nav-link">Blog</a>
+        <a href="tutorials.html" class="nav-link">Tutorials</a>
+        <a href="collections.html" class="nav-link">Collections</a>
+        <a href="new.html" class="nav-link">New Arrivals</a>
+      </div>
+      <div class="nav-actions">
+        <button class="cart-btn" onclick="openCart()">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-count" id="cartCount">0</span>
+        </button>
+        <button class="user-btn"><i class="fas fa-user"></i></button>
+      </div>
+    </div>
+  </nav>
+  <div class="container" style="padding-top:100px;">
+    <h1 class="gradient-text">Inspiration Gallery</h1>
+    <div id="inspirationGrid" class="photos-grid"></div>
+  </div>
+  <script src="script.js"></script>
+  <script>
+    // Contoh load inspiration
+    document.addEventListener("DOMContentLoaded", () => {
+      const grid = document.getElementById("inspirationGrid");
+      // Bisa ambil dari featuredPhotos atau data lain
+      featuredPhotos.forEach(photo => {
+        grid.appendChild(createPhotoCard(photo));
+      });
+      updateCartCount();
+    });
+  </script>
+</body>
+</html>

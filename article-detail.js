@@ -42,7 +42,7 @@ const articlesData = [
     author: "Sarah Johnson",
     date: "2024-01-15",
     readingTime: "8 min read",
-    image: "https://images.unsplash.com/photo-1554048612-b6a482b224b8?w=800&h=500&fit=crop",
+    image: "https://plus.unsplash.com/premium_photo-1741629489767-e147cf0ff31e?w=600&auto=format&fit=crop",
     featured: true,
     views: 2450,
     tags: ["portrait", "lighting", "techniques", "studio"],
@@ -102,6 +102,67 @@ const articlesData = [
     featured: false,
     views: 1234,
     tags: ["street", "ethics", "culture", "legal"],
+  },
+  {
+    id: 4,
+    title: "Macro Photography: Exploring the Miniature World",
+    excerpt:
+      "Dive into the fascinating world of macro photography and discover techniques for capturing stunning close-up images.",
+    content: `
+      <p>Macro photography opens up an entirely new world of photographic possibilities, allowing us to see familiar subjects in completely new ways.</p>
+      <h3>Equipment Essentials</h3>
+      <p>While dedicated macro lenses offer the best results, you can start macro photography with extension tubes or close-up filters on your existing lenses.</p>
+      <h3>Lighting Challenges</h3>
+      <p>Macro photography often requires additional lighting due to the close working distances and small apertures needed for adequate depth of field.</p>
+    `,
+    category: "Macro",
+    author: "David Kim",
+    date: "2024-01-08",
+    readingTime: "7 min read",
+    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=400&fit=crop",
+    featured: false,
+    views: 987,
+    tags: ["macro", "close-up", "equipment", "lighting"],
+  },
+  {
+    id: 5,
+    title: "Night Photography: Mastering Low Light Conditions",
+    excerpt: "Learn the techniques and settings needed to capture stunning images in challenging low-light situations.",
+    content: `
+      <p>Night photography presents unique challenges but offers incredible creative opportunities for those willing to master the techniques.</p>
+      <h3>Camera Settings</h3>
+      <p>Shooting in manual mode gives you complete control. Start with ISO 1600-3200, aperture f/2.8-f/4, and shutter speeds of 15-30 seconds for star trails.</p>
+      <h3>Essential Equipment</h3>
+      <p>A sturdy tripod is absolutely essential for night photography. Consider also bringing a headlamp with a red filter to preserve your night vision.</p>
+    `,
+    category: "Night",
+    author: "Alex Thompson",
+    date: "2024-01-05",
+    readingTime: "9 min read",
+    image: "https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=600&h=400&fit=crop",
+    featured: false,
+    views: 1567,
+    tags: ["night", "low light", "stars", "long exposure"],
+  },
+  {
+    id: 6,
+    title: "Wildlife Photography: Patience and Preparation",
+    excerpt: "Essential tips for capturing amazing wildlife photographs while respecting nature and animal welfare.",
+    content: `
+      <p>Wildlife photography combines technical skill with patience and respect for nature. Success often comes from understanding animal behavior and being prepared.</p>
+      <h3>Research and Planning</h3>
+      <p>Study your subjects before heading out. Understanding animal behavior patterns will help you anticipate great photo opportunities.</p>
+      <h3>Ethical Considerations</h3>
+      <p>The welfare of wildlife should always come first. Never disturb animals for a photograph, and maintain appropriate distances at all times.</p>
+    `,
+    category: "Wildlife",
+    author: "Jennifer Park",
+    date: "2024-01-03",
+    readingTime: "6 min read",
+    image: "https://plus.unsplash.com/premium_photo-1679952779080-638d0d700533?w=600&auto=format&fit=crop",
+    featured: false,
+    views: 2100,
+    tags: ["wildlife", "nature", "ethics", "telephoto"],
   },
 ]
 

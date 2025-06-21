@@ -140,40 +140,7 @@ function loadFeaturedPhotos() {
 }
 
 // Create Photo Card
-function createPhotoCard(photo) {
-  const card = document.createElement("div")
-  card.className = "photo-card"
-  card.onclick = () => viewPhotoDetail(photo.id)
 
-  card.innerHTML = `
-        <div class="photo-image">
-            <img src="${photo.image}" alt="${photo.title}" loading="lazy">
-            <div class="photo-badge">${photo.category}</div>
-            <div class="photo-overlay">
-                <div class="photo-rating">
-                    <i class="fas fa-star"></i>
-                    <span>${photo.rating}</span>
-                </div>
-                <div class="photo-downloads">
-                    <i class="fas fa-download"></i>
-                    ${photo.downloads}
-                </div>
-            </div>
-        </div>
-        <div class="photo-content">
-            <h3 class="photo-title">${photo.title}</h3>
-            <p class="photo-photographer">by ${photo.photographer}</p>
-            <div class="photo-footer">
-                <div class="photo-price">$${photo.price}</div>
-                <button class="add-to-cart" onclick="event.stopPropagation(); addToCart(${photo.id})">
-                    <i class="fas fa-shopping-cart"></i> Add to Cart
-                </button>
-            </div>
-        </div>
-    `
-
-  return card
-}
 
 // Cart Functions
 function addToCart(photoId) {
@@ -303,7 +270,7 @@ function toggleMobileMenu() {
 // Utility Functions
 function viewPhotoDetail(photoId) {
   localStorage.setItem("selectedPhotoId", photoId)
-  window.location.href = "photo-detail.html"
+  window.location.href = "product-detail.html"
 }
 
 function showNotification(message) {
@@ -363,3 +330,73 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   })
 })
+function createPhotoCard(photo) {
+  const card = document.createElement("div");
+  card.className = "photo-card";
+  card.onclick = () => viewPhotoDetail(photo.id);
+
+  card.innerHTML = `
+    <div class="photo-image">
+      <img src="${photo.image}" alt="${photo.title}" loading="lazy">
+      <div class="photo-badge">${photo.category}</div>
+      <div class="photo-overlay">
+        <div class="photo-rating">
+          <i class="fas fa-star"></i>
+          <span>${photo.rating}</span>
+        </div>
+        <div class="photo-downloads">
+          <i class="fas fa-download"></i>
+          ${photo.downloads}
+        </div>
+      </div>
+    </div>
+    <div class="photo-content">
+      <h3 class="photo-title">${photo.title}</h3>
+      <p class="photo-photographer">by ${photo.photographer}</p>
+      <div class="photo-footer">
+        <div class="photo-price">$${photo.price}</div>
+        <button class="add-to-cart" onclick="event.stopPropagation(); addToCart(${photo.id})">
+          <i class="fas fa-shopping-cart"></i> Add to Cart
+        </button>
+        <button class="wishlist-btn" onclick="event.stopPropagation(); toggleWishlist(${photo.id})">
+          <i class="fas fa-heart"></i>
+        </button>
+        <button class="like-btn" onclick="event.stopPropagation(); likePhoto(${photo.id})">
+          <i class="fas fa-thumbs-up"></i>
+        </button>
+        <button class="share-btn" onclick="event.stopPropagation(); sharePhoto('${photo.title}','${photo.image}')">
+          <i class="fas fa-share"></i>
+        </button>
+      </div>
+    </div>
+  `;
+  return card;
+}
+
+// Wishlist, Like, Share, Rating logic
+function toggleWishlist(photoId) {
+  let wishlist = JSON.parse(localStorage.getItem("wishlist")||"[]");
+  if(wishlist.includes(photoId)){
+    wishlist = wishlist.filter(id=>id!==photoId);
+  }else{
+    wishlist.push(photoId);
+  }
+  localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  showNotification("Wishlist updated!");
+}
+function likePhoto(photoId) {
+  let likes = JSON.parse(localStorage.getItem("likes")||"[]");
+  if(!likes.includes(photoId)){
+    likes.push(photoId);
+    localStorage.setItem("likes", JSON.stringify(likes));
+    showNotification("You liked this photo!");
+  }
+}
+function sharePhoto(title, image) {
+  if(navigator.share){
+    navigator.share({title, url: image});
+  }else{
+    navigator.clipboard.writeText(image);
+    showNotification("Photo link copied!");
+  }
+}

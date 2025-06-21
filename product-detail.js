@@ -7,7 +7,7 @@ const allPhotos = [
     price: 299,
     originalPrice: 399,
     category: "space",
-    image: "https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=800&h=600&fit=crop",
+    image: "https://images.pexels.com/photos/110854/pexels-photo-110854.jpeg",
     rating: 4.9,
     downloads: 1250,
     tags: ["space", "nebula", "cosmic", "astronomy"],
@@ -37,7 +37,7 @@ const allPhotos = [
     price: 199,
     originalPrice: 249,
     category: "urban",
-    image: "https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=800&h=600&fit=crop",
+    image: "https://images.pexels.com/photos/338515/pexels-photo-338515.jpeg",
     rating: 4.8,
     downloads: 980,
     tags: ["urban", "night", "city", "lights"],
@@ -73,7 +73,7 @@ const allPhotos = [
     price: 249,
     originalPrice: 299,
     category: "nature",
-    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+    image: "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg",
     rating: 4.9,
     downloads: 1450,
     tags: ["mountain", "nature", "landscape", "peaceful"],
@@ -139,7 +139,7 @@ const allPhotos = [
     price: 349,
     originalPrice: 449,
     category: "wildlife",
-    image: "https://images.unsplash.com/photo-1549366021-9f761d040a94?w=800&h=600&fit=crop",
+    image: "https://images.pexels.com/photos/145939/pexels-photo-145939.jpeg",
     rating: 4.9,
     downloads: 892,
     tags: ["wildlife", "animal", "portrait", "nature"],
@@ -175,7 +175,7 @@ const allPhotos = [
     price: 229,
     originalPrice: 279,
     category: "architecture",
-    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=600&fit=crop",
+    image: "https://images.pexels.com/photos/417273/pexels-photo-417273.jpeg",
     rating: 4.6,
     downloads: 634,
     tags: ["architecture", "modern", "building", "design"],
@@ -211,7 +211,7 @@ const allPhotos = [
     price: 279,
     originalPrice: 329,
     category: "nature",
-    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=600&fit=crop",
+    image: "https://images.pexels.com/photos/417273/pexels-photo-417273.jpeg",
     rating: 4.8,
     downloads: 1120,
     tags: ["beach", "sunset", "ocean", "coastal", "nature"],
@@ -241,7 +241,7 @@ const allPhotos = [
     price: 399,
     originalPrice: 499,
     category: "urban",
-    image: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800&h=600&fit=crop",
+    image: "https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg",
     rating: 4.9,
     downloads: 1345,
     tags: ["aerial", "cityscape", "urban", "drone", "skyline"],
@@ -271,7 +271,7 @@ const allPhotos = [
     price: 199,
     originalPrice: 249,
     category: "abstract",
-    image: "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=800&h=600&fit=crop",
+    image: "https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg",
     rating: 4.7,
     downloads: 876,
     tags: ["minimalist", "still life", "abstract", "composition"],
@@ -301,7 +301,7 @@ const allPhotos = [
     price: 249,
     originalPrice: 299,
     category: "macro",
-    image: "https://images.unsplash.com/photo-1429091443922-e7d9ae79a837?w=800&h=600&fit=crop",
+    image: "https://images.pexels.com/photos/459301/pexels-photo-459301.jpeg",
     rating: 4.8,
     downloads: 945,
     tags: ["macro", "dewdrops", "nature", "close-up"],
@@ -337,7 +337,7 @@ const allPhotos = [
     price: 399,
     originalPrice: 499,
     category: "night",
-    image: "https://images.unsplash.com/photo-1483347756197-71ef80e95f73?w=800&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=600&h=400&fit=crop",
     rating: 4.9,
     downloads: 1560,
     tags: ["aurora", "northern lights", "night", "sky"],
@@ -367,7 +367,7 @@ const allPhotos = [
     price: 299,
     originalPrice: 349,
     category: "nature",
-    image: "https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&h=600&fit=crop",
+    image: "https://images.pexels.com/photos/8521836/pexels-photo-8521836.jpeg",
     rating: 4.8,
     downloads: 1230,
     tags: ["desert", "dunes", "landscape", "nature"],
@@ -397,7 +397,7 @@ const allPhotos = [
     price: 279,
     originalPrice: 329,
     category: "automotive",
-    image: "https://images.unsplash.com/photo-1489824904134-891ab64532f1?w=800&h=600&fit=crop",
+    image: "https://images.pexels.com/photos/32617588/pexels-photo-32617588.jpeg",
     rating: 4.7,
     downloads: 890,
     tags: ["vintage", "car", "automotive", "detail"],
@@ -433,7 +433,7 @@ const allPhotos = [
     price: 349,
     originalPrice: 399,
     category: "underwater",
-    image: "https://images.unsplash.com/photo-1546026423-cc4642628d2b?w=800&h=600&fit=crop",
+    image: "https://images.pexels.com/photos/966731/pexels-photo-966731.jpeg",
     rating: 4.8,
     downloads: 1050,
     tags: ["underwater", "coral", "reef", "ocean", "marine"],
@@ -469,7 +469,7 @@ const allPhotos = [
     price: 299,
     originalPrice: 349,
     category: "architecture",
-    image: "https://images.unsplash.com/photo-1487017159836-4e23ece2e4cf?w=800&h=600&fit=crop",
+    image: "https://images.pexels.com/photos/27721890/pexels-photo-27721890.jpeg",
     rating: 4.7,
     downloads: 920,
     tags: ["architecture", "geometric", "modern", "abstract"],
@@ -505,7 +505,7 @@ const allPhotos = [
     price: 249,
     originalPrice: 299,
     category: "nature",
-    image: "https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=800&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=600&h=400&fit=crop",
     rating: 4.8,
     downloads: 1340,
     tags: ["forest", "mist", "path", "nature", "trees"],
@@ -614,16 +614,12 @@ function loadProductContent() {
         </div>
 
         <!-- Image thumbnails -->
-        <div class="image-thumbnails">
-          <div class="thumbnail active">
-            <img src="${currentPhoto.image}" alt="${currentPhoto.title}" onclick="changeMainImage(this.src)">
-          </div>
-          <div class="thumbnail">
-            <img src="${currentPhoto.image.replace("w=800", "w=801")}" alt="${currentPhoto.title} - View 2" onclick="changeMainImage(this.src)">
-          </div>
-          <div class="thumbnail">
-            <img src="${currentPhoto.image.replace("w=800", "w=802")}" alt="${currentPhoto.title} - Detail" onclick="changeMainImage(this.src)">
-          </div>
+        <div class="image-thumbnails" style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+          ${[0, 1, 2].map(i => `
+            <div class="thumbnail${i === 0 ? " active" : ""}" style="width: 70px; height: 70px; border-radius: 8px; overflow: hidden; border: 2px solid ${i === 0 ? '#06b6d4' : 'transparent'}; cursor: pointer;">
+                <img src="${currentPhoto.image.replace("w=800", `w=${800+i}`)}" alt="${currentPhoto.title} - View ${i+1}" style="width: 100%; height: 100%; object-fit: cover;" onclick="changeMainImage('${currentPhoto.image.replace("w=800", `w=${800+i}`)}')">
+            </div>
+          `).join("")}
         </div>
       </div>
 
@@ -773,7 +769,20 @@ function selectQuality(index) {
       }
     }
   })
-
+function changeMainImage(src) {
+  const mainImage = document.querySelector('.main-image');
+  if (mainImage) {
+    mainImage.src = src;
+  }
+  // Update active thumbnail
+  document.querySelectorAll('.thumbnail').forEach(thumb => {
+    if (thumb.querySelector('img').src === src) {
+      thumb.classList.add('active');
+    } else {
+      thumb.classList.remove('active');
+    }
+  });
+}
   // Update original price and discount if applicable
   const originalPrice = qualityOption.price * 1.2 // Just for display
   const priceOriginalElement = document.querySelector(".price-original")
@@ -786,20 +795,7 @@ function selectQuality(index) {
 }
 
 // Function to change main image
-function changeMainImage(src) {
-  const mainImage = document.querySelector(".main-image")
-  mainImage.src = src
 
-  // Update active thumbnail
-  const thumbnails = document.querySelectorAll(".thumbnail")
-  thumbnails.forEach((thumbnail) => {
-    if (thumbnail.querySelector("img").src === src) {
-      thumbnail.classList.add("active")
-    } else {
-      thumbnail.classList.remove("active")
-    }
-  })
-}
 
 // Show license details in a modal
 function showLicenseDetails() {
@@ -960,10 +956,9 @@ function updateZoomImage() {
 
 // Fullscreen functionality
 function toggleFullscreen() {
-  const imageContainer = document.querySelector(".main-image-container")
-
+  const mainImage = document.querySelector(".main-image")
   if (!document.fullscreenElement) {
-    imageContainer.requestFullscreen().catch((err) => {
+    mainImage.requestFullscreen().catch((err) => {
       console.log(`Error attempting to enable fullscreen: ${err.message}`)
     })
   } else {
