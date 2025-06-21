@@ -1,20 +1,22 @@
 
-# 📸 PhotoNexus  - UI INTERFACE PENJUALAN FOTO BERKUALITAS DENGAN HARGA MANYORITAS
+# 📸 PhotoNexus  
+UI INTERFACE PENJUALAN FOTO BERKUALITAS DENGAN HARGA MANYORITAS
 
 <img align="right" alt="Coding" width="3500" height="400" src="Screenshot 2025-06-21 180301.png">
-*Clean, responsive, and animated UI for a stock photography platform.*
+
+Clean, responsive, and animated UI for a stock photography platform.
 
 ---
 
  ✨ Key Features
 ✅ Interactive Animations
 - Smooth hover effects (buttons, cards)  
-- Page transitions with GSAP/Animate.css  
+- Page transitions with css  
 - Dynamic modals for image previews  
 
 ✅ Fully Responsive
-- Mobile-first design (Flexbox + CSS Grid)  
-- Tablet/desktop breakpoints  
+- Mobile-first design 
+- Tablet/desktop 
 
 ✅ Admin & User Dashboards 
 - Article/product management (CRUD)  
@@ -31,7 +33,7 @@
 |-------------------|-------------------------------------------------------------------------|
 | Color Palette     | `#4A6CF7` (Primary), gradients, neutrals                                |
 | Typography        | Roboto (Google Fonts) + system-ui fallback                              |
-| Icons             | FontAwesome 6 + custom SVG                                              |
+| Icons             | Font + custom SVG                                                       |
 | Effects           | `box-shadow`, `transform: scale()`, `transition: all 0.3s ease-in-out`  |
 
 ---
@@ -88,15 +90,15 @@ PhotoNexus/
    - Open `index.html` in your browser (no server needed).  
 
 3. **Customize**  
-   - Edit colors in `css/abstracts/_variables.scss`.  
-   - Add pages in `views/` with linked CSS/JS.  
+   - Edit colors in `"namepage".css`.  
+   - Add pages  with linked CSS/JS.  
 
 ---
 
 ## 🛠️ **Tech Stack**  
-- **Frontend**: HTML5, CSS3 (Flexbox/Grid), JavaScript (ES6+)  
+- **Frontend**: HTML5, CSS3 , JavaScript   
 - **Tools**: VS Code, Figma (for design mockups), Git  
-- **Libraries**: FontAwesome, Animate.css, GSAP (optional)  
+- **Libraries**
 
 ---
 
@@ -129,4 +131,6 @@ MIT © 2024 [Bima]
 
 ### 🎉 Enjoy the design journey! 
 *Star ⭐ the repo if you find it useful!*  
-```
+
+### Tertanda Bimelby !
+*15,05,2025*
