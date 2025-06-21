@@ -1,7 +1,7 @@
 
 # 📸 PhotoNexus  - UI INTERFACE PENJUALAN FOTO BERKUALITAS DENGAN HARGA MANYORITAS
-br>
-<img align="right" alt="Coding" width="350" height="400" src="bima.jpg">
+
+<img align="right" alt="Coding" width="3500" height="400" src="Screenshot 2025-06-21 175555.png">
 *Clean, responsive, and animated UI for a stock photography platform.*
 
 ---
