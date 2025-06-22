@@ -42,7 +42,7 @@ Here’s a refined, visually enhanced, and well-structured `README.md` for **Pho
  🏗️ Project Structure  
 ```bash
 PhotoNexus/
-├── index.html              # Landing page
+├── home.html              # Landing page
 ├── katalog.html            # Product catalog
 ├── detail-produk.html      # Product detail page
 ├── keranjang.html          # Cart page

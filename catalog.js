@@ -1030,6 +1030,17 @@ function viewPhotoDetail(photoId) {
   localStorage.setItem("selectedPhotoId", photoId)
   window.location.href = "product-detail.html"
 }
+// Update mini profile avatar in navbar on every page
+document.addEventListener("DOMContentLoaded", () => {
+  const user = JSON.parse(localStorage.getItem("currentUser") || "null");
+  const mini = document.getElementById("profileMini");
+  if (mini && user) {
+    mini.src = user.avatar && user.avatar.trim() !== ""
+      ? user.avatar
+      : `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || "User")}`;
+    mini.alt = user.name || "Profile";
+  }
+});
 // Preview function
 function previewPhoto(photoId) {
   const photo = allPhotos.find((p) => p.id === photoId)

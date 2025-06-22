@@ -18,7 +18,7 @@
             </div>
             
             <div class="nav-menu">
-                <a href="index.html" class="nav-link">Home</a>
+                <a href="home.html" class="nav-link">Home</a>
                 <a href="catalog.html" class="nav-link">Catalog</a>
                 <a href="articles.html" class="nav-link">Articles</a>
                 <a href="dashboard.html" class="nav-link active">Dashboard</a>
@@ -29,8 +29,8 @@
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count" id="cartCount">0</span>
                 </button>
-                <button class="user-btn">
-                    <i class="fas fa-user"></i>
+                <button class="user-btn" onclick="window.location.href='profile.html'">
+                    <img id="profileMini" src="https://ui-avatars.com/api/?name=User" alt="Profile" style="width:28px;height:28px;border-radius:50%;">
                 </button>
             </div>
         </div>
@@ -196,70 +196,57 @@
             </div>
 
             <!-- Profile Section -->
-            <div id="profile" class="dashboard-section">
-                <div class="section-header">
-                    <h2><i class="fas fa-user-cog"></i> Profile Settings</h2>
-                    <p>Manage your account information and preferences</p>
-                </div>
+           <!-- ...existing code... -->
 
-                <div class="profile-content">
-                    <div class="profile-form">
-                        <form id="profileForm">
-                            <div class="form-section">
-                                <h3>Personal Information</h3>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="firstName">First Name</label>
-                                        <input type="text" id="firstName" name="firstName" value="mehmed">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="lastName">Last Name</label>
-                                        <input type="text" id="lastName" name="lastName" value="bay">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="email">Email Address</label>
-                                    <input type="email" id="email" name="email" value="mehmed@example.com">
-                                </div>
-                                <div class="form-group">
-                                    <label for="phone">Phone Number</label>
-                                    <input type="tel" id="phone" name="phone" value="+68 1234567890">
-                                </div>
-                            </div>
-
-                            <div class="form-section">
-                                <h3>Preferences</h3>
-                                <div class="form-group">
-                                    <label for="newsletter">
-                                        <input type="checkbox" id="newsletter" name="newsletter" checked>
-                                        Subscribe to newsletter
-                                    </label>
-                                </div>
-                                <div class="form-group">
-                                    <label for="notifications">
-                                        <input type="checkbox" id="notifications" name="notifications" checked>
-                                        Email notifications
-                                    </label>
-                                </div>
-                                <div class="form-group">
-                                    <label for="theme">Theme Preference</label>
-                                    <select id="theme" name="theme">
-                                        <option value="dark">Dark</option>
-                                        <option value="light">Light</option>
-                                        <option value="auto">Auto</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-actions">
-                                <button type="submit" class="btn btn-primary">Save Changes</button>
-                                <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+<!-- Profile Section -->
+<div id="profile" class="dashboard-section">
+    <div class="profile-settings-card">
+        <h2><i class="fas fa-user-cog"></i> Profile Settings</h2>
+        <div class="profile-settings-desc">
+            Manage your account information and preferences
+        </div>
+        <form class="profile-settings-form" id="profileForm">
+            <div class="profile-form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" required>
             </div>
-
+            <div class="profile-form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName">
+            </div>
+            <div class="profile-form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="profile-form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone">
+            </div>
+            <div class="profile-form-group">
+                <label>Preferences</label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="newsletter"> Subscribe to newsletter
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="notifications"> Email notifications
+                </label>
+            </div>
+            <div class="profile-form-group">
+                <label for="theme">Theme Preference</label>
+                <select id="theme">
+                    <option value="dark">Dark</option>
+                    <option value="light">Light</option>
+                    <option value="auto">Auto</option>
+                </select>
+            </div>
+            <div class="profile-form-actions">
+                <button class="btn btn-primary" type="submit">Save Changes</button>
+                <button class="btn btn-secondary" type="button" onclick="resetForm()">Reset</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- ...existing code... -->
             <!-- Admin Section -->
             <div id="admin" class="dashboard-section">
                 <div class="section-header">

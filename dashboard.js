@@ -149,17 +149,32 @@ function initializeDashboard() {
 
 // Load user profile
 function loadUserProfile() {
-  document.getElementById("userName").textContent = currentUser.name
-  document.getElementById("userEmail").textContent = currentUser.email
-  document.getElementById("userAvatar").src = currentUser.avatar
+  // Ambil user dari localStorage
+  const user = JSON.parse(localStorage.getItem("currentUser") || "null");
+  if (!user) return;
 
-  // Load profile form
-  document.getElementById("firstName").value = currentUser.name.split(" ")[0]
-  document.getElementById("lastName").value = currentUser.name.split(" ")[1] || ""
-  document.getElementById("email").value = currentUser.email
-  document.getElementById("newsletter").checked = currentUser.preferences.newsletter
-  document.getElementById("notifications").checked = currentUser.preferences.notifications
-  document.getElementById("theme").value = currentUser.preferences.theme
+  document.getElementById("userName").textContent = user.name;
+  document.getElementById("userEmail").textContent = user.email;
+  document.getElementById("userAvatar").src =
+    user.avatar && user.avatar.trim() !== ""
+      ? user.avatar
+      : `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || "User")}`;
+
+  // Jika ada form profil di dashboard, isi juga
+  if (document.getElementById("firstName")) {
+    const nameParts = user.name.split(" ");
+    document.getElementById("firstName").value = nameParts[0] || "";
+    document.getElementById("lastName").value = nameParts.slice(1).join(" ") || "";
+  }
+  if (document.getElementById("email")) {
+    document.getElementById("email").value = user.email;
+  }
+  if (document.getElementById("profileAvatarInput")) {
+    document.getElementById("profileAvatarInput").value = user.avatar || "";
+  }
+  if (document.getElementById("theme")) {
+    document.getElementById("theme").value = user.preferences?.theme || "dark";
+  }
 }
 
 // Load overview data
@@ -261,6 +276,8 @@ function showSection(sectionName) {
 }
 
 // Load purchases
+// ...existing code...
+
 function loadPurchases() {
   const transactions = JSON.parse(localStorage.getItem("transactions")) || []
   const container = document.getElementById("purchasesContent")
@@ -301,10 +318,10 @@ function loadPurchases() {
             ${transaction.items.length > 3 ? `<div class="more-items">+${transaction.items.length - 3}</div>` : ""}
           </div>
           <div class="purchase-info">
-            <div class="purchase-total">$${transaction.total.toFixed(2)}</div>
+            <div class="purchase-total"><span>Total:</span> <strong>$${transaction.total.toFixed(2)}</strong></div>
             <div class="purchase-status ${transaction.status}">${transaction.status}</div>
           </div>
-          <button class="btn btn-secondary btn-sm" onclick="viewPurchaseDetails('${transaction.id}')">
+          <button class="btn btn-primary btn-block" onclick="viewPurchaseDetails('${transaction.id}')">
             View Details
           </button>
         </div>
@@ -314,6 +331,7 @@ function loadPurchases() {
     </div>
   `
 }
+// ...existing code...
 
 // Load wishlist
 function loadWishlist() {
@@ -343,7 +361,7 @@ function loadWishlist() {
           (item) => `
         <div class="wishlist-card">
           <img src="${item.image}" alt="${item.title}" class="wishlist-image">
-          <div class="wishlist-content">
+          <div class="wishlist-info">
             <h4 class="wishlist-title">${item.title}</h4>
             <p class="wishlist-photographer">by ${item.photographer}</p>
             <div class="wishlist-price">$${item.price}</div>
@@ -911,20 +929,29 @@ function resetForm() {
 
 // Handle profile form submission
 document.getElementById("profileForm").addEventListener("submit", (e) => {
-  e.preventDefault()
+  e.preventDefault();
 
-  // Update user data
-  currentUser.name = `${document.getElementById("firstName").value} ${document.getElementById("lastName").value}`
-  currentUser.email = document.getElementById("email").value
-  currentUser.preferences.newsletter = document.getElementById("newsletter").checked
-  currentUser.preferences.notifications = document.getElementById("notifications").checked
-  currentUser.preferences.theme = document.getElementById("theme").value
+  // Ambil user dari localStorage
+  let user = JSON.parse(localStorage.getItem("currentUser") || "null");
+  if (!user) return;
 
-  // Update display
-  loadUserProfile()
+  // Update data user
+  user.name = `${document.getElementById("firstName").value} ${document.getElementById("lastName").value}`.trim();
+  user.email = document.getElementById("email").value;
+  user.avatar = document.getElementById("profileAvatarInput")?.value.trim() || user.avatar || "";
+  user.preferences = user.preferences || {};
+  user.preferences.newsletter = document.getElementById("newsletter")?.checked ?? user.preferences.newsletter;
+  user.preferences.notifications = document.getElementById("notifications")?.checked ?? user.preferences.notifications;
+  user.preferences.theme = document.getElementById("theme")?.value || user.preferences.theme || "dark";
 
-  showNotification("Profile updated successfully!", "success")
-})
+  // Simpan ke localStorage
+  localStorage.setItem("currentUser", JSON.stringify(user));
+
+  // Update tampilan sidebar
+  loadUserProfile();
+
+  showNotification("Profile updated successfully!", "success");
+});
 
 // Utility functions
 function viewPurchaseDetails(transactionId) {

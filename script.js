@@ -261,11 +261,24 @@ function loadCartItems() {
   totalElement.textContent = getCartTotal().toFixed(2)
 }
 
+// Update mini profile avatar in navbar on every page
+document.addEventListener("DOMContentLoaded", () => {
+  const user = JSON.parse(localStorage.getItem("currentUser") || "null");
+  const mini = document.getElementById("profileMini");
+  if (mini && user) {
+    mini.src = user.avatar && user.avatar.trim() !== ""
+      ? user.avatar
+      : `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || "User")}`;
+    mini.alt = user.name || "Profile";
+  }
+});
 // Navigation Functions
+// ...existing code...
 function toggleMobileMenu() {
-  const navMenu = document.getElementById("navMenu")
-  navMenu.style.display = navMenu.style.display === "flex" ? "none" : "flex"
+  const navMenu = document.getElementById("navMenu");
+  navMenu.classList.toggle("show");
 }
+// ...existing code...
 
 // Utility Functions
 function viewPhotoDetail(photoId) {

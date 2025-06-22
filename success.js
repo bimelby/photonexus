@@ -9,7 +9,7 @@ function loadTransactionDetails() {
   const transaction = JSON.parse(localStorage.getItem("lastTransaction"))
 
   if (!transaction) {
-    window.location.href = "index.html"
+    window.location.href = "home.html"
     return
   }
 
