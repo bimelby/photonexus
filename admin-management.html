@@ -4,18 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - PhotoNexus</title>
-    <link rel="stylesheet" href="admin-management.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="admin-management.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
+    <!-- Navbar (copy dari home.html) -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-camera"></i>
+                <span>PhotoNexus</span>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="home.html" class="nav-link">Home</a>
+                <a href="admin-management.html" class="nav-link active">Admin Panel</a>
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link dropdown-toggle ">
+                        Browse <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="catalog.html" class="dropdown-item">Photo Catalog</a>
+                        <a href="categories.html" class="dropdown-item">Categories</a>
+                        <a href="collections.html" class="dropdown-item">Collections</a>
+                        <a href="new.arrivals.html" class="dropdown-item">New Arrivals</a>
+                    </div>
+                </div>
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link dropdown-toggle">
+                        Resources <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="articles.html" class="dropdown-item">Articles</a>
+                        <a href="tutorials.html" class="dropdown-item">Tutorials</a>
+                        <a href="inspiration.html" class="dropdown-item">Inspiration</a>
+                        <a href="blog.html" class="dropdown-item">Blog</a>
+                    </div>
+                </div>
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link dropdown-toggle">
+                        Account <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="index.html" class="dropdown-item">Sign In</a>
+                        <a href="register.html" class="dropdown-item">Register</a>
+                        <a href="dashboard.html" class="dropdown-item">Dashboard</a>
+                        <a href="history.html" class="dropdown-item">Purchase History</a>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-actions">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search photos..." id="searchInput">
+                </div>
+                <button class="cart-btn" onclick="openCart()">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+                <button class="user-btn" onclick="window.location.href='profile.html'">
+                    <img id="profileMini" src="https://ui-avatars.com/api/?name=User" alt="Profile" style="width:28px;height:28px;border-radius:50%;">
+                </button>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+    <!-- End Navbar -->
     <div class="admin-wrapper">
         <aside class="admin-sidebar">
             <div class="sidebar-brand"><i class="fas fa-camera"></i> PhotoNexus</div>
             <nav class="sidebar-menu">
                 <button class="sidebar-link active" data-tab="users"><i class="fas fa-users"></i> Users</button>
-                <button class="sidebar-link" data-tab="photos"><i class="fas fa-images"></i> Photos</button>
+                <button class="sidebar-link" data-tab="products"><i class="fas fa-images"></i> Photos</button>
                 <button class="sidebar-link" data-tab="articles"><i class="fas fa-newspaper"></i> Articles</button>
                 <button class="sidebar-link" data-tab="transactions"><i class="fas fa-receipt"></i> Transactions</button>
                 <button class="sidebar-link" data-tab="analytics"><i class="fas fa-chart-bar"></i> Analytics</button>

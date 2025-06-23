@@ -21,13 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function loadAllData() {
   users = JSON.parse(localStorage.getItem('users') || '[]');
-  photos = JSON.parse(localStorage.getItem('products') || '[]');
+  products = JSON.parse(localStorage.getItem('products') || '[]');
   articles = JSON.parse(localStorage.getItem('articles') || '[]');
   transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
 }
 function saveAllData() {
   localStorage.setItem('users', JSON.stringify(users));
-  localStorage.setItem('photos', JSON.stringify(photos));
+  localStorage.setItem('products', JSON.stringify(products));
   localStorage.setItem('articles', JSON.stringify(articles));
   localStorage.setItem('transactions', JSON.stringify(transactions));
 }
@@ -48,7 +48,7 @@ function renderTab(tab) {
   state.tab = tab;
   document.getElementById('adminTitle').innerHTML = {
     users: '<i class="fas fa-users"></i> User Management',
-    photos: '<i class="fas fa-images"></i> Photo Management',
+    photos: '<i class="fas fa-images"></i> P Management',
     articles: '<i class="fas fa-newspaper"></i> Article Management',
     transactions: '<i class="fas fa-receipt"></i> Transaction Management',
     analytics: '<i class="fas fa-chart-bar"></i> Analytics',
@@ -80,7 +80,7 @@ function renderActions(tab) {
 function renderContent(tab) {
   const content = document.getElementById('adminContent');
   if (tab === 'users') renderUsersTable(content);
-  if (tab === 'photos') renderPhotosTable(content);
+  if (tab === 'products') renderProductsTable(content);
   if (tab === 'articles') renderArticlesTable(content);
   if (tab === 'transactions') renderTransactionsTable(content);
   if (tab === 'analytics') renderAnalytics(content);
