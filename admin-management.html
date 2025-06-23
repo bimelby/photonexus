@@ -3,139 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Management - PhotoNexus</title>
+    <title>Admin Panel - PhotoNexus</title>
+    <link rel="stylesheet" href="admin-management.css">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="dashboard.css">
-    <link rel="stylesheet" href="admin-management.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-brand">
-                <i class="fas fa-camera"></i>
-                <span>PhotoNexus</span>
-            </div>
-            <div class="nav-menu" id="navMenu">
-                <a href="home.html" class="nav-link">Home</a>
-                <a href="admin-management.html" class="nav-link active">Admin Panel</a>
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link dropdown-toggle">Browse <i class="fas fa-chevron-down"></i></a>
-                    <div class="dropdown-menu">
-                        <a href="catalog.html" class="dropdown-item">Photo Catalog</a>
-                        <a href="categories.html" class="dropdown-item">Categories</a>
-                        <a href="collections.html" class="dropdown-item">Collections</a>
-                        <a href="new.arrivals.html" class="dropdown-item">New Arrivals</a>
-                    </div>
-                </div>
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link dropdown-toggle">Resources <i class="fas fa-chevron-down"></i></a>
-                    <div class="dropdown-menu">
-                        <a href="articles.html" class="dropdown-item">Articles</a>
-                        <a href="tutorials.html" class="dropdown-item">Tutorials</a>
-                        <a href="inspiration.html" class="dropdown-item">Inspiration</a>
-                        <a href="blog.html" class="dropdown-item">Blog</a>
-                    </div>
-                </div>
-                <div class="nav-dropdown">
-                    <a href="#" class="nav-link dropdown-toggle">Account <i class="fas fa-chevron-down"></i></a>
-                    <div class="dropdown-menu">
-                        <a href="index.html" class="dropdown-item">Sign In</a>
-                        <a href="register.html" class="dropdown-item">Register</a>
-                        <a href="dashboard.html" class="dropdown-item">Dashboard</a>
-                        <a href="history.html" class="dropdown-item">Purchase History</a>
-                    </div>
-                </div>
-            </div>
-            <div class="nav-actions">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search photos..." id="searchInput">
-                </div>
-                <button class="cart-btn" onclick="openCart()">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count" id="cartCount">0</span>
-                </button>
-                <button class="user-btn" onclick="window.location.href='profile.html'">
-                    <img id="profileMini" src="https://ui-avatars.com/api/?name=User" alt="Profile" style="width:28px;height:28px;border-radius:50%;">
-                </button>
-            </div>
-            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-    </nav>
-    <div class="dashboard-container fade-in">
-        <div class="dashboard-main" style="margin-left:0;">
-            <div class="section-header animate__animated animate__fadeInDown">
-                <h2><i class="fas fa-cog"></i> Admin Management</h2>
-                <p>Manage users, photos, articles, and transactions with a modern, interactive dashboard.</p>
-            </div>
-            <div class="quick-stats animate__animated animate__fadeInUp">
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-users"></i></div>
-                    <div class="stat-content">
-                        <div class="stat-value" id="totalUsers">0</div>
-                        <div class="stat-label">Total Users</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-images"></i></div>
-                    <div class="stat-content">
-                        <div class="stat-value" id="totalPhotos">0</div>
-                        <div class="stat-label">Photos</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-newspaper"></i></div>
-                    <div class="stat-content">
-                        <div class="stat-value" id="totalArticles">0</div>
-                        <div class="stat-label">Articles</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
-                    <div class="stat-content">
-                        <div class="stat-value" id="totalRevenue">$0</div>
-                        <div class="stat-label">Revenue</div>
-                    </div>
-                </div>
-            </div>
-            <div class="admin-tabs animate__animated animate__fadeIn">
-                <button class="tab-btn active" onclick="switchTab('users')"><i class="fas fa-users"></i> Users</button>
-                <button class="tab-btn" onclick="switchTab('photos')"><i class="fas fa-images"></i> Photos</button>
-                <button class="tab-btn" onclick="switchTab('articles')"><i class="fas fa-newspaper"></i> Articles</button>
-                <button class="tab-btn" onclick="switchTab('transactions')"><i class="fas fa-receipt"></i> Transactions</button>
-                <button class="tab-btn" onclick="switchTab('analytics')"><i class="fas fa-chart-bar"></i> Analytics</button>
-            </div>
-            <div class="admin-tab-content animate__animated animate__fadeInUp">
-                <!-- Tab panels will be rendered by JS for consistency and animation -->
-                <div id="users-tab" class="admin-tab active"></div>
-                <div id="photos-tab" class="admin-tab"></div>
-                <div id="articles-tab" class="admin-tab"></div>
-                <div id="transactions-tab" class="admin-tab"></div>
-                <div id="analytics-tab" class="admin-tab"></div>
-            </div>
-        </div>
+    <div class="admin-wrapper">
+        <aside class="admin-sidebar">
+            <div class="sidebar-brand"><i class="fas fa-camera"></i> PhotoNexus</div>
+            <nav class="sidebar-menu">
+                <button class="sidebar-link active" data-tab="users"><i class="fas fa-users"></i> Users</button>
+                <button class="sidebar-link" data-tab="photos"><i class="fas fa-images"></i> Photos</button>
+                <button class="sidebar-link" data-tab="articles"><i class="fas fa-newspaper"></i> Articles</button>
+                <button class="sidebar-link" data-tab="transactions"><i class="fas fa-receipt"></i> Transactions</button>
+                <button class="sidebar-link" data-tab="analytics"><i class="fas fa-chart-bar"></i> Analytics</button>
+            </nav>
+        </aside>
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1 id="adminTitle"><i class="fas fa-cog"></i> Admin Panel</h1>
+                <div id="adminActions"></div>
+            </header>
+            <section id="adminContent"></section>
+        </main>
     </div>
-    <!-- Modals (akan diisi dinamis oleh JS) -->
     <div id="modalContainer"></div>
-    <div id="cartModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
-                <button class="close-btn" onclick="closeCart()">&times;</button>
-            </div>
-            <div class="modal-body" id="cartItems"></div>
-            <div class="modal-footer">
-                <div class="cart-total">Total: $<span id="cartTotal">0.00</span></div>
-                <button class="btn btn-primary" onclick="window.location.href='checkout.html'"><i class="fas fa-credit-card"></i> Checkout</button>
-            </div>
-        </div>
-    </div>
+    <div id="notificationContainer"></div>
     <script src="admin-management.js"></script>
-    <script src="script.js"></script>
 </body>
 </html>
 
