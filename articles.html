@@ -18,16 +18,49 @@
             </div>
             
             <div class="nav-menu" id="navMenu">
-                <a href="home.html" class="nav-link">Home</a>
-                <a href="catalog.html" class="nav-link">Catalog</a>
-                <a href="articles.html" class="nav-link active">Articles</a>
-                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="home.html" class="nav-link  ">Home</a>
+                <a href="admin-management.html" class="nav-link ">Admin Panel</a>
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link dropdown-toggle ">
+                        Browse <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="catalog.html" class="dropdown-item">Photo Catalog</a>
+                        <a href="categories.html" class="dropdown-item">Categories</a>
+                        <a href="collections.html" class="dropdown-item">Collections</a>
+                        <a href="new.arrivals.html" class="dropdown-item">New Arrivals</a>
+                    </div>
+                </div>
+                
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link dropdown-toggle active">
+                        Resources <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="articles.html" class="dropdown-item">Articles</a>
+                        <a href="tutorials.html" class="dropdown-item">Tutorials</a>
+                        <a href="inspiration.html" class="dropdown-item">Inspiration</a>
+                        <a href="blog.html" class="dropdown-item">Blog</a>
+                    </div>
+                </div>
+                
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link dropdown-toggle">
+                        Account <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="index.html" class="dropdown-item">Sign In</a>
+                        <a href="register.html" class="dropdown-item">Register</a>
+                        <a href="dashboard.html" class="dropdown-item">Dashboard</a>
+                        <a href="history.html" class="dropdown-item">Purchase History</a>
+                    </div>
+                </div>
             </div>
             
             <div class="nav-actions">
                 <div class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search articles..." id="searchInput">
+                    <input type="text" placeholder="Search photos..." id="searchInput">
                 </div>
                 <button class="cart-btn" onclick="openCart()">
                     <i class="fas fa-shopping-cart"></i>
@@ -43,6 +76,7 @@
             </button>
         </div>
     </nav>
+    <!-- Hero Section -->
 
     <div class="articles-container">
         <!-- Header -->

@@ -1,7 +1,8 @@
 // Catalog specific JavaScript
 // license: "Commercial"
 // Catalog specific JavaScript
-const allPhotos = [
+// Ambil data foto dari localStorage jika ada
+const defaultPhotos = [
   {
     id:   1,
     title: "Cosmic Nebula",
@@ -213,211 +214,211 @@ const allPhotos = [
     description: "A dreamy view of the Milky Way and distant galaxies.",
   },
   // Nature
-{
-  id: 14,
-  title: "Sunset Valley",
-  photographer: "Ainsyah Rose",
-  price: 20,
-  originalPrice: 25,
-  category: "nature",
-  image: "https://images.pexels.com/photos/966731/pexels-photo-966731.jpeg",
-  rating: 4.8,
-  downloads: 900,
-  tags: ["nature", "sunset", "valley", "landscape"],
-  resolution: "6000x4000",
-  format: "JPEG",
-  license: "Commercial",
-  description: "A breathtaking sunset over a lush green valley.",
-},
-// Urban
-{
-  id: 15,
-  title: "Metro Rush",
-  photographer: "abdulllah Adams",
-  price: 21,
-  originalPrice: 26,
-  category: "urban",
-  image: "https://images.pexels.com/photos/27721890/pexels-photo-27721890.jpeg",
-  rating: 4.7,
-  downloads: 750,
-  tags: ["urban", "metro", "city", "rush"],
-  resolution: "5472x3648",
-  format: "JPEG",
-  license: "Commercial",
-  description: "A busy metro station in the heart of the city.",
-},
-// Portrait
-{
-  id: 16,
-  title: "Blue Mood",
-  photographer: "Rachel Lee",
-  price: 18,
-  originalPrice: 23,
-  category: "portrait",
-  image: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=600&h=400&fit=crop",
-  rating: 4.6,
-  downloads: 800,
-  tags: ["portrait", "blue", "mood", "studio"],
-  resolution: "4000x6000",
-  format: "RAW + JPEG",
-  license: "Standard",
-  description: "A moody portrait with blue tones and dramatic lighting.",
-},
-// Abstract
-{
-  id: 17,
-  title: "Geometric Dreams",
-  photographer: "Samir Patel",
-  price: 16,
-  originalPrice: 21,
-  category: "abstract",
-  image: "https://images.pexels.com/photos/32605106/pexels-photo-32605106.jpeg",
-  rating: 4.5,
-  downloads: 650,
-  tags: ["abstract", "geometric", "modern", "art"],
-  resolution: "4000x6000",
-  format: "JPEG",
-  license: "Standard",
-  description: "Abstract geometric shapes in a modern composition.",
-},
-// Architecture
-{
-  id: 18,
-  title: "Classic Columns",
-  photographer: "Victor Hugo",
-  price: 240,
-  originalPrice: 290,
-  category: "architecture",
-  image: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=600&h=400&fit=crop",
-  rating: 4.8,
-  downloads: 830,
-  tags: ["architecture", "classic", "columns", "building"],
-  resolution: "5184x3456",
-  format: "JPEG",
-  license: "Commercial",
-  description: "Classic architectural columns in a historic building.",
-},
-// Wildlife
-{
-  id: 19,
-  title: "Eagle Flight",
-  photographer: "Linda Fox",
-  price: 370,
-  originalPrice: 470,
-  category: "wildlife",
-  image: "https://images.pexels.com/photos/3250638/pexels-photo-3250638.jpeg",
-  rating: 4.9,
-  downloads: 980,
-  tags: ["wildlife", "eagle", "flight", "nature"],
-  resolution: "6000x4000",
-  format: "RAW + JPEG",
-  license: "Commercial",
-  description: "A majestic eagle soaring above the mountains.",
-},
+  {
+    id: 14,
+    title: "Sunset Valley",
+    photographer: "Ainsyah Rose",
+    price: 20,
+    originalPrice: 25,
+    category: "nature",
+    image: "https://images.pexels.com/photos/966731/pexels-photo-966731.jpeg",
+    rating: 4.8,
+    downloads: 900,
+    tags: ["nature", "sunset", "valley", "landscape"],
+    resolution: "6000x4000",
+    format: "JPEG",
+    license: "Commercial",
+    description: "A breathtaking sunset over a lush green valley.",
+  },
+  // Urban
+  {
+    id: 15,
+    title: "Metro Rush",
+    photographer: "abdulllah Adams",
+    price: 21,
+    originalPrice: 26,
+    category: "urban",
+    image: "https://images.pexels.com/photos/27721890/pexels-photo-27721890.jpeg",
+    rating: 4.7,
+    downloads: 750,
+    tags: ["urban", "metro", "city", "rush"],
+    resolution: "5472x3648",
+    format: "JPEG",
+    license: "Commercial",
+    description: "A busy metro station in the heart of the city.",
+  },
+  // Portrait
+  {
+    id: 16,
+    title: "Blue Mood",
+    photographer: "Rachel Lee",
+    price: 18,
+    originalPrice: 23,
+    category: "portrait",
+    image: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=600&h=400&fit=crop",
+    rating: 4.6,
+    downloads: 800,
+    tags: ["portrait", "blue", "mood", "studio"],
+    resolution: "4000x6000",
+    format: "RAW + JPEG",
+    license: "Standard",
+    description: "A moody portrait with blue tones and dramatic lighting.",
+  },
+  // Abstract
+  {
+    id: 17,
+    title: "Geometric Dreams",
+    photographer: "Samir Patel",
+    price: 16,
+    originalPrice: 21,
+    category: "abstract",
+    image: "https://images.pexels.com/photos/32605106/pexels-photo-32605106.jpeg",
+    rating: 4.5,
+    downloads: 650,
+    tags: ["abstract", "geometric", "modern", "art"],
+    resolution: "4000x6000",
+    format: "JPEG",
+    license: "Standard",
+    description: "Abstract geometric shapes in a modern composition.",
+  },
+  // Architecture
+  {
+    id: 18,
+    title: "Classic Columns",
+    photographer: "Victor Hugo",
+    price: 240,
+    originalPrice: 290,
+    category: "architecture",
+    image: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=600&h=400&fit=crop",
+    rating: 4.8,
+    downloads: 830,
+    tags: ["architecture", "classic", "columns", "building"],
+    resolution: "5184x3456",
+    format: "JPEG",
+    license: "Commercial",
+    description: "Classic architectural columns in a historic building.",
+  },
+  // Wildlife
+  {
+    id: 19,
+    title: "Eagle Flight",
+    photographer: "Linda Fox",
+    price: 370,
+    originalPrice: 470,
+    category: "wildlife",
+    image: "https://images.pexels.com/photos/3250638/pexels-photo-3250638.jpeg",
+    rating: 4.9,
+    downloads: 980,
+    tags: ["wildlife", "eagle", "flight", "nature"],
+    resolution: "6000x4000",
+    format: "RAW + JPEG",
+    license: "Commercial",
+    description: "A majestic eagle soaring above the mountains.",
+  },
 
-{
-  id: 20,
-  title: "Sunset Valley",
-  photographer: "Olivia Green",
-  price: 205,
-  originalPrice: 255,
-  category: "nature",
-  image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&h=400&fit=crop",
-  rating: 4.8,
-  downloads: 900,
-  tags: ["nature", "sunset", "valley", "landscape"],
-  resolution: "6000x4000",
-  format: "JPEG",
-  license: "Commercial",
-  description: "A breathtaking sunset over a lush green valley.",
-},
-// Urban
-{
-  id: 21,
-  title: "Metro Rush",
-  photographer: "Adam Smits",
-  price: 215,
-  originalPrice: 265,
-  category: "urban",
-  image: "https://images.pexels.com/photos/106773/pexels-photo-106773.jpeg",
-  rating: 4.7,
-  downloads: 750,
-  tags: ["urban", "metro", "city", "rush"],
-  resolution: "5472x3648",
-  format: "JPEG",
-  license: "Commercial",
-  description: "A busy metro station in the heart of the city.",
-},
-// Portrait
-{
-  id: 22,
-  title: "Blue Mood",
-  photographer: "Rachel Lee",
-  price: 185,
-  originalPrice: 235,
-  category: "portrait",
-  image: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=600&h=400&fit=crop",
-  rating: 4.6,
-  downloads: 800,
-  tags: ["portrait", "blue", "mood", "studio"],
-  resolution: "4000x6000",
-  format: "RAW + JPEG",
-  license: "Standard",
-  description: "A moody portrait with blue tones and dramatic lighting.",
-},
-// Abstract
-{
-  id: 23,
-  title: "Geometric Dreams",
-  photographer: " Mehmed Abdullah ",
-  price: 160,
-  originalPrice: 210,
-  category: "abstract",
-  image: "https://images.pexels.com/photos/32585528/pexels-photo-32585528.jpeg",
-  rating: 4.5,
-  downloads: 650,
-  tags: ["abstract", "geometric", "modern", "art"],
-  resolution: "4000x6000",
-  format: "JPEG",
-  license: "Standard",
-  description: "Abstract geometric shapes in a modern composition.",
-},
-// Architecture
-{
-  id: 24,
-  title: "Classic Columns",
-  photographer: "Victor Hugo",
-  price: 240,
-  originalPrice: 290,
-  category: "architecture",
-  image: "https://images.pexels.com/photos/32570545/pexels-photo-32570545.jpeg",
-  rating: 4.8,
-  downloads: 830,
-  tags: ["architecture", "classic", "columns", "building"],
-  resolution: "5184x3456",
-  format: "JPEG",
-  license: "Commercial",
-  description: "Classic architectural columns in a historic building.",
-},
-// Wildlife
-{
-  id: 25,
-  title: "Eagle Flight",
-  photographer: "Zainab Khan",
-  price: 370,
-  originalPrice: 470,
-  category: "wildlife",
-  image: "https://images.pexels.com/photos/635503/pexels-photo-635503.jpeg",
-  rating: 4.9,
-  downloads: 980,
-  tags: ["wildlife", "eagle", "flight", "nature"],
-  resolution: "6000x4000",
-  format: "RAW + JPEG",
-  license: "Commercial",
-  description: "A majestic eagle soaring above the mountains.",
-},
-// ...existing code...
- {
+  {
+    id: 20,
+    title: "Sunset Valley",
+    photographer: "Olivia Green",
+    price: 205,
+    originalPrice: 255,
+    category: "nature",
+    image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&h=400&fit=crop",
+    rating: 4.8,
+    downloads: 900,
+    tags: ["nature", "sunset", "valley", "landscape"],
+    resolution: "6000x4000",
+    format: "JPEG",
+    license: "Commercial",
+    description: "A breathtaking sunset over a lush green valley.",
+  },
+  // Urban
+  {
+    id: 21,
+    title: "Metro Rush",
+    photographer: "Adam Smits",
+    price: 215,
+    originalPrice: 265,
+    category: "urban",
+    image: "https://images.pexels.com/photos/106773/pexels-photo-106773.jpeg",
+    rating: 4.7,
+    downloads: 750,
+    tags: ["urban", "metro", "city", "rush"],
+    resolution: "5472x3648",
+    format: "JPEG",
+    license: "Commercial",
+    description: "A busy metro station in the heart of the city.",
+  },
+  // Portrait
+  {
+    id: 22,
+    title: "Blue Mood",
+    photographer: "Rachel Lee",
+    price: 185,
+    originalPrice: 235,
+    category: "portrait",
+    image: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=600&h=400&fit=crop",
+    rating: 4.6,
+    downloads: 800,
+    tags: ["portrait", "blue", "mood", "studio"],
+    resolution: "4000x6000",
+    format: "RAW + JPEG",
+    license: "Standard",
+    description: "A moody portrait with blue tones and dramatic lighting.",
+  },
+  // Abstract
+  {
+    id: 23,
+    title: "Geometric Dreams",
+    photographer: " Mehmed Abdullah ",
+    price: 160,
+    originalPrice: 210,
+    category: "abstract",
+    image: "https://images.pexels.com/photos/32585528/pexels-photo-32585528.jpeg",
+    rating: 4.5,
+    downloads: 650,
+    tags: ["abstract", "geometric", "modern", "art"],
+    resolution: "4000x6000",
+    format: "JPEG",
+    license: "Standard",
+    description: "Abstract geometric shapes in a modern composition.",
+  },
+  // Architecture
+  {
+    id: 24,
+    title: "Classic Columns",
+    photographer: "Victor Hugo",
+    price: 240,
+    originalPrice: 290,
+    category: "architecture",
+    image: "https://images.pexels.com/photos/32570545/pexels-photo-32570545.jpeg",
+    rating: 4.8,
+    downloads: 830,
+    tags: ["architecture", "classic", "columns", "building"],
+    resolution: "5184x3456",
+    format: "JPEG",
+    license: "Commercial",
+    description: "Classic architectural columns in a historic building.",
+  },
+  // Wildlife
+  {
+    id: 25,
+    title: "Eagle Flight",
+    photographer: "Zainab Khan",
+    price: 370,
+    originalPrice: 470,
+    category: "wildlife",
+    image: "https://images.pexels.com/photos/635503/pexels-photo-635503.jpeg",
+    rating: 4.9,
+    downloads: 980,
+    tags: ["wildlife", "eagle", "flight", "nature"],
+    resolution: "6000x4000",
+    format: "RAW + JPEG",
+    license: "Commercial",
+    description: "A majestic eagle soaring above the mountains.",
+  },
+  // ...existing code...
+  {
     id: 26,
     title: "Urban Geometry",
     photographer: "Megan Fox",
@@ -432,8 +433,8 @@ const allPhotos = [
     format: "JPEG",
     license: "Commercial",
     description: "Geometric patterns in a modern cityscape.",
-},
-{
+  },
+  {
     id: 27,
     title: "Wildlife in Motion",
     photographer: "Chris Evans",
@@ -448,8 +449,8 @@ const allPhotos = [
     format: "RAW + JPEG",
     license: "Commercial",
     description: "A wild animal captured mid-motion in its natural habitat.",
-},
-{
+  },
+  {
     id: 28,
     title: "Portrait in Blue",
     photographer: "Linda Brown",
@@ -464,8 +465,8 @@ const allPhotos = [
     format: "RAW + JPEG",
     license: "Standard",
     description: "A creative portrait with blue tones and dramatic lighting.",
-},
-{
+  },
+  {
     id: 29,
     title: "Abstract Neon",
     photographer: "Oscar Wilde",
@@ -480,8 +481,8 @@ const allPhotos = [
     format: "JPEG",
     license: "Standard",
     description: "Neon lights create an abstract, colorful composition.",
-},
-{
+  },
+  {
     id: 30,
     title: "Nature's Mirror",
     photographer: "Paul Green",
@@ -496,8 +497,8 @@ const allPhotos = [
     format: "RAW + JPEG",
     license: "Extended",
     description: "A calm lake reflecting the surrounding mountains and sky.",
-},
-{
+  },
+  {
     id: 31,
     title: "Space Odyssey",
     photographer: "Neil Armstrong",
@@ -512,8 +513,8 @@ const allPhotos = [
     format: "RAW + JPEG",
     license: "Commercial",
     description: "A breathtaking view of a distant galaxy.",
-},
-{
+  },
+  {
     id: 32,
     title: "Urban Alley",
     photographer: "Sam Lee",
@@ -528,8 +529,8 @@ const allPhotos = [
     format: "JPEG",
     license: "Commercial",
     description: "A moody urban alley illuminated by neon lights.",
-},
-{
+  },
+  {
     id: 33,
     title: "Golden Forest",
     photographer: "Anna Woods",
@@ -544,8 +545,8 @@ const allPhotos = [
     format: "JPEG",
     license: "Commercial",
     description: "Golden sunlight streaming through a dense forest.",
-},
-{
+  },
+  {
     id: 34,
     title: "Architectural Lines",
     photographer: "Lisa Wang",
@@ -560,8 +561,8 @@ const allPhotos = [
     format: "JPEG",
     license: "Commercial",
     description: "Clean architectural lines in a modern building.",
-},
-{
+  },
+  {
     id: 35,
     title: "Wildlife Encounter",
     photographer: "John Smith",
@@ -576,8 +577,8 @@ const allPhotos = [
     format: "RAW + JPEG",
     license: "Commercial",
     description: "A close encounter with a wild animal in its habitat.",
-},
-{
+  },
+  {
     id: 36,
     title: "Portrait of Grace",
     photographer: "Emily Carter",
@@ -592,8 +593,8 @@ const allPhotos = [
     format: "RAW + JPEG",
     license: "Standard",
     description: "A graceful portrait with soft lighting.",
-},
-{
+  },
+  {
     id: 37,
     title: "Abstract Dreams",
     photographer: "Maria Rodriguez",
@@ -608,8 +609,8 @@ const allPhotos = [
     format: "JPEG",
     license: "Standard",
     description: "Dreamy abstract art with vibrant colors.",
-},
-{
+  },
+  {
     id: 38,
     title: "Stellar Night",
     photographer: "Nina Patel",
@@ -624,8 +625,8 @@ const allPhotos = [
     format: "RAW + JPEG",
     license: "Commercial",
     description: "A star-filled night sky in deep space.",
-},
-{
+  },
+  {
     id: 39,
     title: "Urban Reflections",
     photographer: "Brian Lee",
@@ -640,8 +641,8 @@ const allPhotos = [
     format: "JPEG",
     license: "Commercial",
     description: "Reflections of city lights on wet pavement.",
-},
-{
+  },
+  {
     id: 40,
     title: "Wildlife Majesty",
     photographer: "Tom Walker",
@@ -656,8 +657,8 @@ const allPhotos = [
     format: "RAW + JPEG",
     license: "Commercial",
     description: "A majestic animal in the wild.",
-},
-{
+  },
+  {
     id: 41,
     title: "Portrait in Gold",
     photographer: "Linda Brown",
@@ -672,8 +673,8 @@ const allPhotos = [
     format: "RAW + JPEG",
     license: "Standard",
     description: "A portrait with golden hues and elegant pose.",
-},
-{
+  },
+  {
     id: 42,
     title: "Abstract Motion",
     photographer: "Oscar breisha",
@@ -690,38 +691,47 @@ const allPhotos = [
     description: "Motion blur creates a dynamic abstract composition.",
   },
 
-// ...existing code...
-...Array.from({length: 1000000}, (_, i) => {
-  const id = 43 + i;
-  const categories = [
-    "nature", "urban", "portrait", "abstract", "architecture", "wildlife", "space"
-  ];
-  const cat = categories[i % categories.length];
-  // Gunakan picsum.photos untuk placeholder image yang pasti tampil
-  // Setiap kategori diberi query berbeda agar variasi
-  const picsumSeed = `${cat}-${id}`;
-  return {
-    id,
-    title: `${cat.charAt(0).toUpperCase() + cat.slice(1)} Photo #${id}`,
-    photographer: `Photographer ${id}`,
-    price: 10 + (i % 15) * 10,
-    originalPrice: 37 + (i % 70) * 100,
-    category: cat,
-    image: `https://picsum.photos/seed/${picsumSeed}/600/400`,
-    rating: +(4.5 + ((i % 3) * 0.5)).toFixed(1),
-    downloads: 500 + (i * 7) % 1000,
-    tags: [cat, "stock", "photo", `tag${i}`],
-    resolution: "15360x8640",
-    format: i % 2 === 0 ? "RAW + JPEG" : "JPEG",
-    license: i % 3 === 0 ? "Commercial" : "Standard",
-    description: `A beautiful ${cat} stock photo number ${id}.`
-  }
-}),
-// ...existing code...
+  // ...existing code...
+  ...Array.from({length: 1000000}, (_, i) => {
+    const id = 43 + i;
+    const categories = [
+      "nature", "urban", "portrait", "abstract", "architecture", "wildlife", "space"
+    ];
+    const cat = categories[i % categories.length];
+    // Gunakan picsum.photos untuk placeholder image yang pasti tampil
+    // Setiap kategori diberi query berbeda agar variasi
+    const picsumSeed = `${cat}-${id}`;
+    return {
+      id,
+      title: `${cat.charAt(0).toUpperCase() + cat.slice(1)} Photo #${id}`,
+      photographer: `Photographer ${id}`,
+      price: 10 + (i % 15) * 10,
+      originalPrice: 37 + (i % 70) * 100,
+      category: cat,
+      image: `https://picsum.photos/seed/${picsumSeed}/600/400`,
+      rating: +(4.5 + ((i % 3) * 0.5)).toFixed(1),
+      downloads: 500 + (i * 7) % 1000,
+      tags: [cat, "stock", "photo", `tag${i}`],
+      resolution: "15360x8640",
+      format: i % 2 === 0 ? "RAW + JPEG" : "JPEG",
+      license: i % 3 === 0 ? "Commercial" : "Standard",
+      description: `A beautiful ${cat} stock photo number ${id}.`
+    }
+  }),
+  // ...existing code...
 
-//
-// ... lanjutkan dengan pola serupa untuk setiap kategori ...
-]
+  //
+  // ... lanjutkan dengan pola serupa untuk setiap kategori ...
+];
+let allPhotos = [];
+const storedPhotos = localStorage.getItem('products');
+if (storedPhotos) {
+  const localPhotos = JSON.parse(storedPhotos);
+  const ids = new Set(localPhotos.map(p => p.id));
+  allPhotos = [...localPhotos, ...defaultPhotos.filter(p => !ids.has(p.id))];
+} else {
+  allPhotos = [...defaultPhotos];
+}
 
 let filteredPhotos = [...allPhotos]
 let currentPage = 1

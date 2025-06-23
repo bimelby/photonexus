@@ -60,6 +60,50 @@ document.addEventListener("DOMContentLoaded", () => {
     el.style.animationDelay = `${index * 0.1}s`
     el.classList.add("fade-in")
   })
+
+  // Event listeners for mobile dropdowns
+  const dropdownToggles = document.querySelectorAll(".nav-dropdown .dropdown-toggle");
+  dropdownToggles.forEach(toggle => {
+    toggle.addEventListener("click", function(event) {
+      console.log("Dropdown toggle clicked!"); // Debug log
+      // Only toggle if on mobile (screen width <= 768px)
+      if (window.innerWidth <= 768) {
+        event.preventDefault(); // Prevent default link behavior
+        const parentDropdown = this.closest(".nav-dropdown");
+        console.log("Parent dropdown:", parentDropdown); // Debug log
+        parentDropdown.classList.toggle("show-dropdown");
+        console.log("show-dropdown class toggled on parent:", parentDropdown.classList.contains("show-dropdown")); // Debug log
+
+        // Close other open dropdowns
+        dropdownToggles.forEach(otherToggle => {
+          const otherParentDropdown = otherToggle.closest(".nav-dropdown");
+          if (otherParentDropdown !== parentDropdown && otherParentDropdown.classList.contains("show-dropdown")) {
+            otherParentDropdown.classList.remove("show-dropdown");
+            console.log("Removed show-dropdown from other dropdown:", otherParentDropdown); // Debug log
+          }
+        });
+      } else {
+        console.log("Not on mobile, hover effect should handle it."); // Debug log
+      }
+    });
+  });
+
+  // Close mobile menu and dropdowns when a nav-link or dropdown-item is clicked
+  document.querySelectorAll(".nav-link:not(.dropdown-toggle), .dropdown-item").forEach(item => {
+    item.addEventListener("click", () => {
+      console.log("Nav link or dropdown item clicked."); // Debug log
+      const navMenu = document.getElementById("navMenu");
+      if (navMenu.classList.contains("show")) {
+        navMenu.classList.remove("show");
+        console.log("Mobile menu closed."); // Debug log
+        // Close all dropdowns when main menu is closed
+        document.querySelectorAll(".nav-dropdown.show-dropdown").forEach(dropdown => {
+          dropdown.classList.remove("show-dropdown");
+          console.log("Closed dropdown:", dropdown); // Debug log
+        });
+      }
+    });
+  });
 })
 
 // Particle Animation
@@ -273,12 +317,23 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 // Navigation Functions
-// ...existing code...
 function toggleMobileMenu() {
   const navMenu = document.getElementById("navMenu");
-  navMenu.classList.toggle("show");
+  if (!navMenu) {
+    showNotification("Navigation menu not found! Please check your HTML structure.", "error");
+    return;
+  }
+  try {
+    navMenu.classList.toggle("show");
+    // Close all dropdowns when main menu is toggled
+    document.querySelectorAll(".nav-dropdown.show-dropdown").forEach(dropdown => {
+      dropdown.classList.remove("show-dropdown");
+    });
+  } catch (e) {
+    showNotification("Error toggling mobile menu: " + e.message, "error");
+    console.error(e);
+  }
 }
-// ...existing code...
 
 // Utility Functions
 function viewPhotoDetail(photoId) {
@@ -413,3 +468,8 @@ function sharePhoto(title, image) {
     showNotification("Photo link copied!");
   }
 }
+
+// Tambahan: Global error handler untuk notifikasi jika ada error JS
+window.addEventListener('error', function(event) {
+  showNotification("JavaScript error: " + event.message, "error");
+});

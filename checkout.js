@@ -285,6 +285,7 @@ function processPayment() {
   // Simulate payment processing
   setTimeout(() => {
     // Create transaction record
+    const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
     const transaction = {
       id: "TXN" + Date.now(),
       date: new Date().toISOString(),
@@ -305,6 +306,8 @@ function processPayment() {
         zipCode: document.getElementById("zipCode").value,
         country: document.getElementById("country").value,
       },
+      user: currentUser ? currentUser.name : "",
+      amount: orderData.items.length,
     }
 
     // Save transaction to localStorage

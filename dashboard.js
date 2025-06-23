@@ -1,9 +1,9 @@
-// Dashboard JavaScript with full admin functionality
+// Dashboard JavaScript with full user functionality
 const currentUser = {
   id: 1,
   name: "Mehmed",
   email: "mehmed@example.com",
-  role: "admin", // admin, user
+  role: "user", // user, user
   avatar: "https://i.pinimg.com/736x/f2/fb/ab/f2fbabf45d1a6d97280bb77d22d7ada8.jpg",
   joinDate: "2023-01-15",
   preferences: {
@@ -14,9 +14,9 @@ const currentUser = {
 }
 
 let currentSection = "overview"
-let currentAdminTab = "articles"
+let currentuserTab = "articles"
 
-// Sample data for admin management
+// Sample data for user management
 let articlesData = [
   {
     id: 1,
@@ -70,7 +70,7 @@ let usersData = [
     id: 1,
     name: "Mehmed",
     email: "mehmed@example.com",
-    role: "admin",
+    role: "user",
     status: "active",
     joinDate: "2023-01-15",
     purchases: 15,
@@ -130,12 +130,13 @@ const transactionsData = [
 
 // Initialize dashboard
 document.addEventListener("DOMContentLoaded", () => {
+  cleanUpUserData();
   initializeDashboard()
   updateCartCount()
 
   // Check if user is admin
-  if (currentUser.role === "admin") {
-    document.querySelector(".admin-only").style.display = "block"
+  if (currentUser.role === "user") {
+    document.querySelector(".user-only").style.display = "block"
   }
 })
 
@@ -269,8 +270,8 @@ function showSection(sectionName) {
     case "downloads":
       loadDownloads()
       break
-    case "admin":
-      loadAdminData()
+    case "user":
+      loadUserData()
       break
   }
 }
@@ -431,251 +432,295 @@ function loadDownloads() {
 }
 
 // Admin functions
-function loadAdminData() {
-  showAdminTab("articles")
+function loadUserData() {
+  showUserTab("articles")
 }
 
-function showAdminTab(tabName) {
-  // Hide all tabs
-  document.querySelectorAll(".admin-tab").forEach((tab) => {
-    tab.classList.remove("active")
-  })
+function showUserTab(tabName) {
+  document.querySelectorAll('.user-tab').forEach(tab => tab.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.getElementById(`${tabName}-tab`).classList.add('active');
+  document.querySelector(`[onclick="showUserTab('${tabName}')"]`).classList.add('active');
+  if (tabName === 'articles') loadArticlesTableUserPanel();
+  if (tabName === 'photos') loadPhotosTableUserPanel();
+  if (tabName === 'transactions') loadTransactionsTableUserPanel();
+}
 
-  // Remove active class from tab buttons
-  document.querySelectorAll(".tab-btn").forEach((btn) => {
-    btn.classList.remove("active")
-  })
+// Helper: Load and save data from localStorage
+function getArticlesData() {
+  return JSON.parse(localStorage.getItem("articles")) || [];
+}
+function setArticlesData(data) {
+  localStorage.setItem("articles", JSON.stringify(data));
+}
+function getPhotosData() {
+  return JSON.parse(localStorage.getItem("products")) || [];
+}
+function setPhotosData(data) {
+  localStorage.setItem("products", JSON.stringify(data));
+}
+function getTransactionsData() {
+  return JSON.parse(localStorage.getItem("transactions")) || [];
+}
+function setTransactionsData(data) {
+  localStorage.setItem("transactions", JSON.stringify(data));
+}
 
-  // Show selected tab
-  document.getElementById(`${tabName}-tab`).classList.add("active")
-  document.querySelector(`[onclick="showAdminTab('${tabName}')"]`).classList.add("active")
-
-  currentAdminTab = tabName
-
-  // Load tab-specific data
-  switch (tabName) {
-    case "articles":
-      loadArticlesTable()
-      break
-    case "products":
-      loadProductsTable()
-      break
-    case "users":
-      loadUsersTable()
-      break
-    case "transactions":
-      loadTransactionsTable()
-      break
+// Helper: Clean up old data (tanpa userId) dari localStorage
+function cleanUpUserData() {
+  // Bersihkan artikel tanpa userId
+  let articles = getArticlesData();
+  const filteredArticles = articles.filter(a => a.userId);
+  if (filteredArticles.length !== articles.length) {
+    setArticlesData(filteredArticles);
+  }
+  // Bersihkan foto tanpa userId
+  let photos = getPhotosData();
+  const filteredPhotos = photos.filter(p => p.userId);
+  if (filteredPhotos.length !== photos.length) {
+    setPhotosData(filteredPhotos);
   }
 }
 
-// Load articles table
-function loadArticlesTable() {
-  const container = document.getElementById("articlesTable")
-
+// --- ARTICLES ---
+function loadArticlesTableUserPanel() {
+  const container = document.getElementById('articles-tab');
+  let articles = getArticlesData();
+  const currentUser = getCurrentUser();
+  // Filter hanya artikel milik user login dan yang punya userId
+  articles = articles.filter(article => article.userId === currentUser?.id);
   container.innerHTML = `
-    <table class="admin-data-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Title</th>
-          <th>Author</th>
-          <th>Category</th>
-          <th>Status</th>
-          <th>Views</th>
-          <th>Date</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${articlesData
-          .map(
-            (article) => `
+    <div class="tab-header">
+      <h3>Articles Management</h3>
+      <button class="btn btn-primary" onclick="openArticleModalUserPanel()">
+        <i class="fas fa-plus"></i> Add Article
+      </button>
+    </div>
+    <div class="user-table">
+      <table class="user-data-table user-table-compact">
+        <thead>
           <tr>
-            <td>${article.id}</td>
-            <td>${article.title}</td>
-            <td>${article.author}</td>
-            <td><span class="category-badge">${article.category}</span></td>
-            <td><span class="status-badge ${article.status}">${article.status}</span></td>
-            <td>${article.views}</td>
-            <td>${formatDate(article.date)}</td>
-            <td>
-              <div class="action-buttons">
-                <button class="btn-icon" onclick="editArticle(${article.id})" title="Edit">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn-icon" onclick="viewArticle(${article.id})" title="View">
-                  <i class="fas fa-eye"></i>
-                </button>
-                <button class="btn-icon delete" onclick="deleteArticle(${article.id})" title="Delete">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </div>
-            </td>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
           </tr>
-        `,
-          )
-          .join("")}
-      </tbody>
-    </table>
-  `
+        </thead>
+        <tbody>
+          ${articles.length === 0 ? `<tr><td colspan='7' style='text-align:center;color:#64748b;'>No articles found.</td></tr>` :
+            articles.map(article => `
+            <tr>
+              <td>${article.id}</td>
+              <td class="truncate">${article.title}</td>
+              <td class="truncate">${article.author}</td>
+              <td><span class="category-badge">${article.category}</span></td>
+              <td><span class="status-badge ${article.status}">${article.status}</span></td>
+              <td>${formatDate(article.date)}</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-icon" onclick="editArticleUserPanel(${article.id})" title="Edit"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon" onclick="viewArticleUserPanel(${article.id})" title="View"><i class="fas fa-eye"></i></button>
+                  <button class="btn-icon delete" onclick="deleteArticleUserPanel(${article.id})" title="Delete"><i class="fas fa-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
 }
 
-// Load products table
-function loadProductsTable() {
-  const container = document.getElementById("productsTable")
+function openArticleModalUserPanel(articleId = null) {
+  const modal = document.getElementById("articleModal")
+  const form = document.getElementById("articleForm")
+  const title = document.getElementById("articleModalTitle")
 
-  container.innerHTML = `
-    <table class="admin-data-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Image</th>
-          <th>Title</th>
-          <th>Photographer</th>
-          <th>Category</th>
-          <th>Price</th>
-          <th>Downloads</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${productsData
-          .map(
-            (product) => `
-          <tr>
-            <td>${product.id}</td>
-            <td><img src="${product.image}" alt="${product.title}" class="table-thumbnail"></td>
-            <td>${product.title}</td>
-            <td>${product.photographer}</td>
-            <td><span class="category-badge">${product.category}</span></td>
-            <td>$${product.price}</td>
-            <td>${product.downloads}</td>
-            <td><span class="status-badge ${product.status}">${product.status}</span></td>
-            <td>
-              <div class="action-buttons">
-                <button class="btn-icon" onclick="editProduct(${product.id})" title="Edit">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn-icon" onclick="viewProduct(${product.id})" title="View">
-                  <i class="fas fa-eye"></i>
-                </button>
-                <button class="btn-icon delete" onclick="deleteProduct(${product.id})" title="Delete">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-        `,
-          )
-          .join("")}
-      </tbody>
-    </table>
-  `
+  if (articleId) {
+    const article = getArticlesData().find((a) => a.id === articleId)
+    title.textContent = "Edit Article"
+
+    // Populate form with article data
+    document.getElementById("articleTitle").value = article.title
+    document.getElementById("articleExcerpt").value = article.excerpt
+    document.getElementById("articleContent").value = article.content || ""
+    document.getElementById("articleCategory").value = article.category
+    document.getElementById("articleAuthor").value = article.author
+    document.getElementById("articleImage").value = article.image || ""
+    document.getElementById("articleTags").value = article.tags ? article.tags.join(", ") : ""
+
+    form.dataset.articleId = articleId
+  } else {
+    title.textContent = "Add Article"
+    form.reset()
+    delete form.dataset.articleId
+  }
+
+  modal.style.display = "block"
+}
+function editArticleUserPanel(articleId) {
+  openArticleModalUserPanel(articleId);
+}
+function viewArticleUserPanel(articleId) {
+  localStorage.setItem("selectedArticleId", articleId);
+  window.open("article-detail.html", "_blank");
+}
+function deleteArticleUserPanel(articleId) {
+  const currentUser = getCurrentUser();
+  if (confirm("Are you sure you want to delete this article?")) {
+    let articles = getArticlesData();
+    articles = articles.filter(a => !(a.id === articleId && a.userId === currentUser?.id));
+    setArticlesData(articles);
+    loadArticlesTableUserPanel();
+    showNotification("Article deleted successfully!", "success");
+  }
 }
 
-// Load users table
-function loadUsersTable() {
-  const container = document.getElementById("usersTable")
-
+// --- PHOTOS ---
+function loadPhotosTableUserPanel() {
+  const container = document.getElementById('photos-tab');
+  let photos = getPhotosData();
+  const currentUser = getCurrentUser();
+  // Filter hanya foto milik user login dan yang punya userId
+  photos = photos.filter(photo => photo.userId === currentUser?.id);
   container.innerHTML = `
-    <table class="admin-data-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Status</th>
-          <th>Join Date</th>
-          <th>Purchases</th>
-          <th>Total Spent</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${usersData
-          .map(
-            (user) => `
+    <div class="tab-header">
+      <h3>Photos Management</h3>
+      <button class="btn btn-primary" onclick="openPhotoModalUserPanel()">
+        <i class="fas fa-plus"></i> Add Photo
+      </button>
+    </div>
+    <div class="user-table">
+      <table class="user-data-table user-table-compact">
+        <thead>
           <tr>
-            <td>${user.id}</td>
-            <td>${user.name}</td>
-            <td>${user.email}</td>
-            <td><span class="role-badge ${user.role}">${user.role}</span></td>
-            <td><span class="status-badge ${user.status}">${user.status}</span></td>
-            <td>${formatDate(user.joinDate)}</td>
-            <td>${user.purchases}</td>
-            <td>$${user.totalSpent}</td>
-            <td>
-              <div class="action-buttons">
-                <button class="btn-icon" onclick="editUser(${user.id})" title="Edit">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn-icon" onclick="viewUser(${user.id})" title="View">
-                  <i class="fas fa-eye"></i>
-                </button>
-                <button class="btn-icon delete" onclick="deleteUser(${user.id})" title="Delete">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </div>
-            </td>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Photographer</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Actions</th>
           </tr>
-        `,
-          )
-          .join("")}
-      </tbody>
-    </table>
-  `
+        </thead>
+        <tbody>
+          ${photos.length === 0 ? `<tr><td colspan='8' style='text-align:center;color:#64748b;'>No photos found.</td></tr>` :
+            photos.map(photo => `
+            <tr>
+              <td>${photo.id}</td>
+              <td><img src="${photo.image}" alt="${photo.title}" class="table-thumbnail compact-thumb"></td>
+              <td class="truncate">${photo.title}</td>
+              <td class="truncate">${photo.photographer}</td>
+              <td><span class="category-badge">${photo.category}</span></td>
+              <td>$${photo.price}</td>
+              <td><span class="status-badge ${photo.status}">${photo.status}</span></td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-icon" onclick="editPhotoUserPanel(${photo.id})" title="Edit"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon" onclick="viewPhotoUserPanel(${photo.id})" title="View"><i class="fas fa-eye"></i></button>
+                  <button class="btn-icon delete" onclick="deletePhotoUserPanel(${photo.id})" title="Delete"><i class="fas fa-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+function openPhotoModalUserPanel(photoId = null) {
+  document.getElementById("addProductModal").style.display = "block";
+  document.getElementById("addProductForm").reset();
+  editingProductId = photoId;
+
+  if (photoId) {
+    const product = getPhotosData().find(p => p.id === photoId);
+    document.getElementById("productTitle").value = product.title;
+    document.getElementById("productPhotographer").value = product.photographer;
+    document.getElementById("productCategory").value = product.category;
+    document.getElementById("productPrice").value = product.price;
+    document.getElementById("productImage").value = product.image;
+    document.getElementById("productStatus").value = product.status;
+  }
+}
+function editPhotoUserPanel(photoId) {
+  openPhotoModalUserPanel(photoId);
+}
+function viewPhotoUserPanel(photoId) {
+  localStorage.setItem("selectedPhotoId", photoId);
+  window.open("product-detail.html", "_blank");
+}
+function deletePhotoUserPanel(photoId) {
+  const currentUser = getCurrentUser();
+  if (confirm("Are you sure you want to delete this photo?")) {
+    let photos = getPhotosData();
+    photos = photos.filter(p => !(p.id === photoId && p.userId === currentUser?.id));
+    setPhotosData(photos);
+    loadPhotosTableUserPanel();
+    showNotification("Photo deleted successfully!", "success");
+  }
 }
 
-// Load transactions table
-function loadTransactionsTable() {
-  const container = document.getElementById("transactionsTable")
-
+// --- TRANSACTIONS ---
+function loadTransactionsTableUserPanel() {
+  const container = document.getElementById('transactions-tab');
+  let transactions = getTransactionsData();
+  const currentUser = getCurrentUser();
+  // Filter hanya transaksi milik user login
+  const userTransactions = transactions.filter(tx => tx.user === (currentUser?.name || ""));
   container.innerHTML = `
-    <table class="admin-data-table">
-      <thead>
-        <tr>
-          <th>Transaction ID</th>
-          <th>User</th>
-          <th>Amount</th>
-          <th>Items</th>
-          <th>Payment Method</th>
-          <th>Status</th>
-          <th>Date</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${transactionsData
-          .map(
-            (transaction) => `
+    <div class="tab-header">
+      <h3>Transactions Info</h3>
+    </div>
+    <div class="user-table">
+      <table class="user-data-table">
+        <thead>
           <tr>
-            <td>${transaction.id}</td>
-            <td>${transaction.user}</td>
-            <td>$${transaction.amount}</td>
-            <td>${transaction.items}</td>
-            <td>${transaction.paymentMethod}</td>
-            <td><span class="status-badge ${transaction.status}">${transaction.status}</span></td>
-            <td>${formatDate(transaction.date)}</td>
-            <td>
-              <div class="action-buttons">
-                <button class="btn-icon" onclick="viewTransaction('${transaction.id}')" title="View">
-                  <i class="fas fa-eye"></i>
-                </button>
-                <button class="btn-icon" onclick="refundTransaction('${transaction.id}')" title="Refund">
-                  <i class="fas fa-undo"></i>
-                </button>
-              </div>
-            </td>
+            <th>ID</th>
+            <th>User</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
           </tr>
-        `,
-          )
-          .join("")}
-      </tbody>
-    </table>
-  `
+        </thead>
+        <tbody>
+          ${userTransactions.length === 0 ? `<tr><td colspan='6' style='text-align:center;color:#64748b;'>No transactions found.</td></tr>` :
+            userTransactions.map(tx => `
+            <tr>
+              <td>${tx.id}</td>
+              <td>${tx.user || '-'}</td>
+              <td>${tx.amount || (tx.items ? tx.items.length : 0)}</td>
+              <td><span class="status-badge ${tx.status}">${tx.status}</span></td>
+              <td>${formatDate(tx.date)}</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-icon" onclick="viewTransactionUserPanel('${tx.id}')" title="View"><i class="fas fa-eye"></i></button>
+                  <button class="btn-icon delete" onclick="deleteTransactionUserPanel('${tx.id}')" title="Delete"><i class="fas fa-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+function viewTransactionUserPanel(transactionId) {
+  showNotification(`View transaction ${transactionId}`, "info");
+}
+function deleteTransactionUserPanel(transactionId) {
+  if (confirm("Are you sure you want to delete this transaction?")) {
+    let transactions = getTransactionsData();
+    transactions = transactions.filter(t => t.id !== transactionId);
+    setTransactionsData(transactions);
+    loadTransactionsTableUserPanel();
+    showNotification("Transaction deleted successfully!", "success");
+  }
 }
 
 // Article management functions
@@ -715,7 +760,8 @@ function saveArticle() {
   const form = document.getElementById("articleForm")
   const formData = new FormData(form)
   const articleId = form.dataset.articleId
-
+  let articles = getArticlesData();
+  const currentUser = getCurrentUser();
   const articleData = {
     title: formData.get("title"),
     excerpt: formData.get("excerpt"),
@@ -723,29 +769,28 @@ function saveArticle() {
     category: formData.get("category"),
     author: formData.get("author"),
     image: formData.get("image"),
-    tags: formData
-      .get("tags")
-      .split(",")
-      .map((tag) => tag.trim()),
+    tags: formData.get("tags").split(",").map((tag) => tag.trim()),
     date: new Date().toISOString().split("T")[0],
     views: 0,
     status: "published",
+    userId: currentUser?.id,
   }
-
   if (articleId) {
-    // Update existing article
-    const index = articlesData.findIndex((a) => a.id == articleId)
-    articlesData[index] = { ...articlesData[index], ...articleData }
-    showNotification("Article updated successfully!", "success")
+    // Update existing article (hanya jika milik user login)
+    const index = articles.findIndex((a) => a.id == articleId && a.userId === currentUser?.id)
+    if (index !== -1) {
+      articles[index] = { ...articles[index], ...articleData, userId: currentUser?.id }
+      showNotification("Article updated successfully!", "success")
+    }
   } else {
     // Add new article
-    articleData.id = Math.max(...articlesData.map((a) => a.id)) + 1
-    articlesData.push(articleData)
+    articleData.id = articles.length ? Math.max(...articles.map((a) => a.id)) + 1 : 1
+    articles.push(articleData)
     showNotification("Article added successfully!", "success")
   }
-
+  setArticlesData(articles);
   closeArticleModal()
-  loadArticlesTable()
+  loadArticlesTableUserPanel()
 }
 
 function editArticle(articleId) {
@@ -790,25 +835,29 @@ function addProduct(event) {
   const price = parseFloat(document.getElementById("productPrice").value);
   const image = document.getElementById("productImage").value;
   const status = document.getElementById("productStatus").value;
-
+  let products = getPhotosData();
+  const currentUser = getCurrentUser();
   if (editingProductId) {
-    // Edit mode
-    const idx = productsData.findIndex(p => p.id === editingProductId);
-    productsData[idx] = {
-      ...productsData[idx],
-      title,
-      photographer,
-      category,
-      price,
-      image,
-      status
-    };
-    showNotification("Product updated successfully!", "success");
-    editingProductId = null;
+    // Edit mode (hanya jika milik user login)
+    const idx = products.findIndex(p => p.id === editingProductId && p.userId === currentUser?.id);
+    if (idx !== -1) {
+      products[idx] = {
+        ...products[idx],
+        title,
+        photographer,
+        category,
+        price,
+        image,
+        status,
+        userId: currentUser?.id,
+      };
+      showNotification("Product updated successfully!", "success");
+      editingProductId = null;
+    }
   } else {
     // Add mode
     const newProduct = {
-      id: productsData.length ? Math.max(...productsData.map(p => p.id)) + 1 : 1,
+      id: products.length ? Math.max(...products.map(p => p.id)) + 1 : 1,
       title,
       photographer,
       category,
@@ -817,13 +866,14 @@ function addProduct(event) {
       status,
       date: new Date().toISOString().split("T")[0],
       downloads: 0,
+      userId: currentUser?.id,
     };
-    productsData.push(newProduct);
+    products.push(newProduct);
     showNotification("Product added successfully!", "success");
   }
-
+  setPhotosData(products);
   document.getElementById("addProductModal").style.display = "none";
-  loadProductsTable();
+  loadPhotosTableUserPanel();
 }
 function editProduct(productId) {
   openProductModal(productId);
@@ -1102,4 +1152,9 @@ window.onclick = (event) => {
   if (event.target === cartModal) {
     closeCart()
   }
+}
+
+// Helper: Get current user
+function getCurrentUser() {
+  return JSON.parse(localStorage.getItem("currentUser") || "null");
 }

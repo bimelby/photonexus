@@ -1,73 +1,10 @@
 // Enhanced Admin Management JavaScript with Full CRUD Functionality
 
 // Sample data with more comprehensive information
-let users = [
-  {
-    id: 1,
-    name: "John Smith",
-    email: "john.smith@example.com",
-    role: "admin",
-    status: "active",
-    joinDate: "2023-01-15",
-    lastActive: "2024-01-20",
-    avatar: "JS",
-    bio: "Senior administrator with 5+ years experience in platform management.",
-    totalPurchases: 45,
-    totalSpent: 2340.5,
-  },
-  {
-    id: 2,
-    name: "Sarah Johnson",
-    email: "sarah.j@example.com",
-    role: "photographer",
-    status: "active",
-    joinDate: "2023-03-22",
-    lastActive: "2024-01-19",
-    avatar: "SJ",
-    bio: "Professional landscape photographer specializing in nature photography.",
-    totalPurchases: 12,
-    totalSpent: 890.25,
-  },
-  {
-    id: 3,
-    name: "Mike Chen",
-    email: "mike.chen@example.com",
-    role: "customer",
-    status: "active",
-    joinDate: "2023-06-10",
-    lastActive: "2024-01-18",
-    avatar: "MC",
-    bio: "Graphic designer and photography enthusiast.",
-    totalPurchases: 28,
-    totalSpent: 1560.75,
-  },
-  {
-    id: 4,
-    name: "Emily Davis",
-    email: "emily.davis@example.com",
-    role: "photographer",
-    status: "inactive",
-    joinDate: "2023-02-08",
-    lastActive: "2024-01-10",
-    avatar: "ED",
-    bio: "Portrait photographer with focus on urban lifestyle.",
-    totalPurchases: 8,
-    totalSpent: 420.0,
-  },
-  {
-    id: 5,
-    name: "David Wilson",
-    email: "david.w@example.com",
-    role: "customer",
-    status: "suspended",
-    joinDate: "2023-08-14",
-    lastActive: "2024-01-05",
-    avatar: "DW",
-    bio: "Digital artist and content creator.",
-    totalPurchases: 3,
-    totalSpent: 180.5,
-  },
-]
+let users = [];
+let photos = [];
+let articles = [];
+let transactions = [];
 
 // Enhanced photos data with more comprehensive information
 let photos = [
@@ -687,7 +624,7 @@ let articles = [
 ]
 
 // Enhanced transactions data
-const transactions = [
+let transactions = [
   {
     id: "TXN-2024-001",
     customerId: 3,
@@ -774,39 +711,320 @@ const currentFilters = {
 
 // Initialize admin management
 document.addEventListener("DOMContentLoaded", () => {
-  updateCartCount()
-  loadUsersTable()
-  updateStats()
+  loadUsers();
+  loadPhotos();
+  loadArticles();
+  loadTransactions();
+  updateCartCount && updateCartCount();
+  updateStats && updateStats();
+  switchTab('users'); // default tab
 })
 
 // Tab switching functionality
 function switchTab(tabName) {
-  // Remove active class from all tabs and panels
-  document.querySelectorAll(".tab-btn").forEach((btn) => btn.classList.remove("active"))
-  document.querySelectorAll(".tab-panel").forEach((panel) => panel.classList.remove("active"))
+  // Hide all tab contents
+  document.querySelectorAll('.admin-tab-content').forEach(tab => tab.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  const tabContent = document.getElementById(`${tabName}-tab`);
+  if (tabContent) tabContent.classList.add('active');
+  const tabBtn = document.querySelector(`[onclick="switchTab('${tabName}')"]`);
+  if (tabBtn) tabBtn.classList.add('active');
+  // Render tab content
+  if (tabName === 'users') renderUsersTab();
+  if (tabName === 'photos') renderPhotosTab();
+  if (tabName === 'articles') renderArticlesTab();
+  if (tabName === 'transactions') renderTransactionsTab();
+  if (tabName === 'analytics') renderAnalyticsTab();
+}
 
-  // Add active class to selected tab and panel
-  event.target.classList.add("active")
-  document.getElementById(`${tabName}-tab`).classList.add("active")
+// Render Users Tab
+function renderUsersTab() {
+  const tab = document.getElementById('users-tab')
+  tab.innerHTML = `
+    <div class="panel-header">
+      <h2><i class="fas fa-users"></i> User Management</h2>
+      <div class="panel-actions">
+        <button class="btn btn-primary" onclick="openAddUserModal()"><i class="fas fa-plus"></i> Add New User</button>
+        <button class="btn btn-secondary" onclick="exportUsers()"><i class="fas fa-download"></i> Export Users</button>
+      </div>
+    </div>
+    <div class="search-filter-bar">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search users..." id="userSearch" oninput="loadUsersTable()">
+      </div>
+      <div class="filter-options">
+        <select id="userRoleFilter" onchange="loadUsersTable()">
+          <option value="">All Roles</option>
+          <option value="admin">Admin</option>
+          <option value="photographer">Photographer</option>
+          <option value="customer">Customer</option>
+        </select>
+        <select id="userStatusFilter" onchange="loadUsersTable()">
+          <option value="">All Status</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+          <option value="suspended">Suspended</option>
+        </select>
+      </div>
+    </div>
+    <div class="data-table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th><input type="checkbox" id="selectAllUsers" onchange="toggleSelectAllUsers()"></th>
+            <th>User</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Joined</th>
+            <th>Last Active</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="usersTableBody"></tbody>
+      </table>
+    </div>
+    <div class="pagination">
+      <button class="pagination-btn" onclick="previousPage('users')"><i class="fas fa-chevron-left"></i></button>
+      <span class="pagination-info" id="usersPagination">Page 1</span>
+      <button class="pagination-btn" onclick="nextPage('users')"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  `
+  loadUsersTable()
+}
 
-  // Load content based on tab
-  switch (tabName) {
-    case "users":
-      loadUsersTable()
-      break
-    case "photos":
-      loadPhotosGrid()
-      break
-    case "articles":
-      loadArticlesList()
-      break
-    case "transactions":
-      loadTransactionsTable()
-      break
-    case "analytics":
-      loadAnalytics()
-      break
-  }
+// Render Photos Tab
+function renderPhotosTab() {
+  loadPhotos();
+  const tab = document.getElementById('photos-tab')
+  tab.innerHTML = `
+    <div class="panel-header">
+      <h2><i class="fas fa-images"></i> Photo Management</h2>
+      <div class="panel-actions">
+        <button class="btn btn-primary" onclick="openAddPhotoModal()"><i class="fas fa-plus"></i> Add New Photo</button>
+        <button class="btn btn-secondary" onclick="bulkUpload()"><i class="fas fa-upload"></i> Bulk Upload</button>
+      </div>
+    </div>
+    <div class="search-filter-bar">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search photos..." id="photoSearch" oninput="filterPhotos()">
+      </div>
+      <div class="filter-options">
+        <select id="photoCategoryFilter" onchange="filterPhotos()">
+          <option value="">All Categories</option>
+          <option value="nature">Nature</option>
+          <option value="urban">Urban</option>
+          <option value="space">Space</option>
+          <option value="abstract">Abstract</option>
+          <option value="wildlife">Wildlife</option>
+          <option value="architecture">Architecture</option>
+        </select>
+        <select id="photoStatusFilter" onchange="filterPhotos()">
+          <option value="">All Status</option>
+          <option value="published">Published</option>
+          <option value="draft">Draft</option>
+          <option value="pending">Pending Review</option>
+        </select>
+      </div>
+    </div>
+    <div class="photo-grid" id="photoGrid"></div>
+    <div class="pagination">
+      <button class="pagination-btn" onclick="previousPage('photos')"><i class="fas fa-chevron-left"></i></button>
+      <span class="pagination-info" id="photosPagination">Page 1</span>
+      <button class="pagination-btn" onclick="nextPage('photos')"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  `
+  loadPhotosGrid()
+}
+
+// Render Articles Tab
+function renderArticlesTab() {
+  loadArticles();
+  const tab = document.getElementById('articles-tab')
+  tab.innerHTML = `
+    <div class="panel-header">
+      <h2><i class="fas fa-newspaper"></i> Article Management</h2>
+      <div class="panel-actions">
+        <button class="btn btn-primary" onclick="openAddArticleModal()"><i class="fas fa-plus"></i> Create Article</button>
+        <button class="btn btn-secondary" onclick="exportArticles()"><i class="fas fa-download"></i> Export Articles</button>
+      </div>
+    </div>
+    <div class="search-filter-bar">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search articles..." id="articleSearch" oninput="filterArticles()">
+      </div>
+      <div class="filter-options">
+        <select id="articleCategoryFilter" onchange="filterArticles()">
+          <option value="">All Categories</option>
+          <option value="photography">Photography</option>
+          <option value="technology">Technology</option>
+          <option value="tutorials">Tutorials</option>
+          <option value="news">News</option>
+        </select>
+        <select id="articleStatusFilter" onchange="filterArticles()">
+          <option value="">All Status</option>
+          <option value="published">Published</option>
+          <option value="draft">Draft</option>
+          <option value="scheduled">Scheduled</option>
+        </select>
+      </div>
+    </div>
+    <div class="articles-list" id="articlesList"></div>
+    <div class="pagination">
+      <button class="pagination-btn" onclick="previousPage('articles')"><i class="fas fa-chevron-left"></i></button>
+      <span class="pagination-info" id="articlesPagination">Page 1</span>
+      <button class="pagination-btn" onclick="nextPage('articles')"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  `
+  loadArticlesList()
+}
+
+// Render Transactions Tab
+function renderTransactionsTab() {
+  loadTransactions();
+  const tab = document.getElementById('transactions-tab')
+  tab.innerHTML = `
+    <div class="panel-header">
+      <h2><i class="fas fa-receipt"></i> Transaction Management</h2>
+      <div class="panel-actions">
+        <button class="btn btn-secondary" onclick="exportTransactions()"><i class="fas fa-download"></i> Export Transactions</button>
+        <button class="btn btn-secondary" onclick="generateReport()"><i class="fas fa-chart-line"></i> Generate Report</button>
+      </div>
+    </div>
+    <div class="search-filter-bar">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search transactions..." id="transactionSearch" oninput="filterTransactions()">
+      </div>
+      <div class="filter-options">
+        <select id="transactionStatusFilter" onchange="filterTransactions()">
+          <option value="">All Status</option>
+          <option value="completed">Completed</option>
+          <option value="pending">Pending</option>
+          <option value="failed">Failed</option>
+          <option value="refunded">Refunded</option>
+        </select>
+        <select id="transactionTypeFilter" onchange="filterTransactions()">
+          <option value="">All Types</option>
+          <option value="purchase">Purchase</option>
+          <option value="subscription">Subscription</option>
+          <option value="refund">Refund</option>
+        </select>
+        <input type="date" id="transactionDateFrom" onchange="filterTransactions()">
+        <input type="date" id="transactionDateTo" onchange="filterTransactions()">
+      </div>
+    </div>
+    <div class="data-table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Transaction ID</th>
+            <th>Customer</th>
+            <th>Items</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Payment Method</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="transactionsTableBody"></tbody>
+      </table>
+    </div>
+    <div class="pagination">
+      <button class="pagination-btn" onclick="previousPage('transactions')"><i class="fas fa-chevron-left"></i></button>
+      <span class="pagination-info" id="transactionsPagination">Page 1</span>
+      <button class="pagination-btn" onclick="nextPage('transactions')"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  `
+  loadTransactionsTable()
+}
+
+// Render Analytics Tab
+function renderAnalyticsTab() {
+  const tab = document.getElementById('analytics-tab')
+  tab.innerHTML = `
+    <div class="panel-header">
+      <h2><i class="fas fa-chart-bar"></i> Analytics Dashboard</h2>
+      <div class="panel-actions">
+        <select id="analyticsTimeRange" onchange="updateAnalytics()">
+          <option value="7d">Last 7 Days</option>
+          <option value="30d">Last 30 Days</option>
+          <option value="90d">Last 90 Days</option>
+          <option value="1y">Last Year</option>
+        </select>
+        <button class="btn btn-secondary" onclick="exportAnalytics()"><i class="fas fa-download"></i> Export Report</button>
+      </div>
+    </div>
+    <div class="analytics-grid">
+      <div class="analytics-card">
+        <div class="analytics-header">
+          <h3>Revenue Overview</h3>
+          <i class="fas fa-dollar-sign"></i>
+        </div>
+        <div class="analytics-chart" id="revenueChart"><canvas id="revenueCanvas"></canvas></div>
+      </div>
+      <div class="analytics-card">
+        <div class="analytics-header">
+          <h3>User Growth</h3>
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="analytics-chart" id="userGrowthChart"><canvas id="userGrowthCanvas"></canvas></div>
+      </div>
+      <div class="analytics-card">
+        <div class="analytics-header">
+          <h3>Popular Categories</h3>
+          <i class="fas fa-chart-pie"></i>
+        </div>
+        <div class="analytics-chart" id="categoriesChart"><canvas id="categoriesCanvas"></canvas></div>
+      </div>
+      <div class="analytics-card">
+        <div class="analytics-header">
+          <h3>Download Trends</h3>
+          <i class="fas fa-download"></i>
+        </div>
+        <div class="analytics-chart" id="downloadsChart"><canvas id="downloadsCanvas"></canvas></div>
+      </div>
+    </div>
+    <div class="analytics-summary">
+      <div class="summary-card">
+        <div class="summary-icon"><i class="fas fa-trending-up"></i></div>
+        <div class="summary-content">
+          <h4>Total Revenue</h4>
+          <div class="summary-value">$0</div>
+          <div class="summary-change positive">+0% from last month</div>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon"><i class="fas fa-download"></i></div>
+        <div class="summary-content">
+          <h4>Total Downloads</h4>
+          <div class="summary-value">0</div>
+          <div class="summary-change positive">+0% from last month</div>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon"><i class="fas fa-user-plus"></i></div>
+        <div class="summary-content">
+          <h4>New Users</h4>
+          <div class="summary-value">0</div>
+          <div class="summary-change positive">+0% from last month</div>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon"><i class="fas fa-star"></i></div>
+        <div class="summary-content">
+          <h4>Avg. Rating</h4>
+          <div class="summary-value">0</div>
+          <div class="summary-change positive">+0 from last month</div>
+        </div>
+      </div>
+    </div>
+  `
+  // Analytics chart rendering logic here (if needed)
 }
 
 // Update statistics
@@ -826,6 +1044,12 @@ function loadUsersTable() {
   const startIndex = (currentPage.users - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
   const pageUsers = filteredUsers.slice(startIndex, endIndex)
+
+  if (pageUsers.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><i class="fas fa-users"></i><h3>No users found</h3><p>Try adjusting your filters or add a new user.</p></div></td></tr>`;
+    updatePagination("users", filteredUsers.length);
+    return;
+  }
 
   tbody.innerHTML = pageUsers
     .map(
@@ -870,27 +1094,19 @@ function loadUsersTable() {
 }
 
 function filterUsers() {
-  const { search, role, status } = currentFilters.users
+  const search = document.getElementById("userSearch")?.value || "";
+  const role = document.getElementById("userRoleFilter")?.value || "";
+  const status = document.getElementById("userStatusFilter")?.value || "";
+  currentFilters.users = { search, role, status };
   return users.filter((user) => {
     const matchesSearch =
       !search ||
       user.name.toLowerCase().includes(search.toLowerCase()) ||
-      user.email.toLowerCase().includes(search.toLowerCase())
-    const matchesRole = !role || user.role === role
-    const matchesStatus = !status || user.status === status
-
-    return matchesSearch && matchesRole && matchesStatus
-  })
-}
-
-function filterUsers() {
-  const search = document.getElementById("userSearch").value
-  const role = document.getElementById("userRoleFilter").value
-  const status = document.getElementById("userStatusFilter").value
-
-  currentFilters.users = { search, role, status }
-  currentPage.users = 1
-  loadUsersTable()
+      user.email.toLowerCase().includes(search.toLowerCase());
+    const matchesRole = !role || user.role === role;
+    const matchesStatus = !status || user.status === status;
+    return matchesSearch && matchesRole && matchesStatus;
+  });
 }
 
 function toggleSelectAllUsers() {
@@ -902,186 +1118,139 @@ function toggleSelectAllUsers() {
   })
 }
 
+// Helper: Modal dinamis
+function showModal(content) {
+  const container = document.getElementById('modalContainer');
+  container.innerHTML = `<div class="modal" style="display:block;">${content}</div>`;
+  const modal = container.querySelector('.modal');
+  modal.onclick = (e) => { if (e.target === modal) closeModal(); };
+}
+function closeModal() {
+  document.getElementById('modalContainer').innerHTML = '';
+}
+
+// USERS CRUD MODAL
 function openAddUserModal() {
-  document.getElementById("addUserModal").style.display = "block"
-  document.getElementById("addUserForm").reset()
-}
-
-function addUser(event) {
-  event.preventDefault()
-
-  const formData = new FormData(event.target)
-  const newUser = {
-    id: users.length + 1,
-    name: document.getElementById("userName").value,
-    email: document.getElementById("userEmail").value,
-    role: document.getElementById("userRole").value,
-    status: document.getElementById("userStatus").value,
-    joinDate: new Date().toISOString().split("T")[0],
-    lastActive: new Date().toISOString().split("T")[0],
-    avatar: document
-      .getElementById("userName")
-      .value.split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase(),
-    bio: document.getElementById("userBio").value || "",
-    totalPurchases: 0,
-    totalSpent: 0,
-  }
-
-  users.push(newUser)
-  closeModal("addUserModal")
-  loadUsersTable()
-  updateStats()
-  showNotification("User added successfully!", "success")
-}
-
-function editUser(userId) {
-  const user = users.find((u) => u.id === userId)
-  if (!user) return
-
-  // Populate form with user data
-  document.getElementById("userName").value = user.name
-  document.getElementById("userEmail").value = user.email
-  document.getElementById("userRole").value = user.role
-  document.getElementById("userStatus").value = user.status
-  document.getElementById("userBio").value = user.bio || ""
-
-  // Change form submission to update instead of add
-  const form = document.getElementById("addUserForm")
-  form.onsubmit = (event) => updateUser(event, userId)
-
-  // Change modal title and button text
-  document.querySelector("#addUserModal .modal-header h3").innerHTML = '<i class="fas fa-user-edit"></i> Edit User'
-  document.querySelector("#addUserModal .modal-footer .btn-primary").textContent = "Update User"
-
-  document.getElementById("addUserModal").style.display = "block"
-}
-
-function updateUser(event, userId) {
-  event.preventDefault()
-
-  const userIndex = users.findIndex((u) => u.id === userId)
-  if (userIndex === -1) return
-
-  users[userIndex] = {
-    ...users[userIndex],
-    name: document.getElementById("userName").value,
-    email: document.getElementById("userEmail").value,
-    role: document.getElementById("userRole").value,
-    status: document.getElementById("userStatus").value,
-    bio: document.getElementById("userBio").value || "",
-    avatar: document
-      .getElementById("userName")
-      .value.split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase(),
-  }
-
-  closeModal("addUserModal")
-  loadUsersTable()
-  showNotification("User updated successfully!", "success")
-
-  // Reset form for next use
-  resetAddUserForm()
-}
-
-function deleteUser(userId) {
-  if (confirm("Are you sure you want to delete this user? This action cannot be undone.")) {
-    users = users.filter((u) => u.id !== userId)
-    loadUsersTable()
-    updateStats()
-    showNotification("User deleted successfully!", "success")
-  }
-}
-
-function viewUser(userId) {
-  const user = users.find((u) => u.id === userId)
-  if (!user) return
-
-  const modal = document.createElement("div")
-  modal.className = "modal"
-  modal.style.display = "block"
-
-  modal.innerHTML = `
+  showModal(`
     <div class="modal-content">
       <div class="modal-header">
-        <h3><i class="fas fa-user"></i> User Details</h3>
-        <button class="close-btn" onclick="this.closest('.modal').remove()">&times;</button>
+        <h3><i class="fas fa-user-plus"></i> Add New User</h3>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
       </div>
-      <div class="modal-body">
-        <div style="display: grid; grid-template-columns: auto 1fr; gap: 2rem; align-items: start;">
-          <div class="user-avatar" style="width: 80px; height: 80px; font-size: 2rem;">${user.avatar}</div>
-          <div>
-            <h2 style="margin: 0 0 1rem 0; color: #f1f5f9;">${user.name}</h2>
-            <div style="display: grid; gap: 1rem;">
-              <div><strong>Email:</strong> ${user.email}</div>
-              <div><strong>Role:</strong> <span class="role-badge ${user.role}">${user.role}</span></div>
-              <div><strong>Status:</strong> <span class="status-badge ${user.status}">${user.status}</span></div>
-              <div><strong>Joined:</strong> ${formatDate(user.joinDate)}</div>
-              <div><strong>Last Active:</strong> ${formatDate(user.lastActive)}</div>
-              <div><strong>Total Purchases:</strong> ${user.totalPurchases}</div>
-              <div><strong>Total Spent:</strong> $${user.totalSpent.toFixed(2)}</div>
-              ${user.bio ? `<div><strong>Bio:</strong> ${user.bio}</div>` : ""}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="this.closest('.modal').remove()">Close</button>
-        <button class="btn btn-primary" onclick="editUser(${user.id}); this.closest('.modal').remove();">Edit User</button>
-      </div>
+      <form id="addUserForm" class="modal-body" onsubmit="addUser(event)">
+        <div class="form-group"><label>Name</label><input type="text" id="userName" required></div>
+        <div class="form-group"><label>Email</label><input type="email" id="userEmail" required></div>
+        <div class="form-group"><label>Role</label><select id="userRole" required><option value="admin">Admin</option><option value="photographer">Photographer</option><option value="customer">Customer</option></select></div>
+        <div class="form-group"><label>Status</label><select id="userStatus" required><option value="active">Active</option><option value="inactive">Inactive</option><option value="suspended">Suspended</option></select></div>
+        <div class="form-group"><label>Bio</label><textarea id="userBio"></textarea></div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">Add User</button></div>
+      </form>
     </div>
-  `
-
-  document.body.appendChild(modal)
-
-  // Close on outside click
-  modal.onclick = (e) => {
-    if (e.target === modal) {
-      modal.remove()
-    }
-  }
+  `);
 }
-
-function resetAddUserForm() {
-  const form = document.getElementById("addUserForm")
-  form.onsubmit = addUser
-  document.querySelector("#addUserModal .modal-header h3").innerHTML = '<i class="fas fa-user-plus"></i> Add New User'
-  document.querySelector("#addUserModal .modal-footer .btn-primary").textContent = "Add User"
+function openEditUserModal(userId) {
+  const user = users.find(u => u.id === userId);
+  if (!user) return;
+  showModal(`
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-user-edit"></i> Edit User</h3>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+      </div>
+      <form id="editUserForm" class="modal-body" onsubmit="updateUser(event,${userId})">
+        <div class="form-group"><label>Name</label><input type="text" id="userName" value="${user.name}" required></div>
+        <div class="form-group"><label>Email</label><input type="email" id="userEmail" value="${user.email}" required></div>
+        <div class="form-group"><label>Role</label><select id="userRole" required><option value="admin"${user.role==='admin'?' selected':''}>Admin</option><option value="photographer"${user.role==='photographer'?' selected':''}>Photographer</option><option value="customer"${user.role==='customer'?' selected':''}>Customer</option></select></div>
+        <div class="form-group"><label>Status</label><select id="userStatus" required><option value="active"${user.status==='active'?' selected':''}>Active</option><option value="inactive"${user.status==='inactive'?' selected':''}>Inactive</option><option value="suspended"${user.status==='suspended'?' selected':''}>Suspended</option></select></div>
+        <div class="form-group"><label>Bio</label><textarea id="userBio">${user.bio||''}</textarea></div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">Update User</button></div>
+      </form>
+    </div>
+  `);
 }
-
-function exportUsers() {
-  const csvContent =
-    "data:text/csv;charset=utf-8," +
-    "ID,Name,Email,Role,Status,Join Date,Last Active,Total Purchases,Total Spent\n" +
-    users
-      .map(
-        (user) =>
-          `${user.id},"${user.name}","${user.email}",${user.role},${user.status},${user.joinDate},${user.lastActive},${user.totalPurchases},${user.totalSpent}`,
-      )
-      .join("\n")
-
-  const encodedUri = encodeURI(csvContent)
-  const link = document.createElement("a")
-  link.setAttribute("href", encodedUri)
-  link.setAttribute("download", "users_export.csv")
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-
-  showNotification("Users exported successfully!", "success")
+function openDeleteUserModal(userId) {
+  showModal(`
+    <div class="modal-content">
+      <div class="modal-header"><h3><i class="fas fa-trash"></i> Delete User</h3></div>
+      <div class="modal-body"><p>Are you sure you want to delete this user?</p></div>
+      <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-danger" onclick="deleteUser(${userId},true)">Delete</button></div>
+    </div>
+  `);
+}
+// Override CRUD button actions
+function editUser(userId) { openEditUserModal(userId); }
+function deleteUser(userId, confirmed) {
+  if (!confirmed) { openDeleteUserModal(userId); return; }
+  users = users.filter(u => u.id !== userId);
+  saveUsers();
+  closeModal();
+  loadUsersTable();
+  updateStats();
+  showNotification('User deleted successfully!','success');
+}
+// Save/load users to localStorage
+function saveUsers() { localStorage.setItem('users', JSON.stringify(users)); }
+function loadUsers() {
+  let stored = localStorage.getItem('users');
+  users = stored ? JSON.parse(stored) : [];
+}
+// Patch: load users from storage on init
+loadUsers();
+// Patch: after add/edit
+function addUser(event) {
+  event.preventDefault();
+  const newUser = {
+    id: users.length ? Math.max(...users.map(u=>u.id))+1 : 1,
+    name: document.getElementById('userName').value,
+    email: document.getElementById('userEmail').value,
+    role: document.getElementById('userRole').value,
+    status: document.getElementById('userStatus').value,
+    joinDate: new Date().toISOString().split('T')[0],
+    lastActive: new Date().toISOString().split('T')[0],
+    avatar: document.getElementById('userName').value.split(' ').map(n=>n[0]).join('').toUpperCase(),
+    bio: document.getElementById('userBio').value || '',
+    totalPurchases: 0,
+    totalSpent: 0,
+  };
+  users.push(newUser);
+  saveUsers();
+  closeModal();
+  loadUsersTable();
+  updateStats();
+  showNotification('User added successfully!','success');
+}
+function updateUser(event, userId) {
+  event.preventDefault();
+  const idx = users.findIndex(u=>u.id===userId);
+  if(idx===-1) return;
+  users[idx] = {
+    ...users[idx],
+    name: document.getElementById('userName').value,
+    email: document.getElementById('userEmail').value,
+    role: document.getElementById('userRole').value,
+    status: document.getElementById('userStatus').value,
+    bio: document.getElementById('userBio').value || '',
+    avatar: document.getElementById('userName').value.split(' ').map(n=>n[0]).join('').toUpperCase(),
+  };
+  saveUsers();
+  closeModal();
+  loadUsersTable();
+  showNotification('User updated successfully!','success');
 }
 
 // Photo Management Functions
 function loadPhotosGrid() {
-  const grid = document.getElementById("photoGrid")
-  const filteredPhotos = filterPhotos()
-  const startIndex = (currentPage.photos - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  const pagePhotos = filteredPhotos.slice(startIndex, endIndex)
+  const grid = document.getElementById("photoGrid");
+  const filteredPhotos = filterPhotos();
+  const startIndex = (currentPage.photos - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const pagePhotos = filteredPhotos.slice(startIndex, endIndex);
+
+  if (pagePhotos.length === 0) {
+    grid.innerHTML = `<div class="empty-state"><i class="fas fa-images"></i><h3>No photos found</h3><p>Try adjusting your filters or add a new photo.</p></div>`;
+    updatePagination("photos", filteredPhotos.length);
+    return;
+  }
 
   grid.innerHTML = pagePhotos
     .map(
@@ -1116,9 +1285,9 @@ function loadPhotosGrid() {
     </div>
   `,
     )
-    .join("")
+    .join("");
 
-  updatePagination("photos", filteredPhotos.length)
+  updatePagination("photos", filteredPhotos.length);
 }
 
 function filterPhotos() {
@@ -1140,219 +1309,130 @@ function filterPhotos() {
   })
 }
 
+// PHOTOS CRUD MODAL
 function openAddPhotoModal() {
-  document.getElementById("addPhotoModal").style.display = "block"
-  document.getElementById("addPhotoForm").reset()
-  document.getElementById("photoPreview").innerHTML = '<p style="color: #64748b;">No image selected</p>'
+  showModal(`
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-image"></i> Add New Photo</h3>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+      </div>
+      <form id="addPhotoForm" class="modal-body" onsubmit="addPhoto(event)">
+        <div class="form-group"><label>Title</label><input type="text" id="photoTitle" required></div>
+        <div class="form-group"><label>Photographer</label><input type="text" id="photoPhotographer" required></div>
+        <div class="form-group"><label>Category</label><input type="text" id="photoCategory" required></div>
+        <div class="form-group"><label>Price</label><input type="number" id="photoPrice" required></div>
+        <div class="form-group"><label>Description</label><textarea id="photoDescription"></textarea></div>
+        <div class="form-group"><label>Tags (comma separated)</label><input type="text" id="photoTags"></div>
+        <div class="form-group"><label>Image URL</label><input type="text" id="photoImage" required></div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">Add Photo</button></div>
+      </form>
+    </div>
+  `);
+}
+function openEditPhotoModal(photoId) {
+  const photo = photos.find(p => p.id === photoId);
+  if (!photo) return;
+  showModal(`
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-image"></i> Edit Photo</h3>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+      </div>
+      <form id="editPhotoForm" class="modal-body" onsubmit="updatePhoto(event,${photoId})">
+        <div class="form-group"><label>Title</label><input type="text" id="photoTitle" value="${photo.title}" required></div>
+        <div class="form-group"><label>Photographer</label><input type="text" id="photoPhotographer" value="${photo.photographer}" required></div>
+        <div class="form-group"><label>Category</label><input type="text" id="photoCategory" value="${photo.category}" required></div>
+        <div class="form-group"><label>Price</label><input type="number" id="photoPrice" value="${photo.price}" required></div>
+        <div class="form-group"><label>Description</label><textarea id="photoDescription">${photo.description||''}</textarea></div>
+        <div class="form-group"><label>Tags (comma separated)</label><input type="text" id="photoTags" value="${photo.tags ? photo.tags.join(', ') : ''}"></div>
+        <div class="form-group"><label>Image URL</label><input type="text" id="photoImage" value="${photo.image}" required></div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">Update Photo</button></div>
+      </form>
+    </div>
+  `);
+}
+function openDeletePhotoModal(photoId) {
+  showModal(`
+    <div class="modal-content">
+      <div class="modal-header"><h3><i class="fas fa-trash"></i> Delete Photo</h3></div>
+      <div class="modal-body"><p>Are you sure you want to delete this photo?</p></div>
+      <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-danger" onclick="deletePhoto(${photoId},true)">Delete</button></div>
+    </div>
+  `);
+}
+function editPhoto(photoId) { openEditPhotoModal(photoId); }
+function deletePhoto(photoId, confirmed) {
+  if (!confirmed) { openDeletePhotoModal(photoId); return; }
+  photos = photos.filter(p => p.id !== photoId);
+  savePhotos();
+  closeModal();
+  loadPhotosGrid();
+  updateStats();
+  showNotification('Photo deleted successfully!','success');
+}
+function savePhotos() { localStorage.setItem('photos', JSON.stringify(photos)); }
+function loadPhotos() {
+  let stored = localStorage.getItem('photos');
+  photos = stored ? JSON.parse(stored) : [];
 }
 
 function addPhoto(event) {
-  event.preventDefault()
-
-  const fileInput = document.getElementById("photoFile")
-  const file = fileInput.files[0]
-
-  if (!file) {
-    showNotification("Please select an image file", "error")
-    return
-  }
-
-  // Create URL for the uploaded file (in real app, this would be uploaded to server)
-  const imageUrl = URL.createObjectURL(file)
-
+  event.preventDefault();
   const newPhoto = {
-    id: photos.length + 1,
-    title: document.getElementById("photoTitle").value,
-    photographer: document.getElementById("photoPhotographer").value,
-    category: document.getElementById("photoCategory").value,
-    price: Number.parseFloat(document.getElementById("photoPrice").value),
-    status: "published",
-    image: imageUrl,
-    description: document.getElementById("photoDescription").value,
-    tags: document
-      .getElementById("photoTags")
-      .value.split(",")
-      .map((tag) => tag.trim()),
+    id: photos.length ? Math.max(...photos.map(p=>p.id))+1 : 1,
+    title: document.getElementById('photoTitle').value,
+    photographer: document.getElementById('photoPhotographer').value,
+    category: document.getElementById('photoCategory').value,
+    price: Number.parseFloat(document.getElementById('photoPrice').value),
+    status: 'published',
+    image: document.getElementById('photoImage').value,
+    description: document.getElementById('photoDescription').value,
+    tags: document.getElementById('photoTags').value.split(',').map(tag=>tag.trim()),
     downloads: 0,
     rating: 0,
-    uploadDate: new Date().toISOString().split("T")[0],
-  }
-
-  photos.push(newPhoto)
-  closeModal("addPhotoModal")
-  loadPhotosGrid()
-  updateStats()
-  showNotification("Photo added successfully!", "success")
+    uploadDate: new Date().toISOString().split('T')[0],
+  };
+  photos.push(newPhoto);
+  savePhotos();
+  closeModal();
+  loadPhotosGrid();
+  updateStats();
+  showNotification('Photo added successfully!','success');
 }
-
-function editPhoto(photoId) {
-  const photo = photos.find((p) => p.id === photoId)
-  if (!photo) return
-
-  // Populate form with photo data
-  document.getElementById("photoTitle").value = photo.title
-  document.getElementById("photoPhotographer").value = photo.photographer
-  document.getElementById("photoCategory").value = photo.category
-  document.getElementById("photoPrice").value = photo.price
-  document.getElementById("photoDescription").value = photo.description
-  document.getElementById("photoTags").value = photo.tags.join(", ")
-
-  // Show current image
-  document.getElementById("photoPreview").innerHTML = `
-    <img src="${photo.image}" alt="${photo.title}" style="max-width: 100%; max-height: 200px; border-radius: 8px;">
-    <p style="margin-top: 0.5rem; color: #94a3b8;">Current image</p>
-  `
-
-  // Change form submission to update instead of add
-  const form = document.getElementById("addPhotoForm")
-  form.onsubmit = (event) => updatePhoto(event, photoId)
-
-  // Change modal title and button text
-  document.querySelector("#addPhotoModal .modal-header h3").innerHTML = '<i class="fas fa-image"></i> Edit Photo'
-  document.querySelector("#addPhotoModal .modal-footer .btn-primary").textContent = "Update Photo"
-
-  document.getElementById("addPhotoModal").style.display = "block"
-}
-
 function updatePhoto(event, photoId) {
-  event.preventDefault()
-
-  const photoIndex = photos.findIndex((p) => p.id === photoId)
-  if (photoIndex === -1) return
-
-  const fileInput = document.getElementById("photoFile")
-  const file = fileInput.files[0]
-
-  // Update photo data
-  photos[photoIndex] = {
-    ...photos[photoIndex],
-    title: document.getElementById("photoTitle").value,
-    photographer: document.getElementById("photoPhotographer").value,
-    category: document.getElementById("photoCategory").value,
-    price: Number.parseFloat(document.getElementById("photoPrice").value),
-    description: document.getElementById("photoDescription").value,
-    tags: document
-      .getElementById("photoTags")
-      .value.split(",")
-      .map((tag) => tag.trim()),
-  }
-
-  // Update image if new file selected
-  if (file) {
-    photos[photoIndex].image = URL.createObjectURL(file)
-  }
-
-  closeModal("addPhotoModal")
-  loadPhotosGrid()
-  showNotification("Photo updated successfully!", "success")
-
-  // Reset form for next use
-  resetAddPhotoForm()
-}
-
-function deletePhoto(photoId) {
-  if (confirm("Are you sure you want to delete this photo? This action cannot be undone.")) {
-    photos = photos.filter((p) => p.id !== photoId)
-    loadPhotosGrid()
-    updateStats()
-    showNotification("Photo deleted successfully!", "success")
-  }
-}
-
-function viewPhoto(photoId) {
-  const photo = photos.find((p) => p.id === photoId)
-  if (!photo) return
-
-  const modal = document.createElement("div")
-  modal.className = "modal"
-  modal.style.display = "block"
-
-  modal.innerHTML = `
-    <div class="modal-content large">
-      <div class="modal-header">
-        <h3><i class="fas fa-image"></i> Photo Details</h3>
-        <button class="close-btn" onclick="this.closest('.modal').remove()">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-          <div>
-            <img src="${photo.image}" alt="${photo.title}" style="width: 100%; border-radius: 12px;">
-          </div>
-          <div>
-            <h2 style="margin: 0 0 1rem 0; color: #f1f5f9;">${photo.title}</h2>
-            <div style="display: grid; gap: 1rem;">
-              <div><strong>Photographer:</strong> ${photo.photographer}</div>
-              <div><strong>Category:</strong> <span class="photo-card-category">${photo.category}</span></div>
-              <div><strong>Price:</strong> $${photo.price}</div>
-              <div><strong>Status:</strong> <span class="status-badge ${photo.status}">${photo.status}</span></div>
-              <div><strong>Upload Date:</strong> ${formatDate(photo.uploadDate)}</div>
-              <div><strong>Downloads:</strong> ${photo.downloads}</div>
-              <div><strong>Rating:</strong> ${photo.rating}/5</div>
-              <div><strong>Description:</strong> ${photo.description}</div>
-              <div><strong>Tags:</strong> ${photo.tags.map((tag) => `<span class="keyword-tag">${tag}</span>`).join(" ")}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="this.closest('.modal').remove()">Close</button>
-        <button class="btn btn-primary" onclick="editPhoto(${photo.id}); this.closest('.modal').remove();">Edit Photo</button>
-      </div>
-    </div>
-  `
-
-  document.body.appendChild(modal)
-
-  // Close on outside click
-  modal.onclick = (e) => {
-    if (e.target === modal) {
-      modal.remove()
-    }
-  }
-}
-
-function resetAddPhotoForm() {
-  const form = document.getElementById("addPhotoForm")
-  form.onsubmit = addPhoto
-  document.querySelector("#addPhotoModal .modal-header h3").innerHTML = '<i class="fas fa-image"></i> Add New Photo'
-  document.querySelector("#addPhotoModal .modal-footer .btn-primary").textContent = "Add Photo"
-}
-
-// File preview functionality
-document.addEventListener("DOMContentLoaded", () => {
-  const photoFileInput = document.getElementById("photoFile")
-  if (photoFileInput) {
-    photoFileInput.addEventListener("change", (event) => {
-      const file = event.target.files[0]
-      const preview = document.getElementById("photoPreview")
-
-      if (file) {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          preview.innerHTML = `
-            <img src="${e.target.result}" alt="Preview" style="max-width: 100%; max-height: 200px; border-radius: 8px;">
-            <p style="margin-top: 0.5rem; color: #94a3b8;">${file.name}</p>
-          `
-        }
-        reader.readAsDataURL(file)
-      } else {
-        preview.innerHTML = '<p style="color: #64748b;">No image selected</p>'
-      }
-    })
-  }
-})
-
-function bulkUpload() {
-  showNotification("Bulk upload feature coming soon!", "info")
+  event.preventDefault();
+  const idx = photos.findIndex(p=>p.id===photoId);
+  if(idx===-1) return;
+  photos[idx] = {
+    ...photos[idx],
+    title: document.getElementById('photoTitle').value,
+    photographer: document.getElementById('photoPhotographer').value,
+    category: document.getElementById('photoCategory').value,
+    price: Number.parseFloat(document.getElementById('photoPrice').value),
+    description: document.getElementById('photoDescription').value,
+    tags: document.getElementById('photoTags').value.split(',').map(tag=>tag.trim()),
+    image: document.getElementById('photoImage').value,
+  };
+  savePhotos();
+  closeModal();
+  loadPhotosGrid();
+  showNotification('Photo updated successfully!','success');
 }
 
 // Article Management Functions
 function loadArticlesList() {
-  const container = document.getElementById("articlesList")
-  const filteredArticles = filterArticles()
-  const startIndex = (currentPage.articles - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  const pageArticles = filteredArticles.slice(startIndex, endIndex)
+  const container = document.getElementById("articlesList");
+  const filteredArticles = filterArticles();
+  const startIndex = (currentPage.articles - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const pageArticles = filteredArticles.slice(startIndex, endIndex);
+
+  if (pageArticles.length === 0) {
+    container.innerHTML = `<div class="empty-state"><i class="fas fa-newspaper"></i><h3>No articles found</h3><p>Try adjusting your filters or create a new article.</p></div>`;
+    updatePagination("articles", filteredArticles.length);
+    return;
+  }
 
   container.innerHTML = pageArticles
     .map(
@@ -1383,9 +1463,9 @@ function loadArticlesList() {
     </div>
   `,
     )
-    .join("")
+    .join("");
 
-  updatePagination("articles", filteredArticles.length)
+  updatePagination("articles", filteredArticles.length);
 }
 
 function filterArticles() {
@@ -1407,187 +1487,131 @@ function filterArticles() {
   })
 }
 
+// ARTICLES CRUD MODAL
 function openAddArticleModal() {
-  document.getElementById("addArticleModal").style.display = "block"
-  document.getElementById("addArticleForm").reset()
+  showModal(`
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-newspaper"></i> Add New Article</h3>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+      </div>
+      <form id="addArticleForm" class="modal-body" onsubmit="addArticle(event)">
+        <div class="form-group"><label>Title</label><input type="text" id="articleTitle" required></div>
+        <div class="form-group"><label>Author</label><input type="text" id="articleAuthor" required></div>
+        <div class="form-group"><label>Category</label><input type="text" id="articleCategory" required></div>
+        <div class="form-group"><label>Status</label><select id="articleStatus" required><option value="published">Published</option><option value="draft">Draft</option><option value="scheduled">Scheduled</option></select></div>
+        <div class="form-group"><label>Excerpt</label><textarea id="articleExcerpt"></textarea></div>
+        <div class="form-group"><label>Content</label><textarea id="articleContent"></textarea></div>
+        <div class="form-group"><label>Image URL</label><input type="text" id="articleImage" required></div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">Add Article</button></div>
+      </form>
+    </div>
+  `);
+}
+function openEditArticleModal(articleId) {
+  const article = articles.find(a => a.id === articleId);
+  if (!article) return;
+  showModal(`
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-newspaper"></i> Edit Article</h3>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+      </div>
+      <form id="editArticleForm" class="modal-body" onsubmit="updateArticle(event,${articleId})">
+        <div class="form-group"><label>Title</label><input type="text" id="articleTitle" value="${article.title}" required></div>
+        <div class="form-group"><label>Author</label><input type="text" id="articleAuthor" value="${article.author}" required></div>
+        <div class="form-group"><label>Category</label><input type="text" id="articleCategory" value="${article.category}" required></div>
+        <div class="form-group"><label>Status</label><select id="articleStatus" required><option value="published"${article.status==='published'?' selected':''}>Published</option><option value="draft"${article.status==='draft'?' selected':''}>Draft</option><option value="scheduled"${article.status==='scheduled'?' selected':''}>Scheduled</option></select></div>
+        <div class="form-group"><label>Excerpt</label><textarea id="articleExcerpt">${article.excerpt||''}</textarea></div>
+        <div class="form-group"><label>Content</label><textarea id="articleContent">${article.content||''}</textarea></div>
+        <div class="form-group"><label>Image URL</label><input type="text" id="articleImage" value="${article.image}" required></div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">Update Article</button></div>
+      </form>
+    </div>
+  `);
+}
+function openDeleteArticleModal(articleId) {
+  showModal(`
+    <div class="modal-content">
+      <div class="modal-header"><h3><i class="fas fa-trash"></i> Delete Article</h3></div>
+      <div class="modal-body"><p>Are you sure you want to delete this article?</p></div>
+      <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-danger" onclick="deleteArticle(${articleId},true)">Delete</button></div>
+    </div>
+  `);
+}
+function editArticle(articleId) { openEditArticleModal(articleId); }
+function deleteArticle(articleId, confirmed) {
+  if (!confirmed) { openDeleteArticleModal(articleId); return; }
+  articles = articles.filter(a => a.id !== articleId);
+  saveArticles();
+  closeModal();
+  loadArticlesList();
+  updateStats();
+  showNotification('Article deleted successfully!','success');
+}
+function saveArticles() { localStorage.setItem('articles', JSON.stringify(articles)); }
+function loadArticles() {
+  let stored = localStorage.getItem('articles');
+  articles = stored ? JSON.parse(stored) : [];
 }
 
 function addArticle(event) {
-  event.preventDefault()
-
+  event.preventDefault();
   const newArticle = {
-    id: articles.length + 1,
-    title: document.getElementById("articleTitle").value,
-    author: document.getElementById("articleAuthor").value,
-    category: document.getElementById("articleCategory").value,
-    status: document.getElementById("articleStatus").value,
-    publishDate: new Date().toISOString().split("T")[0],
-    excerpt: document.getElementById("articleExcerpt").value,
-    content: document.getElementById("articleContent").value,
-    image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&h=400&fit=crop", // Default image
-    readTime: Math.ceil(document.getElementById("articleContent").value.split(" ").length / 200),
+    id: articles.length ? Math.max(...articles.map(a=>a.id))+1 : 1,
+    title: document.getElementById('articleTitle').value,
+    author: document.getElementById('articleAuthor').value,
+    category: document.getElementById('articleCategory').value,
+    status: document.getElementById('articleStatus').value,
+    publishDate: new Date().toISOString().split('T')[0],
+    excerpt: document.getElementById('articleExcerpt').value,
+    content: document.getElementById('articleContent').value,
+    image: document.getElementById('articleImage').value,
+    readTime: Math.ceil(document.getElementById('articleContent').value.split(' ').length / 200),
     views: 0,
     likes: 0,
-  }
-
-  articles.push(newArticle)
-  closeModal("addArticleModal")
-  loadArticlesList()
-  updateStats()
-  showNotification("Article created successfully!", "success")
+  };
+  articles.push(newArticle);
+  saveArticles();
+  closeModal();
+  loadArticlesList();
+  updateStats();
+  showNotification('Article added successfully!','success');
 }
-
-function editArticle(articleId) {
-  const article = articles.find((a) => a.id === articleId)
-  if (!article) return
-
-  // Populate form with article data
-  document.getElementById("articleTitle").value = article.title
-  document.getElementById("articleAuthor").value = article.author
-  document.getElementById("articleCategory").value = article.category
-  document.getElementById("articleStatus").value = article.status
-  document.getElementById("articleExcerpt").value = article.excerpt
-  document.getElementById("articleContent").value = article.content
-
-  // Change form submission to update instead of add
-  const form = document.getElementById("addArticleForm")
-  form.onsubmit = (event) => updateArticle(event, articleId)
-
-  // Change modal title and button text
-  document.querySelector("#addArticleModal .modal-header h3").innerHTML =
-    '<i class="fas fa-newspaper"></i> Edit Article'
-  document.querySelector("#addArticleModal .modal-footer .btn-primary").textContent = "Update Article"
-
-  document.getElementById("addArticleModal").style.display = "block"
-}
-
 function updateArticle(event, articleId) {
-  event.preventDefault()
-
-  const articleIndex = articles.findIndex((a) => a.id === articleId)
-  if (articleIndex === -1) return
-
-  articles[articleIndex] = {
-    ...articles[articleIndex],
-    title: document.getElementById("articleTitle").value,
-    author: document.getElementById("articleAuthor").value,
-    category: document.getElementById("articleCategory").value,
-    status: document.getElementById("articleStatus").value,
-    excerpt: document.getElementById("articleExcerpt").value,
-    content: document.getElementById("articleContent").value,
-    readTime: Math.ceil(document.getElementById("articleContent").value.split(" ").length / 200),
-  }
-
-  closeModal("addArticleModal")
-  loadArticlesList()
-  showNotification("Article updated successfully!", "success")
-
-  // Reset form for next use
-  resetAddArticleForm()
-}
-
-function deleteArticle(articleId) {
-  if (confirm("Are you sure you want to delete this article? This action cannot be undone.")) {
-    articles = articles.filter((a) => a.id !== articleId)
-    loadArticlesList()
-    updateStats()
-    showNotification("Article deleted successfully!", "success")
-  }
-}
-
-function viewArticle(articleId) {
-  const article = articles.find((a) => a.id === articleId)
-  if (!article) return
-
-  const modal = document.createElement("div")
-  modal.className = "modal"
-  modal.style.display = "block"
-
-  modal.innerHTML = `
-    <div class="modal-content large">
-      <div class="modal-header">
-        <h3><i class="fas fa-newspaper"></i> Article Details</h3>
-        <button class="close-btn" onclick="this.closest('.modal').remove()">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div style="margin-bottom: 2rem;">
-          <img src="${article.image}" alt="${article.title}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px;">
-        </div>
-        <h2 style="margin: 0 0 1rem 0; color: #f1f5f9;">${article.title}</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
-          <div><strong>Author:</strong> ${article.author}</div>
-          <div><strong>Category:</strong> <span class="article-card-category">${article.category}</span></div>
-          <div><strong>Status:</strong> <span class="status-badge ${article.status}">${article.status}</span></div>
-          <div><strong>Published:</strong> ${formatDate(article.publishDate)}</div>
-          <div><strong>Read Time:</strong> ${article.readTime} min</div>
-          <div><strong>Views:</strong> ${article.views}</div>
-          <div><strong>Likes:</strong> ${article.likes}</div>
-        </div>
-        <div style="margin-bottom: 2rem;">
-          <h4>Excerpt:</h4>
-          <p style="color: #94a3b8; line-height: 1.6;">${article.excerpt}</p>
-        </div>
-        <div>
-          <h4>Content:</h4>
-          <div style="color: #cbd5e1; line-height: 1.6; max-height: 300px; overflow-y: auto; padding: 1rem; background: rgba(15, 23, 42, 0.6); border-radius: 8px;">
-            ${article.content.replace(/\n/g, "<br>")}
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="this.closest('.modal').remove()">Close</button>
-        <button class="btn btn-primary" onclick="editArticle(${article.id}); this.closest('.modal').remove();">Edit Article</button>
-      </div>
-    </div>
-  `
-
-  document.body.appendChild(modal)
-
-  // Close on outside click
-  modal.onclick = (e) => {
-    if (e.target === modal) {
-      modal.remove()
-    }
-  }
-}
-
-function resetAddArticleForm() {
-  const form = document.getElementById("addArticleForm")
-  form.onsubmit = addArticle
-  document.querySelector("#addArticleModal .modal-header h3").innerHTML =
-    '<i class="fas fa-newspaper"></i> Create New Article'
-  document.querySelector("#addArticleModal .modal-footer .btn-primary").textContent = "Create Article"
-}
-
-function exportArticles() {
-  const csvContent =
-    "data:text/csv;charset=utf-8," +
-    "ID,Title,Author,Category,Status,Publish Date,Views,Likes,Read Time\n" +
-    articles
-      .map(
-        (article) =>
-          `${article.id},"${article.title}","${article.author}",${article.category},${article.status},${article.publishDate},${article.views},${article.likes},${article.readTime}`,
-      )
-      .join("\n")
-
-  const encodedUri = encodeURI(csvContent)
-  const link = document.createElement("a")
-  link.setAttribute("href", encodedUri)
-  link.setAttribute("download", "articles_export.csv")
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-
-  showNotification("Articles exported successfully!", "success")
+  event.preventDefault();
+  const idx = articles.findIndex(a=>a.id===articleId);
+  if(idx===-1) return;
+  articles[idx] = {
+    ...articles[idx],
+    title: document.getElementById('articleTitle').value,
+    author: document.getElementById('articleAuthor').value,
+    category: document.getElementById('articleCategory').value,
+    status: document.getElementById('articleStatus').value,
+    excerpt: document.getElementById('articleExcerpt').value,
+    content: document.getElementById('articleContent').value,
+    image: document.getElementById('articleImage').value,
+    readTime: Math.ceil(document.getElementById('articleContent').value.split(' ').length / 200),
+  };
+  saveArticles();
+  closeModal();
+  loadArticlesList();
+  showNotification('Article updated successfully!','success');
 }
 
 // Transaction Management Functions
 function loadTransactionsTable() {
-  const tbody = document.getElementById("transactionsTableBody")
-  const filteredTransactions = filterTransactions()
-  const startIndex = (currentPage.transactions - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  const pageTransactions = filteredTransactions.slice(startIndex, endIndex)
+  const tbody = document.getElementById("transactionsTableBody");
+  const filteredTransactions = filterTransactions();
+  const startIndex = (currentPage.transactions - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const pageTransactions = filteredTransactions.slice(startIndex, endIndex);
+
+  if (pageTransactions.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><i class="fas fa-receipt"></i><h3>No transactions found</h3><p>Try adjusting your filters or check again later.</p></div></td></tr>`;
+    updatePagination("transactions", filteredTransactions.length);
+    return;
+  }
 
   tbody.innerHTML = pageTransactions
     .map(
@@ -1619,7 +1643,7 @@ function loadTransactionsTable() {
       </td>
       <td>
         <span style="font-weight: 700; color: #10b981; font-size: 1.1rem;">
-          $${transaction.amount.toFixed(2)}
+          $${(transaction.amount || transaction.total || 0).toFixed(2)}
         </span>
       </td>
       <td><span class="status-badge ${transaction.status}">${transaction.status}</span></td>
@@ -1647,9 +1671,9 @@ function loadTransactionsTable() {
     </tr>
   `,
     )
-    .join("")
+    .join("");
 
-  updatePagination("transactions", filteredTransactions.length)
+  updatePagination("transactions", filteredTransactions.length);
 }
 
 function filterTransactions() {
@@ -1700,7 +1724,7 @@ function viewTransaction(transactionId) {
               <div><strong>Status:</strong> <span class="status-badge ${transaction.status}">${transaction.status}</span></div>
               <div><strong>Type:</strong> ${transaction.type}</div>
               <div><strong>Payment Method:</strong> ${transaction.paymentMethod}</div>
-              <div><strong>Total Amount:</strong> <span style="font-weight: 700; color: #10b981; font-size: 1.2rem;">$${transaction.amount.toFixed(2)}</span></div>
+              <div><strong>Total Amount:</strong> <span style="font-weight: 700; color: #10b981; font-size: 1.2rem;">$${(transaction.amount || transaction.total || 0).toFixed(2)}</span></div>
             </div>
           </div>
           
@@ -1804,7 +1828,7 @@ function editTransaction(transactionId) {
           </div>
           <div class="form-group">
             <label>Total Amount</label>
-            <input type="text" value="$${transaction.amount.toFixed(2)}" disabled style="background: rgba(71, 85, 105, 0.3);">
+            <input type="text" value="$${(transaction.amount || transaction.total || 0).toFixed(2)}" disabled style="background: rgba(71, 85, 105, 0.3);">
           </div>
         </form>
       </div>
@@ -2052,3 +2076,143 @@ function nextPage(type) {
   }
 }
 // ...existing code...
+
+function renderNavbar() {
+  const nav = document.getElementById('adminNavbar');
+  if (!nav) return;
+  const user = JSON.parse(localStorage.getItem("currentUser") || "{}");
+  let navHtml = `
+    <a href="home.html" class="nav-link">Home</a>
+    <a href="admin-management.html" class="nav-link ">Admin Panel</a>
+    <div class="nav-dropdown"> ...Browse... </div>
+    <div class="nav-dropdown"> ...Resources... </div>
+    <div class="nav-dropdown"> ...Account... </div>
+  `;
+  if (user.role === "admin") {
+    navHtml += `<a href="admin-management.html" class="nav-link">Admin Panel</a>`;
+  }
+  nav.innerHTML = navHtml;
+}
+document.addEventListener("DOMContentLoaded", renderNavbar);
+
+// TRANSACTIONS CRUD MODAL
+function openAddTransactionModal() {
+  showModal(`
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-receipt"></i> Add New Transaction</h3>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+      </div>
+      <form id="addTransactionForm" class="modal-body" onsubmit="addTransaction(event)">
+        <div class="form-group"><label>Customer Name</label><input type="text" id="transactionCustomerName" required></div>
+        <div class="form-group"><label>Customer Email</label><input type="email" id="transactionCustomerEmail" required></div>
+        <div class="form-group"><label>Amount</label><input type="number" id="transactionAmount" required></div>
+        <div class="form-group"><label>Status</label><select id="transactionStatus" required><option value="completed">Completed</option><option value="pending">Pending</option><option value="failed">Failed</option><option value="refunded">Refunded</option></select></div>
+        <div class="form-group"><label>Payment Method</label><input type="text" id="transactionPaymentMethod" required></div>
+        <div class="form-group"><label>Date</label><input type="date" id="transactionDate" required></div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">Add Transaction</button></div>
+      </form>
+    </div>
+  `);
+}
+function openEditTransactionModal(transactionId) {
+  const transaction = transactions.find(t => t.id === transactionId);
+  if (!transaction) return;
+  showModal(`
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-receipt"></i> Edit Transaction</h3>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+      </div>
+      <form id="editTransactionForm" class="modal-body" onsubmit="updateTransaction(event,'${transactionId}')">
+        <div class="form-group"><label>Customer Name</label><input type="text" id="transactionCustomerName" value="${transaction.customerName}" required></div>
+        <div class="form-group"><label>Customer Email</label><input type="email" id="transactionCustomerEmail" value="${transaction.customerEmail}" required></div>
+        <div class="form-group"><label>Amount</label><input type="number" id="transactionAmount" value="${transaction.amount}" required></div>
+        <div class="form-group"><label>Status</label><select id="transactionStatus" required><option value="completed"${transaction.status==='completed'?' selected':''}>Completed</option><option value="pending"${transaction.status==='pending'?' selected':''}>Pending</option><option value="failed"${transaction.status==='failed'?' selected':''}>Failed</option><option value="refunded"${transaction.status==='refunded'?' selected':''}>Refunded</option></select></div>
+        <div class="form-group"><label>Payment Method</label><input type="text" id="transactionPaymentMethod" value="${transaction.paymentMethod}" required></div>
+        <div class="form-group"><label>Date</label><input type="date" id="transactionDate" value="${transaction.date}" required></div>
+        <div class="modal-footer"><button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">Update Transaction</button></div>
+      </form>
+    </div>
+  `);
+}
+function openDeleteTransactionModal(transactionId) {
+  showModal(`
+    <div class="modal-content">
+      <div class="modal-header"><h3><i class="fas fa-trash"></i> Delete Transaction</h3></div>
+      <div class="modal-body"><p>Are you sure you want to delete this transaction?</p></div>
+      <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-danger" onclick="deleteTransaction('${transactionId}',true)">Delete</button></div>
+    </div>
+  `);
+}
+function editTransaction(transactionId) { openEditTransactionModal(transactionId); }
+function deleteTransaction(transactionId, confirmed) {
+  if (!confirmed) { openDeleteTransactionModal(transactionId); return; }
+  transactions = transactions.filter(t => t.id !== transactionId);
+  saveTransactions();
+  closeModal();
+  loadTransactionsTable();
+  updateStats();
+  showNotification('Transaction deleted successfully!','success');
+}
+function saveTransactions() { localStorage.setItem('transactions', JSON.stringify(transactions)); }
+function loadTransactionsStorage() {
+  // Ambil dari localStorage, assign ke let transactions
+  let stored = localStorage.getItem('transactions');
+  if (stored) {
+    transactions = JSON.parse(stored);
+  }
+}
+loadTransactionsStorage();
+function addTransaction(event) {
+  event.preventDefault();
+  const newTransaction = {
+    id: 'TXN-' + Date.now(),
+    customerName: document.getElementById('transactionCustomerName').value,
+    customerEmail: document.getElementById('transactionCustomerEmail').value,
+    amount: Number.parseFloat(document.getElementById('transactionAmount').value),
+    status: document.getElementById('transactionStatus').value,
+    paymentMethod: document.getElementById('transactionPaymentMethod').value,
+    date: document.getElementById('transactionDate').value,
+    items: [],
+    type: 'purchase',
+  };
+  transactions.push(newTransaction);
+  saveTransactions();
+  closeModal();
+  loadTransactionsTable();
+  updateStats();
+  showNotification('Transaction added successfully!','success');
+}
+function updateTransaction(event, transactionId) {
+  event.preventDefault();
+  const idx = transactions.findIndex(t=>t.id===transactionId);
+  if(idx===-1) return;
+  transactions[idx] = {
+    ...transactions[idx],
+    customerName: document.getElementById('transactionCustomerName').value,
+    customerEmail: document.getElementById('transactionCustomerEmail').value,
+    amount: Number.parseFloat(document.getElementById('transactionAmount').value),
+    status: document.getElementById('transactionStatus').value,
+    paymentMethod: document.getElementById('transactionPaymentMethod').value,
+    date: document.getElementById('transactionDate').value,
+  };
+  saveTransactions();
+  closeModal();
+  loadTransactionsTable();
+  showNotification('Transaction updated successfully!','success');
+}
+
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+function loadTransactions() {
+  let stored = localStorage.getItem('transactions');
+  transactions = stored ? JSON.parse(stored) : [];
+}

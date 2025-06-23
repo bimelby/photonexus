@@ -3,666 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Management - FutureStock</title>
+    <title>Admin Management - PhotoNexus</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard.css">
     <link rel="stylesheet" href="admin-management.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
-                <i class="fas fa-camera-retro"></i>
-                <span>FutureStock</span>
+                <i class="fas fa-camera"></i>
+                <span>PhotoNexus</span>
             </div>
-            <div class="nav-menu">
-                <a href="home.html" class="nav-link">
-                    <i class="fas fa-home"></i>
-                    <span>Home</span>
-                </a>
-                <a href="catalog.html" class="nav-link">
-                    <i class="fas fa-images"></i>
-                    <span>Catalog</span>
-                </a>
-                <a href="articles.html" class="nav-link">
-                    <i class="fas fa-newspaper"></i>
-                    <span>Articles</span>
-                </a>
-                <a href="dashboard.html" class="nav-link">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="admin-management.html" class="nav-link active">
-                    <i class="fas fa-cog"></i>
-                    <span>Admin</span>
-                </a>
+            <div class="nav-menu" id="navMenu">
+                <a href="home.html" class="nav-link">Home</a>
+                <a href="admin-management.html" class="nav-link active">Admin Panel</a>
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link dropdown-toggle">Browse <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-menu">
+                        <a href="catalog.html" class="dropdown-item">Photo Catalog</a>
+                        <a href="categories.html" class="dropdown-item">Categories</a>
+                        <a href="collections.html" class="dropdown-item">Collections</a>
+                        <a href="new.arrivals.html" class="dropdown-item">New Arrivals</a>
+                    </div>
+                </div>
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link dropdown-toggle">Resources <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-menu">
+                        <a href="articles.html" class="dropdown-item">Articles</a>
+                        <a href="tutorials.html" class="dropdown-item">Tutorials</a>
+                        <a href="inspiration.html" class="dropdown-item">Inspiration</a>
+                        <a href="blog.html" class="dropdown-item">Blog</a>
+                    </div>
+                </div>
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link dropdown-toggle">Account <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-menu">
+                        <a href="index.html" class="dropdown-item">Sign In</a>
+                        <a href="register.html" class="dropdown-item">Register</a>
+                        <a href="dashboard.html" class="dropdown-item">Dashboard</a>
+                        <a href="history.html" class="dropdown-item">Purchase History</a>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-actions">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search photos..." id="searchInput">
+                </div>
                 <button class="cart-btn" onclick="openCart()">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count" id="cartCount">0</span>
                 </button>
+                <button class="user-btn" onclick="window.location.href='profile.html'">
+                    <img id="profileMini" src="https://ui-avatars.com/api/?name=User" alt="Profile" style="width:28px;height:28px;border-radius:50%;">
+                </button>
             </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
     </nav>
-
-    <!-- Admin Management Container -->
-    <div class="admin-container">
-        <!-- Admin Header -->
-        <div class="admin-header">
-            <div class="admin-title">
-                <h1><i class="fas fa-shield-alt"></i> Admin Management Center</h1>
-                <p>Comprehensive management system for all platform operations</p>
+    <div class="dashboard-container fade-in">
+        <div class="dashboard-main" style="margin-left:0;">
+            <div class="section-header animate__animated animate__fadeInDown">
+                <h2><i class="fas fa-cog"></i> Admin Management</h2>
+                <p>Manage users, photos, articles, and transactions with a modern, interactive dashboard.</p>
             </div>
-            <div class="admin-stats">
+            <div class="quick-stats animate__animated animate__fadeInUp">
                 <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="stat-info">
-                        <div class="stat-number" id="totalUsers">1,247</div>
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="totalUsers">0</div>
                         <div class="stat-label">Total Users</div>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-images"></i>
-                    </div>
-                    <div class="stat-info">
-                        <div class="stat-number" id="totalPhotos">16</div>
+                    <div class="stat-icon"><i class="fas fa-images"></i></div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="totalPhotos">0</div>
                         <div class="stat-label">Photos</div>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-newspaper"></i>
-                    </div>
-                    <div class="stat-info">
-                        <div class="stat-number" id="totalArticles">12</div>
+                    <div class="stat-icon"><i class="fas fa-newspaper"></i></div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="totalArticles">0</div>
                         <div class="stat-label">Articles</div>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-dollar-sign"></i>
-                    </div>
-                    <div class="stat-info">
-                        <div class="stat-number" id="totalRevenue">$45,892</div>
+                    <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="totalRevenue">$0</div>
                         <div class="stat-label">Revenue</div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Management Tabs -->
-        <div class="management-tabs">
-            <button class="tab-btn active" onclick="switchTab('users')">
-                <i class="fas fa-users"></i>
-                User Management
-            </button>
-            <button class="tab-btn" onclick="switchTab('photos')">
-                <i class="fas fa-images"></i>
-                Photo Management
-            </button>
-            <button class="tab-btn" onclick="switchTab('articles')">
-                <i class="fas fa-newspaper"></i>
-                Article Management
-            </button>
-            <button class="tab-btn" onclick="switchTab('transactions')">
-                <i class="fas fa-receipt"></i>
-                Transaction Management
-            </button>
-            <button class="tab-btn" onclick="switchTab('analytics')">
-                <i class="fas fa-chart-bar"></i>
-                Analytics
-            </button>
-        </div>
-
-        <!-- Tab Content -->
-        <div class="tab-content">
-            <!-- User Management Tab -->
-            <div id="users-tab" class="tab-panel active">
-                <div class="panel-header">
-                    <h2><i class="fas fa-users"></i> User Management</h2>
-                    <div class="panel-actions">
-                        <button class="btn btn-primary" onclick="openAddUserModal()">
-                            <i class="fas fa-plus"></i>
-                            Add New User
-                        </button>
-                        <button class="btn btn-secondary" onclick="exportUsers()">
-                            <i class="fas fa-download"></i>
-                            Export Users
-                        </button>
-                    </div>
-                </div>
-
-                <div class="search-filter-bar">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Search users..." id="userSearch" oninput="filterUsers()">
-                    </div>
-                    <div class="filter-options">
-                        <select id="userRoleFilter" onchange="filterUsers()">
-                            <option value="">All Roles</option>
-                            <option value="admin">Admin</option>
-                            <option value="photographer">Photographer</option>
-                            <option value="customer">Customer</option>
-                        </select>
-                        <select id="userStatusFilter" onchange="filterUsers()">
-                            <option value="">All Status</option>
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                            <option value="suspended">Suspended</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="data-table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <input type="checkbox" id="selectAllUsers" onchange="toggleSelectAllUsers()">
-                                </th>
-                                <th>User</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Status</th>
-                                <th>Joined</th>
-                                <th>Last Active</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="usersTableBody">
-                            <!-- Users will be populated by JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="pagination">
-                    <button class="pagination-btn" onclick="previousPage('users')">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <span class="pagination-info" id="usersPagination">Page 1 of 10</span>
-                    <button class="pagination-btn" onclick="nextPage('users')">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
+            <div class="admin-tabs animate__animated animate__fadeIn">
+                <button class="tab-btn active" onclick="switchTab('users')"><i class="fas fa-users"></i> Users</button>
+                <button class="tab-btn" onclick="switchTab('photos')"><i class="fas fa-images"></i> Photos</button>
+                <button class="tab-btn" onclick="switchTab('articles')"><i class="fas fa-newspaper"></i> Articles</button>
+                <button class="tab-btn" onclick="switchTab('transactions')"><i class="fas fa-receipt"></i> Transactions</button>
+                <button class="tab-btn" onclick="switchTab('analytics')"><i class="fas fa-chart-bar"></i> Analytics</button>
             </div>
-
-            <!-- Photo Management Tab -->
-            <div id="photos-tab" class="tab-panel">
-                <div class="panel-header">
-                    <h2><i class="fas fa-images"></i> Photo Management</h2>
-                    <div class="panel-actions">
-                        <button class="btn btn-primary" onclick="openAddPhotoModal()">
-                            <i class="fas fa-plus"></i>
-                            Add New Photo
-                        </button>
-                        <button class="btn btn-secondary" onclick="bulkUpload()">
-                            <i class="fas fa-upload"></i>
-                            Bulk Upload
-                        </button>
-                    </div>
-                </div>
-
-                <div class="search-filter-bar">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Search photos..." id="photoSearch" oninput="filterPhotos()">
-                    </div>
-                    <div class="filter-options">
-                        <select id="photoCategoryFilter" onchange="filterPhotos()">
-                            <option value="">All Categories</option>
-                            <option value="nature">Nature</option>
-                            <option value="urban">Urban</option>
-                            <option value="space">Space</option>
-                            <option value="abstract">Abstract</option>
-                            <option value="wildlife">Wildlife</option>
-                            <option value="architecture">Architecture</option>
-                        </select>
-                        <select id="photoStatusFilter" onchange="filterPhotos()">
-                            <option value="">All Status</option>
-                            <option value="published">Published</option>
-                            <option value="draft">Draft</option>
-                            <option value="pending">Pending Review</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="photo-grid" id="photoGrid">
-                    <!-- Photos will be populated by JavaScript -->
-                </div>
-
-                <div class="pagination">
-                    <button class="pagination-btn" onclick="previousPage('photos')">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <span class="pagination-info" id="photosPagination">Page 1 of 5</span>
-                    <button class="pagination-btn" onclick="nextPage('photos')">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Article Management Tab -->
-            <div id="articles-tab" class="tab-panel">
-                <div class="panel-header">
-                    <h2><i class="fas fa-newspaper"></i> Article Management</h2>
-                    <div class="panel-actions">
-                        <button class="btn btn-primary" onclick="openAddArticleModal()">
-                            <i class="fas fa-plus"></i>
-                            Create Article
-                        </button>
-                        <button class="btn btn-secondary" onclick="exportArticles()">
-                            <i class="fas fa-download"></i>
-                            Export Articles
-                        </button>
-                    </div>
-                </div>
-
-                <div class="search-filter-bar">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Search articles..." id="articleSearch" oninput="filterArticles()">
-                    </div>
-                    <div class="filter-options">
-                        <select id="articleCategoryFilter" onchange="filterArticles()">
-                            <option value="">All Categories</option>
-                            <option value="photography">Photography</option>
-                            <option value="technology">Technology</option>
-                            <option value="tutorials">Tutorials</option>
-                            <option value="news">News</option>
-                        </select>
-                        <select id="articleStatusFilter" onchange="filterArticles()">
-                            <option value="">All Status</option>
-                            <option value="published">Published</option>
-                            <option value="draft">Draft</option>
-                            <option value="scheduled">Scheduled</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="articles-list" id="articlesList">
-                    <!-- Articles will be populated by JavaScript -->
-                </div>
-
-                <div class="pagination">
-                    <button class="pagination-btn" onclick="previousPage('articles')">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <span class="pagination-info" id="articlesPagination">Page 1 of 3</span>
-                    <button class="pagination-btn" onclick="nextPage('articles')">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Transaction Management Tab -->
-            <div id="transactions-tab" class="tab-panel">
-                <div class="panel-header">
-                    <h2><i class="fas fa-receipt"></i> Transaction Management</h2>
-                    <div class="panel-actions">
-                        <button class="btn btn-secondary" onclick="exportTransactions()">
-                            <i class="fas fa-download"></i>
-                            Export Transactions
-                        </button>
-                        <button class="btn btn-secondary" onclick="generateReport()">
-                            <i class="fas fa-chart-line"></i>
-                            Generate Report
-                        </button>
-                    </div>
-                </div>
-
-                <div class="search-filter-bar">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Search transactions..." id="transactionSearch" oninput="filterTransactions()">
-                    </div>
-                    <div class="filter-options">
-                        <select id="transactionStatusFilter" onchange="filterTransactions()">
-                            <option value="">All Status</option>
-                            <option value="completed">Completed</option>
-                            <option value="pending">Pending</option>
-                            <option value="failed">Failed</option>
-                            <option value="refunded">Refunded</option>
-                        </select>
-                        <select id="transactionTypeFilter" onchange="filterTransactions()">
-                            <option value="">All Types</option>
-                            <option value="purchase">Purchase</option>
-                            <option value="subscription">Subscription</option>
-                            <option value="refund">Refund</option>
-                        </select>
-                        <input type="date" id="transactionDateFrom" onchange="filterTransactions()">
-                        <input type="date" id="transactionDateTo" onchange="filterTransactions()">
-                    </div>
-                </div>
-
-                <div class="data-table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Transaction ID</th>
-                                <th>Customer</th>
-                                <th>Items</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Payment Method</th>
-                                <th>Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="transactionsTableBody">
-                            <!-- Transactions will be populated by JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="pagination">
-                    <button class="pagination-btn" onclick="previousPage('transactions')">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <span class="pagination-info" id="transactionsPagination">Page 1 of 15</span>
-                    <button class="pagination-btn" onclick="nextPage('transactions')">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Analytics Tab -->
-            <div id="analytics-tab" class="tab-panel">
-                <div class="panel-header">
-                    <h2><i class="fas fa-chart-bar"></i> Analytics Dashboard</h2>
-                    <div class="panel-actions">
-                        <select id="analyticsTimeRange" onchange="updateAnalytics()">
-                            <option value="7d">Last 7 Days</option>
-                            <option value="30d">Last 30 Days</option>
-                            <option value="90d">Last 90 Days</option>
-                            <option value="1y">Last Year</option>
-                        </select>
-                        <button class="btn btn-secondary" onclick="exportAnalytics()">
-                            <i class="fas fa-download"></i>
-                            Export Report
-                        </button>
-                    </div>
-                </div>
-
-                <div class="analytics-grid">
-                    <div class="analytics-card">
-                        <div class="analytics-header">
-                            <h3>Revenue Overview</h3>
-                            <i class="fas fa-dollar-sign"></i>
-                        </div>
-                        <div class="analytics-chart" id="revenueChart">
-                            <canvas id="revenueCanvas"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="analytics-card">
-                        <div class="analytics-header">
-                            <h3>User Growth</h3>
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="analytics-chart" id="userGrowthChart">
-                            <canvas id="userGrowthCanvas"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="analytics-card">
-                        <div class="analytics-header">
-                            <h3>Popular Categories</h3>
-                            <i class="fas fa-chart-pie"></i>
-                        </div>
-                        <div class="analytics-chart" id="categoriesChart">
-                            <canvas id="categoriesCanvas"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="analytics-card">
-                        <div class="analytics-header">
-                            <h3>Download Trends</h3>
-                            <i class="fas fa-download"></i>
-                        </div>
-                        <div class="analytics-chart" id="downloadsChart">
-                            <canvas id="downloadsCanvas"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="analytics-summary">
-                    <div class="summary-card">
-                        <div class="summary-icon">
-                            <i class="fas fa-trending-up"></i>
-                        </div>
-                        <div class="summary-content">
-                            <h4>Total Revenue</h4>
-                            <div class="summary-value">$45,892</div>
-                            <div class="summary-change positive">+12.5% from last month</div>
-                        </div>
-                    </div>
-
-                    <div class="summary-card">
-                        <div class="summary-icon">
-                            <i class="fas fa-download"></i>
-                        </div>
-                        <div class="summary-content">
-                            <h4>Total Downloads</h4>
-                            <div class="summary-value">15,247</div>
-                            <div class="summary-change positive">+8.3% from last month</div>
-                        </div>
-                    </div>
-
-                    <div class="summary-card">
-                        <div class="summary-icon">
-                            <i class="fas fa-user-plus"></i>
-                        </div>
-                        <div class="summary-content">
-                            <h4>New Users</h4>
-                            <div class="summary-value">342</div>
-                            <div class="summary-change positive">+15.7% from last month</div>
-                        </div>
-                    </div>
-
-                    <div class="summary-card">
-                        <div class="summary-icon">
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <div class="summary-content">
-                            <h4>Avg. Rating</h4>
-                            <div class="summary-value">4.8</div>
-                            <div class="summary-change positive">+0.2 from last month</div>
-                        </div>
-                    </div>
-                </div>
+            <div class="admin-tab-content animate__animated animate__fadeInUp">
+                <!-- Tab panels will be rendered by JS for consistency and animation -->
+                <div id="users-tab" class="admin-tab active"></div>
+                <div id="photos-tab" class="admin-tab"></div>
+                <div id="articles-tab" class="admin-tab"></div>
+                <div id="transactions-tab" class="admin-tab"></div>
+                <div id="analytics-tab" class="admin-tab"></div>
             </div>
         </div>
     </div>
-
-    <!-- Modals -->
-    <!-- Add User Modal -->
-    <div id="addUserModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-user-plus"></i> Add New User</h3>
-                <button class="close-btn" onclick="closeModal('addUserModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="addUserForm" onsubmit="addUser(event)">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="userName">Full Name</label>
-                            <input type="text" id="userName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="userEmail">Email</label>
-                            <input type="email" id="userEmail" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="userRole">Role</label>
-                            <select id="userRole" required>
-                                <option value="">Select Role</option>
-                                <option value="customer">Customer</option>
-                                <option value="photographer">Photographer</option>
-                                <option value="admin">Admin</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="userStatus">Status</label>
-                            <select id="userStatus" required>
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="userBio">Bio (Optional)</label>
-                        <textarea id="userBio" rows="3"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeModal('addUserModal')">Cancel</button>
-                <button type="submit" form="addUserForm" class="btn btn-primary">Add User</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Photo Modal -->
-    <div id="addPhotoModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-image"></i> Add New Photo</h3>
-                <button class="close-btn" onclick="closeModal('addPhotoModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="addPhotoForm" onsubmit="addPhoto(event)">
-                    <div class="form-group">
-                        <label for="photoFile">Photo File</label>
-                        <input type="file" id="photoFile" accept="image/*" required>
-                        <div class="file-preview" id="photoPreview"></div>
-                    </div>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="photoTitle">Title</label>
-                            <input type="text" id="photoTitle" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="photoPhotographer">Photographer</label>
-                            <input type="text" id="photoPhotographer" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="photoCategory">Category</label>
-                            <select id="photoCategory" required>
-                                <option value="">Select Category</option>
-                                <option value="nature">Nature</option>
-                                <option value="urban">Urban</option>
-                                <option value="space">Space</option>
-                                <option value="abstract">Abstract</option>
-                                <option value="wildlife">Wildlife</option>
-                                <option value="architecture">Architecture</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="photoPrice">Price ($)</label>
-                            <input type="number" id="photoPrice" min="0" step="0.01" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="photoDescription">Description</label>
-                        <textarea id="photoDescription" rows="3" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="photoTags">Tags (comma separated)</label>
-                        <input type="text" id="photoTags" placeholder="nature, landscape, mountains">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeModal('addPhotoModal')">Cancel</button>
-                <button type="submit" form="addPhotoForm" class="btn btn-primary">Add Photo</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Article Modal -->
-    <div id="addArticleModal" class="modal">
-        <div class="modal-content large">
-            <div class="modal-header">
-                <h3><i class="fas fa-newspaper"></i> Create New Article</h3>
-                <button class="close-btn" onclick="closeModal('addArticleModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="addArticleForm" onsubmit="addArticle(event)">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="articleTitle">Title</label>
-                            <input type="text" id="articleTitle" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="articleAuthor">Author</label>
-                            <input type="text" id="articleAuthor" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="articleCategory">Category</label>
-                            <select id="articleCategory" required>
-                                <option value="">Select Category</option>
-                                <option value="photography">Photography</option>
-                                <option value="technology">Technology</option>
-                                <option value="tutorials">Tutorials</option>
-                                <option value="news">News</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="articleStatus">Status</label>
-                            <select id="articleStatus" required>
-                                <option value="draft">Draft</option>
-                                <option value="published">Published</option>
-                                <option value="scheduled">Scheduled</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="articleExcerpt">Excerpt</label>
-                        <textarea id="articleExcerpt" rows="2" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="articleContent">Content</label>
-                        <textarea id="articleContent" rows="10" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="articleImage">Featured Image</label>
-                        <input type="file" id="articleImage" accept="image/*">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeModal('addArticleModal')">Cancel</button>
-                <button type="submit" form="addArticleForm" class="btn btn-primary">Create Article</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Cart Modal -->
+    <!-- Modals (akan diisi dinamis oleh JS) -->
+    <div id="modalContainer"></div>
     <div id="cartModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
                 <button class="close-btn" onclick="closeCart()">&times;</button>
             </div>
-            <div class="modal-body">
-                <div id="cartItems"></div>
-            </div>
+            <div class="modal-body" id="cartItems"></div>
             <div class="modal-footer">
-                <div class="cart-total">
-                    Total: $<span id="cartTotal">0.00</span>
-                </div>
-                <button class="btn btn-primary" onclick="proceedToCheckout()">
-                    <i class="fas fa-credit-card"></i>
-                    Checkout
-                </button>
+                <div class="cart-total">Total: $<span id="cartTotal">0.00</span></div>
+                <button class="btn btn-primary" onclick="window.location.href='checkout.html'"><i class="fas fa-credit-card"></i> Checkout</button>
             </div>
         </div>
     </div>
-
     <script src="admin-management.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
 
     

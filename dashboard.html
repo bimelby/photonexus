@@ -17,14 +17,51 @@
                 <span>PhotoNexus</span>
             </div>
             
-            <div class="nav-menu">
-                <a href="home.html" class="nav-link">Home</a>
-                <a href="catalog.html" class="nav-link">Catalog</a>
-                <a href="articles.html" class="nav-link">Articles</a>
-                <a href="dashboard.html" class="nav-link active">Dashboard</a>
+            <div class="nav-menu" id="navMenu">
+                <a href="home.html" class="nav-link  ">Home</a>
+                <a href="admin-management.html" class="nav-link ">Admin Panel</a>
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link dropdown-toggle ">
+                        Browse <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="catalog.html" class="dropdown-item">Photo Catalog</a>
+                        <a href="categories.html" class="dropdown-item">Categories</a>
+                        <a href="collections.html" class="dropdown-item">Collections</a>
+                        <a href="new.arrivals.html" class="dropdown-item">New Arrivals</a>
+                    </div>
+                </div>
+                
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link dropdown-toggle">
+                        Resources <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="articles.html" class="dropdown-item">Articles</a>
+                        <a href="tutorials.html" class="dropdown-item">Tutorials</a>
+                        <a href="inspiration.html" class="dropdown-item">Inspiration</a>
+                        <a href="blog.html" class="dropdown-item">Blog</a>
+                    </div>
+                </div>
+                
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link dropdown-toggle active">
+                        Account <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="index.html" class="dropdown-item">Sign In</a>
+                        <a href="register.html" class="dropdown-item">Register</a>
+                        <a href="dashboard.html" class="dropdown-item">Dashboard</a>
+                        <a href="history.html" class="dropdown-item">Purchase History</a>
+                    </div>
+                </div>
             </div>
             
             <div class="nav-actions">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search photos..." id="searchInput">
+                </div>
                 <button class="cart-btn" onclick="openCart()">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count" id="cartCount">0</span>
@@ -33,8 +70,13 @@
                     <img id="profileMini" src="https://ui-avatars.com/api/?name=User" alt="Profile" style="width:28px;height:28px;border-radius:50%;">
                 </button>
             </div>
+            
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
     </nav>
+    <!-- Hero Section -->
 
     <div class="dashboard-container">
         <!-- Sidebar -->
@@ -71,9 +113,9 @@
                     <i class="fas fa-user-cog"></i>
                     <span>Profile Settings</span>
                 </a>
-                <a href="#admin" class="nav-item admin-only" onclick="showSection('admin')" style="display: none;">
+                <a href="#user" class="nav-item user-only" onclick="showSection('user')" style="display:none;">
                     <i class="fas fa-cog"></i>
-                    <span>Admin Panel</span>
+                    <span>user Panel</span>
                 </a>
             </nav>
         </div>
@@ -247,90 +289,41 @@
     </div>
 </div>
 <!-- ...existing code... -->
-            <!-- Admin Section -->
-            <div id="admin" class="dashboard-section">
+            <!-- user Section -->
+            <div id="user" class="dashboard-section">
                 <div class="section-header">
-                    <h2><i class="fas fa-cog"></i> Admin Panel</h2>
+                    <h2><i class="fas fa-cog"></i> user Panel</h2>
                     <p>Manage the platform content and users</p>
                 </div>
 
-                <div class="admin-content">
-                    <div class="admin-tabs">
-                        <button class="tab-btn active" onclick="showAdminTab('articles')">
+                <div class="user-content">
+                    <div class="user-tabs">
+                        <button class="tab-btn active" onclick="showUserTab('articles')">
                             <i class="fas fa-newspaper"></i>
                             Articles
                         </button>
-                        <button class="tab-btn" onclick="showAdminTab('products')">
+                        <button class="tab-btn" onclick="showUserTab('photos')">
                             <i class="fas fa-images"></i>
-                            Products
+                            Photos
                         </button>
-                        <button class="tab-btn" onclick="showAdminTab('users')">
-                            <i class="fas fa-users"></i>
-                            Users
-                        </button>
-                        <button class="tab-btn" onclick="showAdminTab('transactions')">
+                        <button class="tab-btn" onclick="showUserTab('transactions')">
                             <i class="fas fa-receipt"></i>
                             Transactions
                         </button>
                     </div>
 
-                    <div class="admin-tab-content">
+                    <div class="user-tab-content">
                         <!-- Articles Management -->
-                        <div id="articles-tab" class="admin-tab active">
-                            <div class="tab-header">
-                                <h3>Articles Management</h3>
-                                <button class="btn btn-primary" onclick="openArticleModal()">
-                                    <i class="fas fa-plus"></i>
-                                    Add Article
-                                </button>
-                            </div>
-                            <div class="admin-table" id="articlesTable">
-                                <!-- Articles table will be loaded here -->
-                            </div>
+                        <div id="articles-tab" class="user-tab active">
+                            <!-- Articles table will be loaded here by JS -->
                         </div>
-
-                        <!-- Products Management -->
-                        <div id="products-tab" class="admin-tab">
-                            <div class="tab-header">
-                                <h3>Products Management</h3>
-                                <button class="btn btn-primary" onclick="openProductModal()">
-                                    <i class="fas fa-plus"></i>
-                                    Add Product
-                                </button>
-                            </div>
-                            <div class="admin-table" id="productsTable">
-                                <!-- Products table will be loaded here -->
-                            </div>
+                        <!-- Photos Management -->
+                        <div id="photos-tab" class="user-tab">
+                            <!-- Photos table will be loaded here by JS -->
                         </div>
-
-                        <!-- Users Management -->
-                        <div id="users-tab" class="admin-tab">
-                            <div class="tab-header">
-                                <h3>Users Management</h3>
-                                <button class="btn btn-primary" onclick="openUserModal()">
-                                    <i class="fas fa-plus"></i>
-                                    Add User
-                                </button>
-                            </div>
-                            <div class="admin-table" id="usersTable">
-                                <!-- Users table will be loaded here -->
-                            </div>
-                        </div>
-
-                        <!-- Transactions Management -->
-                        <div id="transactions-tab" class="admin-tab">
-                            <div class="tab-header">
-                                <h3>Transactions Management</h3>
-                                <div class="tab-actions">
-                                    <button class="btn btn-secondary" onclick="exportTransactions()">
-                                        <i class="fas fa-download"></i>
-                                        Export
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="admin-table" id="transactionsTable">
-                                <!-- Transactions table will be loaded here -->
-                            </div>
+                        <!-- Transactions Info -->
+                        <div id="transactions-tab" class="user-tab">
+                            <!-- Transactions info will be loaded here by JS -->
                         </div>
                     </div>
                 </div>

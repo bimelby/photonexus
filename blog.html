@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photo Catalog - PhotoNexus</title>
+    <title>Photography Blog - PhotoNexus</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="catalog.css">
+    <link rel="stylesheet" href="blog.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Navigation -->
+   <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
@@ -21,7 +21,7 @@
                 <a href="home.html" class="nav-link  ">Home</a>
                 <a href="admin-management.html" class="nav-link ">Admin Panel</a>
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link dropdown-toggle active ">
+                    <a href="#" class="nav-link dropdown-toggle ">
                         Browse <i class="fas fa-chevron-down"></i>
                     </a>
                     <div class="dropdown-menu">
@@ -33,7 +33,7 @@
                 </div>
                 
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link dropdown-toggle">
+                    <a href="#" class="nav-link dropdown-toggle active ">
                         Resources <i class="fas fa-chevron-down"></i>
                     </a>
                     <div class="dropdown-menu">
@@ -76,80 +76,80 @@
             </button>
         </div>
     </nav>
-    <!-- Hero Section -->    <div class="catalog-container">
+    <!-- Hero Section -->
+    <div class="blog-container">
         <!-- Header -->
-        <div class="catalog-header">
-            <h1 class="gradient-text">Photo Catalog</h1>
-            <p>Discover premium stock photography from talented artists worldwide</p>
+        <div class="blog-header">
+            <h1 class="gradient-text">Photography Blog</h1>
+            <p>Stories, insights, and behind-the-scenes from the world of photography</p>
         </div>
 
-        <div class="catalog-layout">
-            <!-- Filters Sidebar -->
-            <div class="filters-sidebar">
-                <div class="filter-card">
-                    <h3><i class="fas fa-filter"></i> Filters</h3>
-                    
-                    <!-- Category Filter -->
-                    <div class="filter-group">
-                        <label>Category</label>
-                        <select id="categoryFilter" onchange="applyFilters()">
-                            <option value="">All Categories</option>
-                            <option value="nature">Nature</option>
-                            <option value="urban">Urban</option>
-                            <option value="portrait">Portrait</option>
-                            <option value="abstract">Abstract</option>
-                            <option value="architecture">Architecture</option>
-                            <option value="wildlife">Wildlife</option>
-                            <option value="space">Space</option>
-                        </select>
-                    </div>
+        <!-- Featured Post -->
+        <div class="featured-post" id="featuredPost">
+            <!-- Featured post will be loaded here -->
+        </div>
 
-                    <!-- Price Range -->
-                    <div class="filter-group">
-                        <label>Price Range: $<span id="priceMin">0</span> - $<span id="priceMax">1000</span></label>
-                        <div class="price-range">
-                            <input type="range" id="priceRangeMin" min="0" max="1000" value="0" oninput="updatePriceRange()">
-                            <input type="range" id="priceRangeMax" min="0" max="1000" value="1000" oninput="updatePriceRange()">
-                        </div>
+        <div class="blog-layout">
+            <!-- Sidebar -->
+            <div class="blog-sidebar">
+                <div class="sidebar-card">
+                    <h3><i class="fas fa-folder"></i> Categories</h3>
+                    <div class="category-list" id="categoryList">
+                        <!-- Categories will be loaded here -->
                     </div>
+                </div>
 
-                    <!-- Sort By -->
-                    <div class="filter-group">
-                        <label>Sort By</label>
-                        <select id="sortFilter" onchange="applyFilters()">
-                            <option value="popular">Most Popular</option>
-                            <option value="newest">Newest First</option>
-                            <option value="price-low">Price: Low to High</option>
-                            <option value="price-high">Price: High to Low</option>
-                            <option value="rating">Highest Rated</option>
-                        </select>
+                <div class="sidebar-card">
+                    <h3><i class="fas fa-calendar"></i> Recent Posts</h3>
+                    <div class="recent-posts" id="recentPosts">
+                        <!-- Recent posts will be loaded here -->
                     </div>
+                </div>
 
-                    <button class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
-                    <button class="btn btn-secondary" onclick="clearFilters()">Clear All</button>
+                <div class="sidebar-card">
+                    <h3><i class="fas fa-hashtag"></i> Popular Tags</h3>
+                    <div class="tags-cloud" id="tagsCloud">
+                        <!-- Popular tags will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="sidebar-card">
+                    <h3><i class="fas fa-rss"></i> Newsletter</h3>
+                    <div class="newsletter-signup">
+                        <p>Subscribe to get the latest photography tips and updates.</p>
+                        <form id="newsletterForm">
+                            <input type="email" placeholder="Your email address" required>
+                            <button type="submit" class="btn btn-primary">Subscribe</button>
+                        </form>
+                    </div>
                 </div>
             </div>
 
             <!-- Main Content -->
-            <div class="catalog-main">
-                <!-- Toolbar -->
-                <div class="catalog-toolbar">
-                    <div class="results-info">
-                        Showing <span id="resultsCount">0</span> results
+            <div class="blog-main">
+                <!-- Filters -->
+                <div class="blog-filters">
+                    <div class="filter-group">
+                        <select id="categoryFilter" onchange="filterBlog()">
+                            <option value="">All Categories</option>
+                        </select>
                     </div>
-                    <div class="view-controls">
-                        <button class="view-btn active" id="gridView" onclick="setViewMode('grid')">
-                            <i class="fas fa-th"></i>
-                        </button>
-                        <button class="view-btn" id="listView" onclick="setViewMode('list')">
-                            <i class="fas fa-list"></i>
-                        </button>
+                    <div class="filter-group">
+                        <select id="sortFilter" onchange="filterBlog()">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="popular">Most Popular</option>
+                            <option value="comments">Most Comments</option>
+                        </select>
+                    </div>
+                    <div class="results-info">
+                        <span id="resultsCount">0</span> posts found
                     </div>
                 </div>
 
-                <!-- Photos Container -->
-                <div class="photos-container" id="photosContainer">
-                    <!-- Photos will be loaded here -->
+                <!-- Blog Posts -->
+                <div class="blog-posts" id="blogPosts">
+                    <!-- Blog posts will be loaded here -->
                 </div>
 
                 <!-- Pagination -->
@@ -182,6 +182,6 @@
     </div>
 
     <script src="script.js"></script>
-    <script src="catalog.js"></script>
+    <script src="blog.js"></script>
 </body>
 </html>

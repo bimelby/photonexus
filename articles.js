@@ -1,5 +1,5 @@
-// Articles data
-const articlesData = [
+// Data default artikel
+const defaultArticles = [
   {
     id: 1,
     title: "Mastering Portrait Photography: Light and Shadow Techniques",
@@ -137,7 +137,17 @@ const articlesData = [
     views: 2100,
     tags: ["wildlife", "nature", "ethics", "telephoto"],
   },
-]
+];
+
+let articlesData = [];
+const storedArticles = localStorage.getItem('articles');
+if (storedArticles) {
+  const localArticles = JSON.parse(storedArticles);
+  const ids = new Set(localArticles.map(a => a.id));
+  articlesData = [...localArticles, ...defaultArticles.filter(a => !ids.has(a.id))];
+} else {
+  articlesData = [...defaultArticles];
+}
 
 // Global variables
 let filteredArticles = [...articlesData]

@@ -44,3 +44,4 @@ function showProfileNotification(msg, type = "info", callback) {
     if (typeof callback === "function") callback();
   }, 2000);
 }
+

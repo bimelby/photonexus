@@ -9,7 +9,8 @@ document.getElementById("registerForm").onsubmit = function(e) {
     showRegisterNotification("Email already registered!", "error");
     return;
   }
-  users.push({ name, email, password, avatar: "", preferences: {}, role: "user" });
+  const newId = users.length ? Math.max(...users.map(u => u.id || 0)) + 1 : 1;
+  users.push({ id: newId, name, email, password, avatar: "", preferences: {}, role: "user" });
   localStorage.setItem("users", JSON.stringify(users));
   showRegisterNotification("Registration successful! Please sign in.", "success");
   setTimeout(() => window.location.href = "index.html", 1500);
