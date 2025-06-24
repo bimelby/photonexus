@@ -9,18 +9,19 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Navbar (copy dari home.html) -->
+    <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
                 <i class="fas fa-camera"></i>
                 <span>PhotoNexus</span>
             </div>
+            
             <div class="nav-menu" id="navMenu">
                 <a href="home.html" class="nav-link">Home</a>
                 <a href="admin-management.html" class="nav-link active">Admin Panel</a>
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link dropdown-toggle ">
+                    <a href="#" class="nav-link dropdown-toggle">
                         Browse <i class="fas fa-chevron-down"></i>
                     </a>
                     <div class="dropdown-menu">
@@ -30,6 +31,7 @@
                         <a href="new.arrivals.html" class="dropdown-item">New Arrivals</a>
                     </div>
                 </div>
+                
                 <div class="nav-dropdown">
                     <a href="#" class="nav-link dropdown-toggle">
                         Resources <i class="fas fa-chevron-down"></i>
@@ -41,6 +43,7 @@
                         <a href="blog.html" class="dropdown-item">Blog</a>
                     </div>
                 </div>
+                
                 <div class="nav-dropdown">
                     <a href="#" class="nav-link dropdown-toggle">
                         Account <i class="fas fa-chevron-down"></i>
@@ -53,48 +56,736 @@
                     </div>
                 </div>
             </div>
+            
             <div class="nav-actions">
                 <div class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search photos..." id="searchInput">
+                    <input type="text" placeholder="Search..." id="searchInput">
                 </div>
-                <button class="cart-btn" onclick="openCart()">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count" id="cartCount">0</span>
-                </button>
                 <button class="user-btn" onclick="window.location.href='profile.html'">
-                    <img id="profileMini" src="https://ui-avatars.com/api/?name=User" alt="Profile" style="width:28px;height:28px;border-radius:50%;">
+                    <img id="profileMini" src="https://ui-avatars.com/api/?name=Admin" alt="Profile" style="width:28px;height:28px;border-radius:50%;">
                 </button>
             </div>
+            
             <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
                 <i class="fas fa-bars"></i>
             </button>
         </div>
     </nav>
-    <!-- End Navbar -->
-    <div class="admin-wrapper">
-        <aside class="admin-sidebar">
-            <div class="sidebar-brand"><i class="fas fa-camera"></i> PhotoNexus</div>
-            <nav class="sidebar-menu">
-                <button class="sidebar-link active" data-tab="users"><i class="fas fa-users"></i> Users</button>
-                <button class="sidebar-link" data-tab="products"><i class="fas fa-images"></i> Photos</button>
-                <button class="sidebar-link" data-tab="articles"><i class="fas fa-newspaper"></i> Articles</button>
-                <button class="sidebar-link" data-tab="transactions"><i class="fas fa-receipt"></i> Transactions</button>
-                <button class="sidebar-link" data-tab="analytics"><i class="fas fa-chart-bar"></i> Analytics</button>
-            </nav>
-        </aside>
-        <main class="admin-main">
-            <header class="admin-header">
-                <h1 id="adminTitle"><i class="fas fa-cog"></i> Admin Panel</h1>
-                <div id="adminActions"></div>
-            </header>
-            <section id="adminContent"></section>
-        </main>
-    </div>
-    <div id="modalContainer"></div>
-    <div id="notificationContainer"></div>
-    <script src="admin-management.js"></script>
-</body>
-</html>
 
-    
+    <!-- Admin Panel Container -->
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="admin-sidebar">
+            <div class="admin-header">
+                <div class="admin-avatar">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" alt="Admin Avatar" id="adminAvatar">
+                </div>
+                <div class="admin-info">
+                    <h3 id="adminName">Admin User</h3>
+                    <p id="adminEmail">admin@photon Nexus.com</p>
+                    <div class="admin-badge">Super Admin</div>
+                </div>
+            </div>
+
+            <nav class="admin-nav">
+                <a href="#dashboard" class="nav-item active" onclick="showAdminSection('dashboard')">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#users" class="nav-item" onclick="showAdminSection('users')">
+                    <i class="fas fa-users"></i>
+                    <span>Kelola User</span>
+                </a>
+                <a href="#products" class="nav-item" onclick="showAdminSection('products')">
+                    <i class="fas fa-images"></i>
+                    <span>Kelola Produk</span>
+                </a>
+                <a href="#transactions" class="nav-item" onclick="showAdminSection('transactions')">
+                    <i class="fas fa-receipt"></i>
+                    <span>Kelola Transaksi</span>
+                </a>
+                <a href="#articles" class="nav-item" onclick="showAdminSection('articles')">
+                    <i class="fas fa-newspaper"></i>
+                    <span>Kelola Artikel</span>
+                </a>
+                <a href="#analytics" class="nav-item" onclick="showAdminSection('analytics')">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Analisis</span>
+                </a>
+                <a href="#settings" class="nav-item" onclick="showAdminSection('settings')">
+                    <i class="fas fa-cog"></i>
+                    <span>Pengaturan</span>
+                </a>
+                <a href="#reports" class="nav-item" onclick="showAdminSection('reports')">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Laporan</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="admin-main">
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="admin-section active">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-line"></i> Admin Dashboard</h2>
+                    <p>Selamat datang di panel admin PhotoNexus. Kelola semua aspek platform dari sini.</p>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="quick-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalUsers">0</div>
+                            <div class="stat-label">Total Users</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-images"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalProducts">0</div>
+                            <div class="stat-label">Total Produk</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalTransactions">0</div>
+                            <div class="stat-label">Total Transaksi</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalRevenue">$0</div>
+                            <div class="stat-label">Total Pendapatan</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="activity-section">
+                    <h3><i class="fas fa-clock"></i> Aktivitas Terbaru</h3>
+                    <div class="activity-list" id="recentActivity">
+                        <!-- Activity items will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h3><i class="fas fa-bolt"></i> Aksi Cepat</h3>
+                    <div class="actions-grid">
+                        <button class="action-btn" onclick="showAdminSection('users')">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Tambah User</span>
+                        </button>
+                        <button class="action-btn" onclick="showAdminSection('products')">
+                            <i class="fas fa-plus"></i>
+                            <span>Tambah Produk</span>
+                        </button>
+                        <button class="action-btn" onclick="showAdminSection('articles')">
+                            <i class="fas fa-edit"></i>
+                            <span>Tulis Artikel</span>
+                        </button>
+                        <button class="action-btn" onclick="showAdminSection('reports')">
+                            <i class="fas fa-download"></i>
+                            <span>Download Laporan</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Management Section -->
+            <div id="users" class="admin-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-users"></i> Kelola User</h2>
+                    <p>Kelola semua user yang terdaftar di platform</p>
+                </div>
+
+                <div class="content-header">
+                    <div class="search-filter">
+                        <input type="text" placeholder="Cari user..." id="userSearch">
+                        <select id="userRoleFilter">
+                            <option value="">Semua Role</option>
+                            <option value="customer">Customer</option>
+                            <option value="photographer">Photographer</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                        <select id="userStatusFilter">
+                            <option value="">Semua Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="openUserModal()">
+                        <i class="fas fa-plus"></i> Tambah User
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="admin-table" id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Avatar</th>
+                                <th>Nama</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Tanggal Bergabung</th>
+                                <th>Total Pembelian</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Users will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Products Management Section -->
+            <div id="products" class="admin-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-images"></i> Kelola Produk</h2>
+                    <p>Kelola semua produk foto yang tersedia</p>
+                </div>
+
+                <div class="content-header">
+                    <div class="search-filter">
+                        <input type="text" placeholder="Cari produk..." id="productSearch">
+                        <select id="productCategoryFilter">
+                            <option value="">Semua Kategori</option>
+                            <option value="Portrait">Portrait</option>
+                            <option value="Landscape">Landscape</option>
+                            <option value="Street">Street</option>
+                            <option value="Macro">Macro</option>
+                            <option value="Night">Night</option>
+                            <option value="Wildlife">Wildlife</option>
+                        </select>
+                        <select id="productStatusFilter">
+                            <option value="">Semua Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="openProductModal()">
+                        <i class="fas fa-plus"></i> Tambah Produk
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="admin-table" id="productsTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Gambar</th>
+                                <th>Judul</th>
+                                <th>Fotografer</th>
+                                <th>Kategori</th>
+                                <th>Harga</th>
+                                <th>Status</th>
+                                <th>Downloads</th>
+                                <th>Tanggal</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody">
+                            <!-- Products will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Transactions Management Section -->
+            <div id="transactions" class="admin-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-receipt"></i> Kelola Transaksi</h2>
+                    <p>Kelola semua transaksi yang terjadi di platform</p>
+                </div>
+
+                <div class="content-header">
+                    <div class="search-filter">
+                        <input type="text" placeholder="Cari transaksi..." id="transactionSearch">
+                        <select id="transactionStatusFilter">
+                            <option value="">Semua Status</option>
+                            <option value="completed">Completed</option>
+                            <option value="pending">Pending</option>
+                            <option value="failed">Failed</option>
+                            <option value="refunded">Refunded</option>
+                        </select>
+                        <input type="date" id="transactionDateFilter">
+                    </div>
+                    <button class="btn btn-primary" onclick="exportTransactions()">
+                        <i class="fas fa-download"></i> Export Data
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="admin-table" id="transactionsTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>User</th>
+                                <th>Jumlah Item</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Metode Pembayaran</th>
+                                <th>Tanggal</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsTableBody">
+                            <!-- Transactions will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Articles Management Section -->
+            <div id="articles" class="admin-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-newspaper"></i> Kelola Artikel</h2>
+                    <p>Kelola semua artikel yang dipublikasikan</p>
+                </div>
+
+                <div class="content-header">
+                    <div class="search-filter">
+                        <input type="text" placeholder="Cari artikel..." id="articleSearch">
+                        <select id="articleCategoryFilter">
+                            <option value="">Semua Kategori</option>
+                            <option value="Portrait">Portrait</option>
+                            <option value="Landscape">Landscape</option>
+                            <option value="Street">Street</option>
+                            <option value="Macro">Macro</option>
+                            <option value="Night">Night</option>
+                            <option value="Wildlife">Wildlife</option>
+                        </select>
+                        <select id="articleStatusFilter">
+                            <option value="">Semua Status</option>
+                            <option value="published">Published</option>
+                            <option value="draft">Draft</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="openArticleModal()">
+                        <i class="fas fa-plus"></i> Tambah Artikel
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="admin-table" id="articlesTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Gambar</th>
+                                <th>Judul</th>
+                                <th>Penulis</th>
+                                <th>Kategori</th>
+                                <th>Status</th>
+                                <th>Views</th>
+                                <th>Tanggal</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="articlesTableBody">
+                            <!-- Articles will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div id="analytics" class="admin-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-bar"></i> Analisis</h2>
+                    <p>Analisis data platform dan performa</p>
+                </div>
+
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h3>Pendapatan Bulanan</h3>
+                        <div class="chart-container">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>User Growth</h3>
+                        <div class="chart-container">
+                            <canvas id="userGrowthChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Top Categories</h3>
+                        <div class="chart-container">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Top Products</h3>
+                        <div class="chart-container">
+                            <canvas id="productChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analytics-summary">
+                    <div class="summary-card">
+                        <h4>Ringkasan Hari Ini</h4>
+                        <div class="summary-stats">
+                            <div class="summary-item">
+                                <span class="label">Pendapatan</span>
+                                <span class="value" id="todayRevenue">$0</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="label">Transaksi</span>
+                                <span class="value" id="todayTransactions">0</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="label">User Baru</span>
+                                <span class="value" id="todayUsers">0</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="label">Downloads</span>
+                                <span class="value" id="todayDownloads">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settings" class="admin-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-cog"></i> Pengaturan</h2>
+                    <p>Konfigurasi platform dan pengaturan sistem</p>
+                </div>
+
+                <div class="settings-grid">
+                    <div class="settings-card">
+                        <h3>Pengaturan Umum</h3>
+                        <form class="settings-form">
+                            <div class="form-group">
+                                <label>Nama Platform</label>
+                                <input type="text" value="PhotoNexus" id="platformName">
+                            </div>
+                            <div class="form-group">
+                                <label>Email Kontak</label>
+                                <input type="email" value="contact@photon Nexus.com" id="contactEmail">
+                            </div>
+                            <div class="form-group">
+                                <label>Komisi Fotografer (%)</label>
+                                <input type="number" value="70" id="photographerCommission">
+                            </div>
+                            <div class="form-group">
+                                <label>Mata Uang Default</label>
+                                <select id="defaultCurrency">
+                                    <option value="USD">USD</option>
+                                    <option value="EUR">EUR</option>
+                                    <option value="IDR">IDR</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Simpan Pengaturan</button>
+                        </form>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>Pengaturan Keamanan</h3>
+                        <form class="settings-form">
+                            <div class="form-group">
+                                <label>Minimal Password Length</label>
+                                <input type="number" value="8" id="minPasswordLength">
+                            </div>
+                            <div class="form-group">
+                                <label>Session Timeout (minutes)</label>
+                                <input type="number" value="30" id="sessionTimeout">
+                            </div>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="twoFactorAuth" checked>
+                                    Enable Two-Factor Authentication
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="emailVerification" checked>
+                                    Require Email Verification
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Simpan Pengaturan</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Section -->
+            <div id="reports" class="admin-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-file-alt"></i> Laporan</h2>
+                    <p>Generate dan download laporan platform</p>
+                </div>
+
+                <div class="reports-grid">
+                    <div class="report-card">
+                        <h3>Laporan Penjualan</h3>
+                        <p>Laporan detail penjualan dan pendapatan</p>
+                        <div class="report-options">
+                            <select id="salesReportPeriod">
+                                <option value="daily">Harian</option>
+                                <option value="weekly">Mingguan</option>
+                                <option value="monthly">Bulanan</option>
+                                <option value="yearly">Tahunan</option>
+                            </select>
+                            <input type="date" id="salesReportStart">
+                            <input type="date" id="salesReportEnd">
+                        </div>
+                        <button class="btn btn-primary" onclick="generateSalesReport()">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+
+                    <div class="report-card">
+                        <h3>Laporan User</h3>
+                        <p>Laporan aktivitas dan pertumbuhan user</p>
+                        <div class="report-options">
+                            <select id="userReportType">
+                                <option value="registration">Registrasi</option>
+                                <option value="activity">Aktivitas</option>
+                                <option value="purchases">Pembelian</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="generateUserReport()">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+
+                    <div class="report-card">
+                        <h3>Laporan Produk</h3>
+                        <p>Laporan performa produk dan kategori</p>
+                        <div class="report-options">
+                            <select id="productReportCategory">
+                                <option value="">Semua Kategori</option>
+                                <option value="Portrait">Portrait</option>
+                                <option value="Landscape">Landscape</option>
+                                <option value="Street">Street</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="generateProductReport()">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+
+                    <div class="report-card">
+                        <h3>Laporan Artikel</h3>
+                        <p>Laporan performa artikel dan engagement</p>
+                        <div class="report-options">
+                            <select id="articleReportPeriod">
+                                <option value="weekly">Mingguan</option>
+                                <option value="monthly">Bulanan</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="generateArticleReport()">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Modal -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="userModalTitle"><i class="fas fa-user-plus"></i> Tambah User</h3>
+                <button class="close-btn" onclick="closeUserModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="userForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="userName">Nama Lengkap</label>
+                            <input type="text" id="userName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="userEmail">Email</label>
+                            <input type="email" id="userEmail" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="userPassword">Password</label>
+                            <input type="password" id="userPassword" name="password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="userRole">Role</label>
+                            <select id="userRole" name="role" required>
+                                <option value="">Pilih Role</option>
+                                <option value="customer">Customer</option>
+                                <option value="photographer">Photographer</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="userStatus">Status</label>
+                            <select id="userStatus" name="status" required>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="userAvatar">Avatar URL</label>
+                            <input type="url" id="userAvatar" name="avatar">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="userBio">Bio</label>
+                        <textarea id="userBio" name="bio" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeUserModal()">Batal</button>
+                <button class="btn btn-primary" onclick="saveUser()">Simpan User</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="productModalTitle"><i class="fas fa-plus"></i> Tambah Produk</h3>
+                <button class="close-btn" onclick="closeProductModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="productForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="productTitle">Judul</label>
+                            <input type="text" id="productTitle" name="title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productPhotographer">Fotografer</label>
+                            <input type="text" id="productPhotographer" name="photographer" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productCategory">Kategori</label>
+                            <select id="productCategory" name="category" required>
+                                <option value="">Pilih Kategori</option>
+                                <option value="Portrait">Portrait</option>
+                                <option value="Landscape">Landscape</option>
+                                <option value="Street">Street</option>
+                                <option value="Macro">Macro</option>
+                                <option value="Night">Night</option>
+                                <option value="Wildlife">Wildlife</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="productPrice">Harga</label>
+                            <input type="number" id="productPrice" name="price" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productImage">URL Gambar</label>
+                            <input type="url" id="productImage" name="image" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productStatus">Status</label>
+                            <select id="productStatus" name="status" required>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="productDescription">Deskripsi</label>
+                        <textarea id="productDescription" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="productTags">Tags (pisahkan dengan koma)</label>
+                        <input type="text" id="productTags" name="tags" placeholder="tag1, tag2, tag3">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeProductModal()">Batal</button>
+                <button class="btn btn-primary" onclick="saveProduct()">Simpan Produk</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Article Modal -->
+    <div id="articleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="articleModalTitle"><i class="fas fa-plus"></i> Tambah Artikel</h3>
+                <button class="close-btn" onclick="closeArticleModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="articleForm">
+                    <div class="form-group">
+                        <label for="articleTitle">Judul</label>
+                        <input type="text" id="articleTitle" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="articleExcerpt">Ringkasan</label>
+                        <textarea id="articleExcerpt" name="excerpt" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="articleContent">Konten</label>
+                        <textarea id="articleContent" name="content" rows="10" required></textarea>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="articleCategory">Kategori</label>
+                            <select id="articleCategory" name="category" required>
+                                <option value="">Pilih Kategori</option>
+                                <option value="Portrait">Portrait</option>
+                                <option value="Landscape">Landscape</option>
+                                <option value="Street">Street</option>
+                                <option value="Macro">Macro</option>
+                                <option value="Night">Night</option>
+                                <option value="Wildlife">Wildlife</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="articleAuthor">Penulis</label>
+                            <input type="text" id="articleAuthor" name="author" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="articleImage">URL Gambar</label>
+                            <input type="url" id="articleImage" name="image" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="articleStatus">Status</label>
+                            <select id="articleStatus" name="status" required>
+                                <option value="published">Published</option>
+                                <option value="draft">Draft</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="articleTags">Tags (pisahkan dengan koma)</label>
+                        <input type="text" id="articleTags" name="tags" placeholder="tag1, tag2, tag3">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeArticleModal()">Batal</button>
+                <button class="btn btn-primary" onclick="saveArticle()">Simpan Artikel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="admin-management.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html> 

@@ -1,499 +1,439 @@
-// Admin Management JS - Modern Sidebar CRUD Panel
-// Data global
-let users = [];
-let products = [];
-let articles = [];
-let transactions = [];
+// Admin Panel JS for PhotoNexus
+// CRUD, Analytics, Integration, Modal, Notification
 
-const itemsPerPage = 10;
-const state = {
-  tab: 'users',
-  page: { users: 1, photos: 1, articles: 1, transactions: 1 },
-  filter: {},
-};
+// --- GLOBAL DATA ---
+let users = JSON.parse(localStorage.getItem("users") || "[]");
+let products = JSON.parse(localStorage.getItem("products") || "[]");
+let transactions = JSON.parse(localStorage.getItem("transactions") || "[]");
+let articles = JSON.parse(localStorage.getItem("articles") || "[]");
 
-// --- INIT ---
-document.addEventListener('DOMContentLoaded', () => {
-  loadAllData();
-  renderSidebar();
-  renderTab('users');
+let editingUserId = null;
+let editingProductId = null;
+let editingArticleId = null;
+
+// --- SECTION NAVIGATION ---
+function showAdminSection(section) {
+  document.querySelectorAll(".admin-section").forEach(s => s.classList.remove("active"));
+  document.querySelectorAll(".admin-nav .nav-item").forEach(i => i.classList.remove("active"));
+  document.getElementById(section).classList.add("active");
+  document.querySelector(`.admin-nav .nav-item[onclick*='${section}']`).classList.add("active");
+  if (section === "dashboard") loadAdminDashboard();
+  if (section === "users") loadUsersTable();
+  if (section === "products") loadProductsTable();
+  if (section === "transactions") loadTransactionsTable();
+  if (section === "articles") loadArticlesTable();
+  if (section === "analytics") loadAnalytics();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadAdminDashboard();
+  // Default section
+  showAdminSection("dashboard");
 });
 
-function loadAllData() {
-  users = JSON.parse(localStorage.getItem('users') || '[]');
-  products = JSON.parse(localStorage.getItem('products') || '[]');
-  articles = JSON.parse(localStorage.getItem('articles') || '[]');
-  transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
-}
-function saveAllData() {
-  localStorage.setItem('users', JSON.stringify(users));
-  localStorage.setItem('products', JSON.stringify(products));
-  localStorage.setItem('articles', JSON.stringify(articles));
-  localStorage.setItem('transactions', JSON.stringify(transactions));
-}
-
-// --- SIDEBAR ---
-function renderSidebar() {
-  document.querySelectorAll('.sidebar-link').forEach(btn => {
-    btn.onclick = () => {
-      document.querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderTab(btn.dataset.tab);
-    };
-  });
-}
-
-// --- TAB RENDER ---
-function renderTab(tab) {
-  state.tab = tab;
-  document.getElementById('adminTitle').innerHTML = {
-    users: '<i class="fas fa-users"></i> User Management',
-    photos: '<i class="fas fa-images"></i> P Management',
-    articles: '<i class="fas fa-newspaper"></i> Article Management',
-    transactions: '<i class="fas fa-receipt"></i> Transaction Management',
-    analytics: '<i class="fas fa-chart-bar"></i> Analytics',
-  }[tab];
-  renderActions(tab);
-  renderContent(tab);
-}
-function renderActions(tab) {
-  const actions = document.getElementById('adminActions');
-  actions.innerHTML = '';
-  if (tab === 'analytics') return;
-  // Add, Export, Import
-  const addBtn = document.createElement('button');
-  addBtn.className = 'btn btn-primary';
-  addBtn.innerHTML = `<i class="fas fa-plus"></i> Add`;
-  addBtn.onclick = () => openModalForm(tab, 'add');
-  actions.appendChild(addBtn);
-  const exportBtn = document.createElement('button');
-  exportBtn.className = 'btn btn-secondary';
-  exportBtn.innerHTML = `<i class="fas fa-download"></i> Export CSV`;
-  exportBtn.onclick = () => exportCSV(tab);
-  actions.appendChild(exportBtn);
-  const importBtn = document.createElement('button');
-  importBtn.className = 'btn btn-secondary';
-  importBtn.innerHTML = `<i class="fas fa-upload"></i> Import CSV`;
-  importBtn.onclick = () => openImportModal(tab);
-  actions.appendChild(importBtn);
-}
-function renderContent(tab) {
-  const content = document.getElementById('adminContent');
-  if (tab === 'users') renderUsersTable(content);
-  if (tab === 'products') renderProductsTable(content);
-  if (tab === 'articles') renderArticlesTable(content);
-  if (tab === 'transactions') renderTransactionsTable(content);
-  if (tab === 'analytics') renderAnalytics(content);
+// --- DASHBOARD ---
+function loadAdminDashboard() {
+  users = JSON.parse(localStorage.getItem("users") || "[]");
+  products = JSON.parse(localStorage.getItem("products") || "[]");
+  transactions = JSON.parse(localStorage.getItem("transactions") || "[]");
+  articles = JSON.parse(localStorage.getItem("articles") || "[]");
+  document.getElementById("totalUsers").textContent = users.length;
+  document.getElementById("totalProducts").textContent = products.length;
+  document.getElementById("totalTransactions").textContent = transactions.length;
+  const totalRevenue = transactions.filter(t=>t.status==="completed").reduce((sum,t)=>sum+(t.total||t.amount||0),0);
+  document.getElementById("totalRevenue").textContent = "$"+totalRevenue;
+  // Recent activity (dummy)
+  document.getElementById("recentActivity").innerHTML = [
+    {icon:"fa-user-plus",desc:"User baru mendaftar",time:"1 jam lalu"},
+    {icon:"fa-images",desc:"Produk baru ditambahkan",time:"2 jam lalu"},
+    {icon:"fa-receipt",desc:"Transaksi berhasil",time:"3 jam lalu"},
+    {icon:"fa-newspaper",desc:"Artikel dipublikasikan",time:"5 jam lalu"},
+  ].map(a=>`<div class='activity-item'><div class='activity-icon'><i class='fas ${a.icon}'></i></div><div class='activity-content'><div class='activity-description'>${a.desc}</div><div class='activity-time'>${a.time}</div></div></div>`).join("");
 }
 
 // --- USERS CRUD ---
-function renderUsersTable(container) {
-  let html = `<table class="data-table"><thead><tr>
-    <th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th><th>Actions</th>
-  </tr></thead><tbody>`;
-  if (users.length === 0) {
-    html += `<tr><td colspan="6" style="text-align:center;color:#64748b;">No users found.</td></tr>`;
-  } else {
-    users.slice((state.page.users-1)*itemsPerPage, state.page.users*itemsPerPage).forEach(u => {
-      html += `<tr>
-        <td>${u.name}</td>
-        <td>${u.email}</td>
-        <td>${u.role}</td>
-        <td>${u.status}</td>
-        <td>${u.joinDate||'-'}</td>
-        <td class="action-buttons">
-          <button class="btn btn-secondary" onclick="editUser('${u.id}')"><i class="fas fa-edit"></i></button>
-          <button class="btn btn-danger" onclick="deleteUser('${u.id}')" ${u.role==='admin'?'disabled title="Cannot delete admin"':''}><i class="fas fa-trash"></i></button>
-        </td>
-      </tr>`;
-    });
-  }
-  html += `</tbody></table>`;
-  container.innerHTML = html;
+function loadUsersTable() {
+  users = JSON.parse(localStorage.getItem("users") || "[]");
+  const tbody = document.getElementById("usersTableBody");
+  tbody.innerHTML = users.map(u=>`
+    <tr>
+      <td>${u.id}</td>
+      <td><img src="${u.avatar||'https://ui-avatars.com/api/?name='+encodeURIComponent(u.name)}" alt="avatar"></td>
+      <td>${u.name}</td>
+      <td>${u.email}</td>
+      <td>${u.role||'-'}</td>
+      <td><span class="status-badge ${u.status}">${u.status}</span></td>
+      <td>${u.joinDate||'-'}</td>
+      <td>${u.purchases||0}</td>
+      <td class="action-buttons">
+        <button class="btn-icon" onclick="editUser(${u.id})" title="Edit"><i class="fas fa-edit"></i></button>
+        <button class="btn-icon" onclick="viewUser(${u.id})" title="View"><i class="fas fa-eye"></i></button>
+        <button class="btn-icon delete" onclick="deleteUser(${u.id})" title="Delete"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>
+  `).join("");
 }
-window.editUser = function(id) { openModalForm('users', 'edit', id); }
-window.deleteUser = function(id) {
-  const user = users.find(u=>u.id==id);
-  if (!user) return;
-  if (user.role==='admin') return showNotification('Cannot delete admin user','error');
-  openConfirmModal('Delete User', `Are you sure you want to delete user <b>${user.name}</b>?`, () => {
-    users = users.filter(u=>u.id!=id);
-    saveAllData();
-    renderContent('users');
-    showNotification('User deleted','success');
-  });
+function openUserModal(userId=null) {
+  document.getElementById("userModal").style.display = "block";
+  document.getElementById("userForm").reset();
+  editingUserId = userId;
+  document.getElementById("userModalTitle").textContent = userId ? "Edit User" : "Tambah User";
+  if(userId){
+    const u = users.find(u=>u.id===userId);
+    document.getElementById("userName").value = u.name;
+    document.getElementById("userEmail").value = u.email;
+    document.getElementById("userRole").value = u.role;
+    document.getElementById("userStatus").value = u.status;
+    document.getElementById("userAvatar").value = u.avatar||"";
+    document.getElementById("userBio").value = u.bio||"";
+  }
+}
+function closeUserModal(){
+  document.getElementById("userModal").style.display = "none";
+  editingUserId = null;
+}
+function saveUser(){
+  const form = document.getElementById("userForm");
+  const name = form.userName.value.trim();
+  const email = form.userEmail.value.trim();
+  const password = form.userPassword.value;
+  const role = form.userRole.value;
+  const status = form.userStatus.value;
+  const avatar = form.userAvatar.value;
+  const bio = form.userBio.value;
+  if(!name||!email||!role||!status) return showAdminNotification("Lengkapi data user!","error");
+  users = JSON.parse(localStorage.getItem("users") || "[]");
+  if(editingUserId){
+    const idx = users.findIndex(u=>u.id===editingUserId);
+    if(idx!==-1){
+      users[idx] = {...users[idx], name, email, role, status, avatar, bio};
+      showAdminNotification("User updated!","success");
+    }
+  }else{
+    if(users.find(u=>u.email===email)) return showAdminNotification("Email sudah terdaftar!","error");
+    const id = users.length ? Math.max(...users.map(u=>u.id||0))+1 : 1;
+    users.push({id, name, email, password, role, status, avatar, bio, joinDate:new Date().toISOString().split("T")[0], purchases:0, totalSpent:0});
+    showAdminNotification("User ditambahkan!","success");
+  }
+  localStorage.setItem("users",JSON.stringify(users));
+  closeUserModal();
+  loadUsersTable();
+}
+function editUser(id){ openUserModal(id); }
+function viewUser(id){ showAdminNotification("View user "+id,"info"); }
+function deleteUser(id){
+  if(confirm("Hapus user ini?")){
+    users = users.filter(u=>u.id!==id);
+    // Hapus produk/artikel milik user
+    products = products.filter(p=>p.userId!==id);
+    articles = articles.filter(a=>a.userId!==id);
+    localStorage.setItem("users",JSON.stringify(users));
+    localStorage.setItem("products",JSON.stringify(products));
+    localStorage.setItem("articles",JSON.stringify(articles));
+    loadUsersTable();
+    loadProductsTable();
+    loadArticlesTable();
+    showAdminNotification("User & data terkait dihapus!","success");
+  }
 }
 
-// --- PHOTOS CRUD ---
-function renderPhotosTable(container) {
-  let html = `<table class="data-table"><thead><tr>
-    <th>Photo</th><th>Title</th><th>Photographer</th><th>Category</th><th>Price</th><th>Status</th><th>Actions</th>
-  </tr></thead><tbody>`;
-  if (photos.length === 0) {
-    html += `<tr><td colspan="7" style="text-align:center;color:#64748b;">No photos found.</td></tr>`;
-  } else {
-    photos.slice((state.page.photos-1)*itemsPerPage, state.page.photos*itemsPerPage).forEach(p => {
-      html += `<tr>
-        <td><img src="${p.image}" alt="${p.title}" style="width:40px;height:40px;border-radius:6px;object-fit:cover;"></td>
-        <td>${p.title}</td>
-        <td>${p.photographer}</td>
-        <td>${p.category}</td>
-        <td>$${p.price}</td>
-        <td>${p.status||'-'}</td>
-        <td class="action-buttons">
-          <button class="btn btn-secondary" onclick="editPhoto('${p.id}')"><i class="fas fa-edit"></i></button>
-          <button class="btn btn-danger" onclick="deletePhoto('${p.id}')"><i class="fas fa-trash"></i></button>
-        </td>
-      </tr>`;
-    });
+// --- PRODUCTS CRUD ---
+function loadProductsTable() {
+  products = JSON.parse(localStorage.getItem("products") || "[]");
+  const tbody = document.getElementById("productsTableBody");
+  tbody.innerHTML = products.map(p=>`
+    <tr>
+      <td>${p.id}</td>
+      <td><img src="${p.image}" alt="img"></td>
+      <td>${p.title}</td>
+      <td>${p.photographer}</td>
+      <td>${p.category}</td>
+      <td>$${p.price}</td>
+      <td><span class="status-badge ${p.status}">${p.status}</span></td>
+      <td>${p.downloads||0}</td>
+      <td>${p.date||'-'}</td>
+      <td class="action-buttons">
+        <button class="btn-icon" onclick="editProduct(${p.id})" title="Edit"><i class="fas fa-edit"></i></button>
+        <button class="btn-icon" onclick="viewProduct(${p.id})" title="View"><i class="fas fa-eye"></i></button>
+        <button class="btn-icon delete" onclick="deleteProduct(${p.id})" title="Delete"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>
+  `).join("");
+}
+function openProductModal(productId=null){
+  document.getElementById("productModal").style.display = "block";
+  document.getElementById("productForm").reset();
+  editingProductId = productId;
+  document.getElementById("productModalTitle").textContent = productId ? "Edit Produk" : "Tambah Produk";
+  if(productId){
+    const p = products.find(p=>p.id===productId);
+    document.getElementById("productTitle").value = p.title;
+    document.getElementById("productPhotographer").value = p.photographer;
+    document.getElementById("productCategory").value = p.category;
+    document.getElementById("productPrice").value = p.price;
+    document.getElementById("productImage").value = p.image;
+    document.getElementById("productStatus").value = p.status;
+    document.getElementById("productDescription").value = p.description||"";
+    document.getElementById("productTags").value = p.tags ? p.tags.join(", ") : "";
   }
-  html += `</tbody></table>`;
-  container.innerHTML = html;
 }
-window.editPhoto = function(id) { openModalForm('photos', 'edit', id); }
-window.deletePhoto = function(id) {
-  openConfirmModal('Delete Photo', 'Are you sure you want to delete this photo?', () => {
-    photos = photos.filter(p=>p.id!=id);
-    saveAllData();
-    renderContent('photos');
-    showNotification('Photo deleted','success');
-  });
+function closeProductModal(){
+  document.getElementById("productModal").style.display = "none";
+  editingProductId = null;
 }
-
-// --- ARTICLES CRUD ---
-function renderArticlesTable(container) {
-  let html = `<table class="data-table"><thead><tr>
-    <th>Title</th><th>Author</th><th>Category</th><th>Status</th><th>Actions</th>
-  </tr></thead><tbody>`;
-  if (articles.length === 0) {
-    html += `<tr><td colspan="5" style="text-align:center;color:#64748b;">No articles found.</td></tr>`;
-  } else {
-    articles.slice((state.page.articles-1)*itemsPerPage, state.page.articles*itemsPerPage).forEach(a => {
-      html += `<tr>
-        <td>${a.title}</td>
-        <td>${a.author}</td>
-        <td>${a.category}</td>
-        <td>${a.status||'-'}</td>
-        <td class="action-buttons">
-          <button class="btn btn-secondary" onclick="editArticle('${a.id}')"><i class="fas fa-edit"></i></button>
-          <button class="btn btn-danger" onclick="deleteArticle('${a.id}')"><i class="fas fa-trash"></i></button>
-        </td>
-      </tr>`;
-    });
+function saveProduct(){
+  const form = document.getElementById("productForm");
+  const title = form.productTitle.value.trim();
+  const photographer = form.productPhotographer.value.trim();
+  const category = form.productCategory.value;
+  const price = parseFloat(form.productPrice.value);
+  const image = form.productImage.value;
+  const status = form.productStatus.value;
+  const description = form.productDescription.value;
+  const tags = form.productTags.value.split(",").map(t=>t.trim()).filter(Boolean);
+  if(!title||!photographer||!category||!price||!image||!status) return showAdminNotification("Lengkapi data produk!","error");
+  products = JSON.parse(localStorage.getItem("products") || "[]");
+  if(editingProductId){
+    const idx = products.findIndex(p=>p.id===editingProductId);
+    if(idx!==-1){
+      products[idx] = {...products[idx], title, photographer, category, price, image, status, description, tags};
+      showAdminNotification("Produk diupdate!","success");
+    }
+  }else{
+    const id = products.length ? Math.max(...products.map(p=>p.id||0))+1 : 1;
+    products.push({id, title, photographer, category, price, image, status, description, tags, date:new Date().toISOString().split("T")[0], downloads:0});
+    showAdminNotification("Produk ditambahkan!","success");
   }
-  html += `</tbody></table>`;
-  container.innerHTML = html;
+  localStorage.setItem("products",JSON.stringify(products));
+  closeProductModal();
+  loadProductsTable();
 }
-window.editArticle = function(id) { openModalForm('articles', 'edit', id); }
-window.deleteArticle = function(id) {
-  openConfirmModal('Delete Article', 'Are you sure you want to delete this article?', () => {
-    articles = articles.filter(a=>a.id!=id);
-    saveAllData();
-    renderContent('articles');
-    showNotification('Article deleted','success');
-  });
+function editProduct(id){ openProductModal(id); }
+function viewProduct(id){ showAdminNotification("View produk "+id,"info"); }
+function deleteProduct(id){
+  if(confirm("Hapus produk ini?")){
+    products = products.filter(p=>p.id!==id);
+    localStorage.setItem("products",JSON.stringify(products));
+    loadProductsTable();
+    showAdminNotification("Produk dihapus!","success");
+  }
 }
 
 // --- TRANSACTIONS CRUD ---
-function renderTransactionsTable(container) {
-  let html = `<table class="data-table"><thead><tr>
-    <th>ID</th><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th><th>Actions</th>
-  </tr></thead><tbody>`;
-  if (transactions.length === 0) {
-    html += `<tr><td colspan="6" style="text-align:center;color:#64748b;">No transactions found.</td></tr>`;
-  } else {
-    transactions.slice((state.page.transactions-1)*itemsPerPage, state.page.transactions*itemsPerPage).forEach(t => {
-      html += `<tr>
-        <td>${t.id}</td>
-        <td>${t.customerName||'-'}</td>
-        <td>$${t.amount||0}</td>
-        <td>${t.status||'-'}</td>
-        <td>${t.date||'-'}</td>
-        <td class="action-buttons">
-          <button class="btn btn-secondary" onclick="editTransaction('${t.id}')"><i class="fas fa-edit"></i></button>
-          <button class="btn btn-danger" onclick="deleteTransaction('${t.id}')"><i class="fas fa-trash"></i></button>
-        </td>
-      </tr>`;
-    });
-  }
-  html += `</tbody></table>`;
-  container.innerHTML = html;
+function loadTransactionsTable() {
+  transactions = JSON.parse(localStorage.getItem("transactions") || "[]");
+  const tbody = document.getElementById("transactionsTableBody");
+  tbody.innerHTML = transactions.map(t=>`
+    <tr>
+      <td>${t.id}</td>
+      <td>${t.user||'-'}</td>
+      <td>${t.items?t.items.length:t.amount||0}</td>
+      <td>$${t.total||t.amount||0}</td>
+      <td><span class="status-badge ${t.status}">${t.status}</span></td>
+      <td>${t.paymentMethod||'-'}</td>
+      <td>${t.date||'-'}</td>
+      <td class="action-buttons">
+        <button class="btn-icon" onclick="viewTransaction(${t.id})" title="View"><i class="fas fa-eye"></i></button>
+        <button class="btn-icon delete" onclick="deleteTransaction(${t.id})" title="Delete"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>
+  `).join("");
 }
-window.editTransaction = function(id) { openModalForm('transactions', 'edit', id); }
-window.deleteTransaction = function(id) {
-  openConfirmModal('Delete Transaction', 'Are you sure you want to delete this transaction?', () => {
-    transactions = transactions.filter(t=>t.id!=id);
-    saveAllData();
-    renderContent('transactions');
-    showNotification('Transaction deleted','success');
-  });
+function viewTransaction(id){ showAdminNotification("View transaksi "+id,"info"); }
+function deleteTransaction(id){
+  if(confirm("Hapus transaksi ini?")){
+    transactions = transactions.filter(t=>t.id!==id);
+    localStorage.setItem("transactions",JSON.stringify(transactions));
+    loadTransactionsTable();
+    showAdminNotification("Transaksi dihapus!","success");
+  }
+}
+function exportTransactions(){
+  let csv = "ID,User,Amount,Status,Date\n" + transactions.map(t=>`${t.id},${t.user},${t.total||t.amount},${t.status},${t.date}`).join("\n");
+  let blob = new Blob([csv],{type:'text/csv'});
+  let url = URL.createObjectURL(blob);
+  let a = document.createElement('a');
+  a.href = url; a.download = 'transactions.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  showAdminNotification("Exported!","success");
+}
+
+// --- ARTICLES CRUD ---
+function loadArticlesTable() {
+  articles = JSON.parse(localStorage.getItem("articles") || "[]");
+  const tbody = document.getElementById("articlesTableBody");
+  tbody.innerHTML = articles.map(a=>`
+    <tr>
+      <td>${a.id}</td>
+      <td><img src="${a.image}" alt="img"></td>
+      <td>${a.title}</td>
+      <td>${a.author}</td>
+      <td>${a.category}</td>
+      <td><span class="status-badge ${a.status}">${a.status}</span></td>
+      <td>${a.views||0}</td>
+      <td>${a.date||'-'}</td>
+      <td class="action-buttons">
+        <button class="btn-icon" onclick="editArticle(${a.id})" title="Edit"><i class="fas fa-edit"></i></button>
+        <button class="btn-icon" onclick="viewArticle(${a.id})" title="View"><i class="fas fa-eye"></i></button>
+        <button class="btn-icon delete" onclick="deleteArticle(${a.id})" title="Delete"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>
+  `).join("");
+}
+function openArticleModal(articleId=null){
+  document.getElementById("articleModal").style.display = "block";
+  document.getElementById("articleForm").reset();
+  editingArticleId = articleId;
+  document.getElementById("articleModalTitle").textContent = articleId ? "Edit Artikel" : "Tambah Artikel";
+  if(articleId){
+    const a = articles.find(a=>a.id===articleId);
+    document.getElementById("articleTitle").value = a.title;
+    document.getElementById("articleExcerpt").value = a.excerpt;
+    document.getElementById("articleContent").value = a.content;
+    document.getElementById("articleCategory").value = a.category;
+    document.getElementById("articleAuthor").value = a.author;
+    document.getElementById("articleImage").value = a.image;
+    document.getElementById("articleStatus").value = a.status;
+    document.getElementById("articleTags").value = a.tags ? a.tags.join(", ") : "";
+  }
+}
+function closeArticleModal(){
+  document.getElementById("articleModal").style.display = "none";
+  editingArticleId = null;
+}
+function saveArticle(){
+  const form = document.getElementById("articleForm");
+  const title = form.articleTitle.value.trim();
+  const excerpt = form.articleExcerpt.value.trim();
+  const content = form.articleContent.value.trim();
+  const category = form.articleCategory.value;
+  const author = form.articleAuthor.value.trim();
+  const image = form.articleImage.value;
+  const status = form.articleStatus.value;
+  const tags = form.articleTags.value.split(",").map(t=>t.trim()).filter(Boolean);
+  if(!title||!excerpt||!content||!category||!author||!image||!status) return showAdminNotification("Lengkapi data artikel!","error");
+  articles = JSON.parse(localStorage.getItem("articles") || "[]");
+  if(editingArticleId){
+    const idx = articles.findIndex(a=>a.id===editingArticleId);
+    if(idx!==-1){
+      articles[idx] = {...articles[idx], title, excerpt, content, category, author, image, status, tags};
+      showAdminNotification("Artikel diupdate!","success");
+    }
+  }else{
+    const id = articles.length ? Math.max(...articles.map(a=>a.id||0))+1 : 1;
+    articles.push({id, title, excerpt, content, category, author, image, status, tags, date:new Date().toISOString().split("T")[0], views:0});
+    showAdminNotification("Artikel ditambahkan!","success");
+  }
+  localStorage.setItem("articles",JSON.stringify(articles));
+  closeArticleModal();
+  loadArticlesTable();
+}
+function editArticle(id){ openArticleModal(id); }
+function viewArticle(id){ showAdminNotification("View artikel "+id,"info"); }
+function deleteArticle(id){
+  if(confirm("Hapus artikel ini?")){
+    articles = articles.filter(a=>a.id!==id);
+    localStorage.setItem("articles",JSON.stringify(articles));
+    loadArticlesTable();
+    showAdminNotification("Artikel dihapus!","success");
+  }
 }
 
 // --- ANALYTICS ---
-function renderAnalytics(container) {
-  const totalRevenue = transactions.filter(t=>t.status==='completed').reduce((sum,t)=>sum+(t.amount||0),0);
-  const totalUsers = users.length;
-  const totalPhotos = photos.length;
-  const totalArticles = articles.length;
-  container.innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2rem;">
-      <div class="summary-card"><h3>Total Users</h3><div class="summary-value">${totalUsers}</div></div>
-      <div class="summary-card"><h3>Total Photos</h3><div class="summary-value">${totalPhotos}</div></div>
-      <div class="summary-card"><h3>Total Articles</h3><div class="summary-value">${totalArticles}</div></div>
-      <div class="summary-card"><h3>Revenue</h3><div class="summary-value">$${totalRevenue}</div></div>
-    </div>
-  `;
+function loadAnalytics(){
+  // Chart.js example
+  setTimeout(()=>{
+    if(window.revenueChart) window.revenueChart.destroy();
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    window.revenueChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+        datasets: [{
+          label: 'Pendapatan',
+          data: Array.from({length:12},()=>Math.floor(Math.random()*1000)),
+          borderColor: '#06b6d4',
+          backgroundColor: 'rgba(6,182,212,0.1)',
+          fill: true,
+        }]
+      },
+      options: {responsive:true,plugins:{legend:{display:false}}}
+    });
+    // User Growth
+    if(window.userGrowthChart) window.userGrowthChart.destroy();
+    const ctx2 = document.getElementById('userGrowthChart').getContext('2d');
+    window.userGrowthChart = new Chart(ctx2, {
+      type: 'bar',
+      data: {
+        labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+        datasets: [{
+          label: 'User Baru',
+          data: Array.from({length:12},()=>Math.floor(Math.random()*50)),
+          backgroundColor: '#3b82f6',
+        }]
+      },
+      options: {responsive:true,plugins:{legend:{display:false}}}
+    });
+    // Category
+    if(window.categoryChart) window.categoryChart.destroy();
+    const ctx3 = document.getElementById('categoryChart').getContext('2d');
+    window.categoryChart = new Chart(ctx3, {
+      type: 'pie',
+      data: {
+        labels: ['Portrait','Landscape','Street','Macro','Night','Wildlife'],
+        datasets: [{
+          data: [10,20,15,8,12,5],
+          backgroundColor: ['#06b6d4','#3b82f6','#8b5cf6','#f59e42','#10b981','#ef4444'],
+        }]
+      },
+      options: {responsive:true}
+    });
+    // Product
+    if(window.productChart) window.productChart.destroy();
+    const ctx4 = document.getElementById('productChart').getContext('2d');
+    window.productChart = new Chart(ctx4, {
+      type: 'doughnut',
+      data: {
+        labels: products.slice(0,5).map(p=>p.title),
+        datasets: [{
+          data: products.slice(0,5).map(p=>p.downloads||0),
+          backgroundColor: ['#06b6d4','#3b82f6','#8b5cf6','#f59e42','#10b981'],
+        }]
+      },
+      options: {responsive:true}
+    });
+    // Summary
+    document.getElementById("todayRevenue").textContent = "$"+Math.floor(Math.random()*1000);
+    document.getElementById("todayTransactions").textContent = Math.floor(Math.random()*10);
+    document.getElementById("todayUsers").textContent = Math.floor(Math.random()*5);
+    document.getElementById("todayDownloads").textContent = Math.floor(Math.random()*50);
+  },200);
 }
 
-// --- MODAL, NOTIF, CSV ---
-function openModalForm(tab, mode, id) {
-  let modal = document.createElement('div');
-  modal.className = 'modal';
-  let formHtml = '';
-  let isEdit = mode === 'edit';
-  let data = null;
-  if (isEdit) {
-    if (tab === 'users') data = users.find(u => u.id == id);
-    if (tab === 'photos') data = photos.find(p => p.id == id);
-    if (tab === 'articles') data = articles.find(a => a.id == id);
-    if (tab === 'transactions') data = transactions.find(t => t.id == id);
-    if (!data) return;
-  }
-  if (tab === 'users') {
-    formHtml = `
-      <form id="userForm">
-        <div class="form-group"><label>Name</label><input type="text" id="userName" value="${isEdit ? data.name : ''}" required></div>
-        <div class="form-group"><label>Email</label><input type="email" id="userEmail" value="${isEdit ? data.email : ''}" required></div>
-        <div class="form-group"><label>Role</label><select id="userRole" required>
-          <option value="admin"${isEdit && data.role==='admin'?' selected':''}>admin</option>
-          <option value="photographer"${isEdit && data.role==='photographer'?' selected':''}>photographer</option>
-          <option value="customer"${isEdit && data.role==='customer'?' selected':''}>customer</option>
-        </select></div>
-        <div class="form-group"><label>Status</label><select id="userStatus" required>
-          <option value="active"${isEdit && data.status==='active'?' selected':''}>active</option>
-          <option value="inactive"${isEdit && data.status==='inactive'?' selected':''}>inactive</option>
-        </select></div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary">${isEdit ? 'Update' : 'Add'}</button>
-        </div>
-      </form>
-    `;
-  }
-  if (tab === 'photos') {
-    formHtml = `
-      <form id="photoForm">
-        <div class="form-group"><label>Title</label><input type="text" id="photoTitle" value="${isEdit ? data.title : ''}" required></div>
-        <div class="form-group"><label>Photographer</label><input type="text" id="photoPhotographer" value="${isEdit ? data.photographer : ''}" required></div>
-        <div class="form-group"><label>Category</label><input type="text" id="photoCategory" value="${isEdit ? data.category : ''}" required></div>
-        <div class="form-group"><label>Price</label><input type="number" id="photoPrice" value="${isEdit ? data.price : ''}" required></div>
-        <div class="form-group"><label>Status</label><select id="photoStatus" required>
-          <option value="published"${isEdit && data.status==='published'?' selected':''}>published</option>
-          <option value="draft"${isEdit && data.status==='draft'?' selected':''}>draft</option>
-        </select></div>
-        <div class="form-group"><label>Image URL</label><input type="text" id="photoImage" value="${isEdit ? data.image : ''}" required></div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary">${isEdit ? 'Update' : 'Add'}</button>
-        </div>
-      </form>
-    `;
-  }
-  if (tab === 'articles') {
-    formHtml = `
-      <form id="articleForm">
-        <div class="form-group"><label>Title</label><input type="text" id="articleTitle" value="${isEdit ? data.title : ''}" required></div>
-        <div class="form-group"><label>Author</label><input type="text" id="articleAuthor" value="${isEdit ? data.author : ''}" required></div>
-        <div class="form-group"><label>Category</label><input type="text" id="articleCategory" value="${isEdit ? data.category : ''}" required></div>
-        <div class="form-group"><label>Status</label><select id="articleStatus" required>
-          <option value="published"${isEdit && data.status==='published'?' selected':''}>published</option>
-          <option value="draft"${isEdit && data.status==='draft'?' selected':''}>draft</option>
-        </select></div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary">${isEdit ? 'Update' : 'Add'}</button>
-        </div>
-      </form>
-    `;
-  }
-  if (tab === 'transactions') {
-    formHtml = `
-      <form id="transactionForm">
-        <div class="form-group"><label>Customer Name</label><input type="text" id="transactionCustomerName" value="${isEdit ? data.customerName : ''}" required></div>
-        <div class="form-group"><label>Amount</label><input type="number" id="transactionAmount" value="${isEdit ? data.amount : ''}" required></div>
-        <div class="form-group"><label>Status</label><select id="transactionStatus" required>
-          <option value="completed"${isEdit && data.status==='completed'?' selected':''}>completed</option>
-          <option value="pending"${isEdit && data.status==='pending'?' selected':''}>pending</option>
-        </select></div>
-        <div class="form-group"><label>Date</label><input type="date" id="transactionDate" value="${isEdit ? data.date : ''}" required></div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary">${isEdit ? 'Update' : 'Add'}</button>
-        </div>
-      </form>
-    `;
-  }
-  modal.innerHTML = `<div class="modal-header"><h2>${isEdit ? 'Edit' : 'Add'} ${tab.charAt(0).toUpperCase()+tab.slice(1,tab.length-1)}</h2><button class="close-btn" onclick="closeModal()">&times;</button></div><div class="modal-body">${formHtml}</div>`;
-  document.getElementById('modalContainer').innerHTML = '';
-  document.getElementById('modalContainer').appendChild(modal);
-  // Form submit handler
-  if (tab === 'users') document.getElementById('userForm').onsubmit = e => handleUserForm(e, isEdit, id);
-  if (tab === 'photos') document.getElementById('photoForm').onsubmit = e => handlePhotoForm(e, isEdit, id);
-  if (tab === 'articles') document.getElementById('articleForm').onsubmit = e => handleArticleForm(e, isEdit, id);
-  if (tab === 'transactions') document.getElementById('transactionForm').onsubmit = e => handleTransactionForm(e, isEdit, id);
-}
-function closeModal() {
-  document.getElementById('modalContainer').innerHTML = '';
-}
-// --- FORM HANDLERS ---
-function handleUserForm(e, isEdit, id) {
-  e.preventDefault();
-  const name = document.getElementById('userName').value.trim();
-  const email = document.getElementById('userEmail').value.trim();
-  const role = document.getElementById('userRole').value;
-  const status = document.getElementById('userStatus').value;
-  if (!name || !email) return showNotification('Name and Email required','error');
-  if (!isEdit && users.find(u => u.email === email)) return showNotification('Email already exists','error');
-  if (isEdit) {
-    const idx = users.findIndex(u => u.id == id);
-    if (idx !== -1) {
-      users[idx] = { ...users[idx], name, email, role, status };
-    }
-    showNotification('User updated','success');
-  } else {
-    const newId = users.length ? Math.max(...users.map(u=>parseInt(u.id)||0))+1 : 1;
-    users.push({ id: newId, name, email, role, status, joinDate: new Date().toISOString().split('T')[0] });
-    showNotification('User added','success');
-  }
-  saveAllData();
-  closeModal();
-  renderContent('users');
-}
-function handlePhotoForm(e, isEdit, id) {
-  e.preventDefault();
-  const title = document.getElementById('photoTitle').value.trim();
-  const photographer = document.getElementById('photoPhotographer').value.trim();
-  const category = document.getElementById('photoCategory').value.trim();
-  const price = parseFloat(document.getElementById('photoPrice').value);
-  const status = document.getElementById('photoStatus').value;
-  const image = document.getElementById('photoImage').value.trim();
-  if (!title || !photographer || !category || !image) return showNotification('All fields required','error');
-  if (isEdit) {
-    const idx = photos.findIndex(p => p.id == id);
-    if (idx !== -1) {
-      photos[idx] = { ...photos[idx], title, photographer, category, price, status, image };
-    }
-    showNotification('Photo updated','success');
-  } else {
-    const newId = photos.length ? Math.max(...photos.map(p=>parseInt(p.id)||0))+1 : 1;
-    photos.push({ id: newId, title, photographer, category, price, status, image });
-    showNotification('Photo added','success');
-  }
-  saveAllData();
-  closeModal();
-  renderContent('photos');
-}
-function handleArticleForm(e, isEdit, id) {
-  e.preventDefault();
-  const title = document.getElementById('articleTitle').value.trim();
-  const author = document.getElementById('articleAuthor').value.trim();
-  const category = document.getElementById('articleCategory').value.trim();
-  const status = document.getElementById('articleStatus').value;
-  if (!title || !author || !category) return showNotification('All fields required','error');
-  if (isEdit) {
-    const idx = articles.findIndex(a => a.id == id);
-    if (idx !== -1) {
-      articles[idx] = { ...articles[idx], title, author, category, status };
-    }
-    showNotification('Article updated','success');
-  } else {
-    const newId = articles.length ? Math.max(...articles.map(a=>parseInt(a.id)||0))+1 : 1;
-    articles.push({ id: newId, title, author, category, status });
-    showNotification('Article added','success');
-  }
-  saveAllData();
-  closeModal();
-  renderContent('articles');
-}
-function handleTransactionForm(e, isEdit, id) {
-  e.preventDefault();
-  const customerName = document.getElementById('transactionCustomerName').value.trim();
-  const amount = parseFloat(document.getElementById('transactionAmount').value);
-  const status = document.getElementById('transactionStatus').value;
-  const date = document.getElementById('transactionDate').value;
-  if (!customerName || !amount || !date) return showNotification('All fields required','error');
-  if (isEdit) {
-    const idx = transactions.findIndex(t => t.id == id);
-    if (idx !== -1) {
-      transactions[idx] = { ...transactions[idx], customerName, amount, status, date };
-    }
-    showNotification('Transaction updated','success');
-  } else {
-    const newId = transactions.length ? Math.max(...transactions.map(t=>parseInt(t.id)||0))+1 : 1;
-    transactions.push({ id: newId, customerName, amount, status, date });
-    showNotification('Transaction added','success');
-  }
-  saveAllData();
-  closeModal();
-  renderContent('transactions');
-}
-function openConfirmModal(title, message, onConfirm) {
-  const modal = document.createElement('div');
-  modal.className = 'modal';
-  modal.innerHTML = `<div class="modal-header"><h2>${title}</h2><button class="close-btn" onclick="this.closest('.modal').remove()">&times;</button></div>
-    <div class="modal-body">${message}</div>
-    <div class="modal-footer"><button class="btn btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button><button class="btn btn-danger" id="confirmBtn">Delete</button></div>`;
-  document.getElementById('modalContainer').innerHTML = '';
-  document.getElementById('modalContainer').appendChild(modal);
-  modal.querySelector('#confirmBtn').onclick = () => { onConfirm(); modal.remove(); };
-}
-function openImportModal(tab) {
-  // ... Implementasi modal import CSV ...
-  showNotification('Import CSV for '+tab+' (not implemented in this snippet)','info');
-}
-function exportCSV(tab) {
-  let data = [];
-  if (tab==='users') data = users;
-  if (tab==='photos') data = photos;
-  if (tab==='articles') data = articles;
-  if (tab==='transactions') data = transactions;
-  if (!data.length) return showNotification('No data to export','error');
-  const csv = toCSV(data);
-  const blob = new Blob([csv], {type:'text/csv'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `${tab}-export.csv`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  showNotification('Exported CSV','success');
-}
-function toCSV(data) {
-  if (!data.length) return '';
-  const keys = Object.keys(data[0]);
-  const rows = [keys.join(',')];
-  data.forEach(obj => {
-    rows.push(keys.map(k => '"'+String(obj[k]||'').replace(/"/g,'""')+'"').join(','));
+// --- SETTINGS & REPORTS (dummy) ---
+document.querySelectorAll('.settings-form').forEach(f=>f.onsubmit=e=>{e.preventDefault();showAdminNotification('Pengaturan disimpan!','success')});
+function generateSalesReport(){showAdminNotification('Laporan penjualan didownload!','success');}
+function generateUserReport(){showAdminNotification('Laporan user didownload!','success');}
+function generateProductReport(){showAdminNotification('Laporan produk didownload!','success');}
+function generateArticleReport(){showAdminNotification('Laporan artikel didownload!','success');}
+
+// --- MODAL HANDLING ---
+window.onclick = (event) => {
+  ["userModal","productModal","articleModal"].forEach(id=>{
+    const modal = document.getElementById(id);
+    if(event.target===modal) modal.style.display="none";
   });
-  return rows.join('\n');
-}
-function showNotification(msg, type='info') {
-  const notif = document.createElement('div');
-  notif.className = 'notification'+(type==='error'?' error':'');
-  notif.textContent = msg;
-  document.getElementById('notificationContainer').appendChild(notif);
-  setTimeout(()=>notif.remove(), 2500);
-}
+};
 
-// Agar fungsi CRUD bisa dipanggil dari HTML/modal
-window.openModalForm = openModalForm;
-window.closeModal = closeModal;
-window.handleUserForm = handleUserForm;
-window.handlePhotoForm = handlePhotoForm;
-window.handleArticleForm = handleArticleForm;
-window.handleTransactionForm = handleTransactionForm;
-window.openConfirmModal = openConfirmModal;
-window.openImportModal = openImportModal;
-window.exportCSV = exportCSV;
-window.showNotification = showNotification;
+// --- NOTIFICATION ---
+function showAdminNotification(msg,type="info"){
+  const notif = document.createElement("div");
+  notif.className = "notification "+type;
+  notif.textContent = msg;
+  document.body.appendChild(notif);
+  setTimeout(()=>notif.style.transform="translateX(0)",100);
+  setTimeout(()=>{
+    notif.style.transform="translateX(400px)";
+    setTimeout(()=>notif.remove(),300);
+  },3000);
+} 
