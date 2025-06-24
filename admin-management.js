@@ -341,73 +341,121 @@ function deleteArticle(id){
 
 // --- ANALYTICS ---
 function loadAnalytics(){
+  // Check if Chart.js is available
+  if (typeof Chart === 'undefined') {
+    showAdminNotification('Chart.js not loaded. Loading analytics...', 'warning');
+    // Try to load Chart.js dynamically
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+    script.onload = () => {
+      setTimeout(loadAnalytics, 100);
+    };
+    document.head.appendChild(script);
+    return;
+  }
+
   // Chart.js example
   setTimeout(()=>{
-    if(window.revenueChart) window.revenueChart.destroy();
-    const ctx = document.getElementById('revenueChart').getContext('2d');
-    window.revenueChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
-        datasets: [{
-          label: 'Pendapatan',
-          data: Array.from({length:12},()=>Math.floor(Math.random()*1000)),
-          borderColor: '#06b6d4',
-          backgroundColor: 'rgba(6,182,212,0.1)',
-          fill: true,
-        }]
-      },
-      options: {responsive:true,plugins:{legend:{display:false}}}
-    });
-    // User Growth
-    if(window.userGrowthChart) window.userGrowthChart.destroy();
-    const ctx2 = document.getElementById('userGrowthChart').getContext('2d');
-    window.userGrowthChart = new Chart(ctx2, {
-      type: 'bar',
-      data: {
-        labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
-        datasets: [{
-          label: 'User Baru',
-          data: Array.from({length:12},()=>Math.floor(Math.random()*50)),
-          backgroundColor: '#3b82f6',
-        }]
-      },
-      options: {responsive:true,plugins:{legend:{display:false}}}
-    });
-    // Category
-    if(window.categoryChart) window.categoryChart.destroy();
-    const ctx3 = document.getElementById('categoryChart').getContext('2d');
-    window.categoryChart = new Chart(ctx3, {
-      type: 'pie',
-      data: {
-        labels: ['Portrait','Landscape','Street','Macro','Night','Wildlife'],
-        datasets: [{
-          data: [10,20,15,8,12,5],
-          backgroundColor: ['#06b6d4','#3b82f6','#8b5cf6','#f59e42','#10b981','#ef4444'],
-        }]
-      },
-      options: {responsive:true}
-    });
-    // Product
-    if(window.productChart) window.productChart.destroy();
-    const ctx4 = document.getElementById('productChart').getContext('2d');
-    window.productChart = new Chart(ctx4, {
-      type: 'doughnut',
-      data: {
-        labels: products.slice(0,5).map(p=>p.title),
-        datasets: [{
-          data: products.slice(0,5).map(p=>p.downloads||0),
-          backgroundColor: ['#06b6d4','#3b82f6','#8b5cf6','#f59e42','#10b981'],
-        }]
-      },
-      options: {responsive:true}
-    });
-    // Summary
-    document.getElementById("todayRevenue").textContent = "$"+Math.floor(Math.random()*1000);
-    document.getElementById("todayTransactions").textContent = Math.floor(Math.random()*10);
-    document.getElementById("todayUsers").textContent = Math.floor(Math.random()*5);
-    document.getElementById("todayDownloads").textContent = Math.floor(Math.random()*50);
-  },200);
+    try {
+      // Revenue Chart
+      if(window.revenueChart && typeof window.revenueChart.destroy === 'function') {
+        window.revenueChart.destroy();
+      }
+      const revenueCtx = document.getElementById('revenueChart');
+      if (revenueCtx) {
+        window.revenueChart = new Chart(revenueCtx.getContext('2d'), {
+          type: 'line',
+          data: {
+            labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+            datasets: [{
+              label: 'Pendapatan',
+              data: Array.from({length:12},()=>Math.floor(Math.random()*1000)),
+              borderColor: '#06b6d4',
+              backgroundColor: 'rgba(6,182,212,0.1)',
+              fill: true,
+            }]
+          },
+          options: {responsive:true,plugins:{legend:{display:false}}}
+        });
+      }
+
+      // User Growth Chart
+      if(window.userGrowthChart && typeof window.userGrowthChart.destroy === 'function') {
+        window.userGrowthChart.destroy();
+      }
+      const userCtx = document.getElementById('userGrowthChart');
+      if (userCtx) {
+        window.userGrowthChart = new Chart(userCtx.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+            datasets: [{
+              label: 'User Baru',
+              data: Array.from({length:12},()=>Math.floor(Math.random()*50)),
+              backgroundColor: '#3b82f6',
+            }]
+          },
+          options: {responsive:true,plugins:{legend:{display:false}}}
+        });
+      }
+
+      // Category Chart
+      if(window.categoryChart && typeof window.categoryChart.destroy === 'function') {
+        window.categoryChart.destroy();
+      }
+      const categoryCtx = document.getElementById('categoryChart');
+      if (categoryCtx) {
+        window.categoryChart = new Chart(categoryCtx.getContext('2d'), {
+          type: 'pie',
+          data: {
+            labels: ['Portrait','Landscape','Street','Macro','Night','Wildlife'],
+            datasets: [{
+              data: [10,20,15,8,12,5],
+              backgroundColor: ['#06b6d4','#3b82f6','#8b5cf6','#f59e42','#10b981','#ef4444'],
+            }]
+          },
+          options: {responsive:true}
+        });
+      }
+
+      // Product Chart
+      if(window.productChart && typeof window.productChart.destroy === 'function') {
+        window.productChart.destroy();
+      }
+      const productCtx = document.getElementById('productChart');
+      if (productCtx) {
+        const productLabels = products.slice(0,5).map(p=>p.title || 'Product ' + p.id);
+        const productData = products.slice(0,5).map(p=>p.downloads||0);
+        window.productChart = new Chart(productCtx.getContext('2d'), {
+          type: 'doughnut',
+          data: {
+            labels: productLabels,
+            datasets: [{
+              data: productData,
+              backgroundColor: ['#06b6d4','#3b82f6','#8b5cf6','#f59e42','#10b981'],
+            }]
+          },
+          options: {responsive:true}
+        });
+      }
+
+      // Summary
+      const todayRevenue = document.getElementById("todayRevenue");
+      const todayTransactions = document.getElementById("todayTransactions");
+      const todayUsers = document.getElementById("todayUsers");
+      const todayDownloads = document.getElementById("todayDownloads");
+
+      if (todayRevenue) todayRevenue.textContent = "$"+Math.floor(Math.random()*1000);
+      if (todayTransactions) todayTransactions.textContent = Math.floor(Math.random()*10);
+      if (todayUsers) todayUsers.textContent = Math.floor(Math.random()*5);
+      if (todayDownloads) todayDownloads.textContent = Math.floor(Math.random()*50);
+
+      showAdminNotification('Analytics loaded successfully!', 'success');
+    } catch (error) {
+      console.error('Error loading analytics:', error);
+      showAdminNotification('Error loading analytics: ' + error.message, 'error');
+    }
+  }, 200);
 }
 
 // --- SETTINGS & REPORTS (dummy) ---
