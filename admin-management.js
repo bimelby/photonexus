@@ -379,7 +379,7 @@ function loadAnalytics(){
         window.revenueChart.destroy();
       }
       const revenueCtx = document.getElementById('revenueChart');
-      if (revenueCtx) {
+      if (revenueCtx && revenueCtx.getContext) {
         window.revenueChart = new Chart(revenueCtx.getContext('2d'), {
           type: 'line',
           data: {
@@ -401,7 +401,7 @@ function loadAnalytics(){
         window.userGrowthChart.destroy();
       }
       const userCtx = document.getElementById('userGrowthChart');
-      if (userCtx) {
+      if (userCtx && userCtx.getContext) {
         window.userGrowthChart = new Chart(userCtx.getContext('2d'), {
           type: 'bar',
           data: {
@@ -421,7 +421,7 @@ function loadAnalytics(){
         window.categoryChart.destroy();
       }
       const categoryCtx = document.getElementById('categoryChart');
-      if (categoryCtx) {
+      if (categoryCtx && categoryCtx.getContext) {
         window.categoryChart = new Chart(categoryCtx.getContext('2d'), {
           type: 'pie',
           data: {
@@ -440,7 +440,7 @@ function loadAnalytics(){
         window.productChart.destroy();
       }
       const productCtx = document.getElementById('productChart');
-      if (productCtx) {
+      if (productCtx && productCtx.getContext) {
         const productLabels = products.slice(0,5).map(p=>p.title || 'Product ' + p.id);
         const productData = products.slice(0,5).map(p=>p.downloads||0);
         window.productChart = new Chart(productCtx.getContext('2d'), {
