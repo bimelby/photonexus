@@ -134,7 +134,9 @@ function saveUser(){
   loadUsersTable();
 }
 function editUser(id){ openUserModal(id); }
-function viewUser(id){ showAdminNotification("View user "+id,"info"); }
+function viewUser(id) {
+  window.location.href = `user-detail.html?id=${id}`;
+}
 function deleteUser(id){
   if(confirm("Hapus user ini?")){
     users = users.filter(u=>u.id!==id);
